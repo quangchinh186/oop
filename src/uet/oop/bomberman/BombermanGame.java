@@ -12,6 +12,8 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.entities.Wall;
 import uet.oop.bomberman.graphics.Sprite;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,8 @@ public class BombermanGame extends Application {
     private List<Entity> stillObjects = new ArrayList<>();
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
+        //System.setIn(new FileInputStream("D:\Input.txt"));
         Application.launch(BombermanGame.class);
     }
 
