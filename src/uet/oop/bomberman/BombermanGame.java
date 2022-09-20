@@ -8,21 +8,24 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
+import uet.oop.bomberman.entities.Balloon;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.entities.Wall;
+import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.graphics.Sprite;
-import java.io.FileInputStream;
-import java.io.IOException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class BombermanGame extends Application {
     
-    public static final int WIDTH = 20;
-    public static final int HEIGHT = 15;
-    
+    public static final int WIDTH = 31;
+    public static final int HEIGHT = 13;
+    private int level;
     private GraphicsContext gc;
     private Canvas canvas;
     private List<Entity> entities = new ArrayList<>();
@@ -30,7 +33,6 @@ public class BombermanGame extends Application {
 
 
     public static void main(String[] args)  {
-        //System.setIn(new FileInputStream("D:\Input.txt"));
         Application.launch(BombermanGame.class);
     }
 
@@ -57,6 +59,7 @@ public class BombermanGame extends Application {
                 render();
                 getInput();
                 update();
+
             }
         };
         timer.start();
@@ -72,18 +75,46 @@ public class BombermanGame extends Application {
     }
 
     public void createMap() {
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                Entity object;
-                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
-                    object = new Wall(i, j, Sprite.wall.getFxImage());
-                }
-                else {
-                    object = new Grass(i, j, Sprite.grass.getFxImage());
+        String[] map = getMap("res/levels/map1.txt");
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length(); j++) {
+                Entity object = new Grass(j, i, Sprite.grass.getFxImage());
+                switch (map[i].charAt(j)){
+                    case '#':
+                        object = new Wall(j, i, Sprite.wall.getFxImage());
+                        break;
+                    case '*':
+                        object = new Brick(j, i, Sprite.brick.getFxImage());
+                        break;
+                    case '1':
+                        object = new Balloon(j, i, Sprite.balloom_left1.getFxImage());
+                        break;
+                    default:
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        break;
                 }
                 stillObjects.add(object);
             }
         }
+    }
+
+    public static String[] getMap(String file) {
+        try {
+            File myObj = new File(file);
+            Scanner myReader = new Scanner(myObj);
+            int row = myReader.nextInt();
+            myReader.nextLine();
+            String[] m = new String[row];
+            for(int i = 0; i < row; i++){
+                m[i] = myReader.nextLine();
+            }
+            myReader.close();
+            return m;
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void update() {
