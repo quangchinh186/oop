@@ -32,6 +32,7 @@ public class Bomber extends Entity {
     }
 
     public void actionHandler () {
+
         if(currentlyActiveKeys.contains("LEFT")) {
             velX = -1;
         }

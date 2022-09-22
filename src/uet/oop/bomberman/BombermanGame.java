@@ -92,7 +92,7 @@ public class BombermanGame extends Application {
         String[] map = getMap("res/levels/map1.txt");
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length(); j++) {
-                Entity object = new Grass(j, i, Sprite.grass.getFxImage());
+                Entity object;
                 switch (map[i].charAt(j)) {
                     case '#':
                         object = new Wall(j, i, Sprite.wall.getFxImage());
