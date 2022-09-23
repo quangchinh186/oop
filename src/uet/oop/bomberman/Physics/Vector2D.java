@@ -1,4 +1,4 @@
-package Physics;
+package uet.oop.bomberman.Physics;
 
 public class Vector2D {
     public double x;
