@@ -4,7 +4,7 @@ public class Vector2D {
     public double x;
     public double y;
 
-    Vector2D() {
+    public Vector2D() {
         this.x = 0;
         this.y = 0;
     }
