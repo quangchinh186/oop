@@ -14,7 +14,6 @@ public class Bomber extends Entity {
 
     @Override
     public void update() {
-        //System.out.println(this.x);
-        //this.x++;
+        
     }
 }
