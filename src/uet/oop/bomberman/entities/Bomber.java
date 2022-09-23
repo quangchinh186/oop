@@ -3,12 +3,17 @@ package uet.oop.bomberman.entities;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 
+import java.awt.*;
 import java.util.HashSet;
 
 public class Bomber extends Entity {
+    private Rectangle rect;
 
+    private Paint pt;
     static HashSet<String> currentlyActiveKeys;
     static HashSet<String> releasedKey;
     private int velX;
@@ -20,6 +25,8 @@ public class Bomber extends Entity {
         prepareActionHandlers();
         velX = 0;
         velY = 0;
+
+
     }
 
     @Override
@@ -32,6 +39,7 @@ public class Bomber extends Entity {
     }
 
     public void actionHandler () {
+
         if(currentlyActiveKeys.contains("LEFT")) {
             velX = -1;
         }
