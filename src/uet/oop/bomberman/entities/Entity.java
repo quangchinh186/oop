@@ -1,13 +1,17 @@
 package uet.oop.bomberman.entities;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class Entity {
+
+    protected Rectangle rect;
     //Tọa độ X tính từ góc trái trên trong Canvas
     protected int x;
 
@@ -25,6 +29,10 @@ public abstract class Entity {
 
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
+        gc.setStroke(Color.YELLOW);
+        gc.strokeRect(x,y,Sprite.SCALED_SIZE,Sprite.SCALED_SIZE);
+
+
     }
     public abstract void update();
 }
