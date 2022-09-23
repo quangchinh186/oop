@@ -15,6 +15,8 @@ import static uet.oop.bomberman.BombermanGame.*;
 
 public class Bomber extends Entity {
 
+    private Rectangle nextFrameRect;
+
     private Paint pt;
     static HashSet<String> currentlyActiveKeys;
     static HashSet<String> releasedKey;
@@ -28,7 +30,7 @@ public class Bomber extends Entity {
         velocity = new Vector2D();
         rect.setWidth(20);
         rect.setHeight(20);
-
+        nextFrameRect = new Rectangle(20,20);
 
     }
 
@@ -36,25 +38,27 @@ public class Bomber extends Entity {
     public void update() {
         //get input
         actionHandler();
-        //chage position
-
-
-        rect.setX(position.x);
-        rect.setY(position.y);
-
         Grass tmp = new Grass();
 
+        nextFrameRect.setX(this.rect.getX() + velocity.x);
+        nextFrameRect.setY(this.rect.getY() + velocity.y);
+
         for (Entity object : stillObjects) {
-            if(object.rect.intersects(this.rect.getX(), this.rect.getY(), this.rect.getWidth(), this.rect.getHeight())
+            if(object.rect.intersects(nextFrameRect.getX(), nextFrameRect.getY(),
+                    nextFrameRect.getWidth(), nextFrameRect.getHeight())
             && object.getClass() != tmp.getClass()) {
-                System.out.println("COLLISON");
-                velocity.x = -velocity.x;
-                velocity.y = -velocity.y;
+                System.out.println("COLLISON!");
+                velocity.x = 0;
+                velocity.y = 0;
             }
         }
+
         //update pos sau khi nhan va cham
         position.x += velocity.x;
         position.y += velocity.y;
+
+        rect.setX(position.x);
+        rect.setY(position.y);
 
     }
 
