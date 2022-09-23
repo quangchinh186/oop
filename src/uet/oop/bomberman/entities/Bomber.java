@@ -11,8 +11,9 @@ import uet.oop.bomberman.Physics.Vector2D;
 import java.awt.*;
 import java.util.HashSet;
 
+import static uet.oop.bomberman.BombermanGame.*;
+
 public class Bomber extends Entity {
-    private Rectangle rect;
 
     private Paint pt;
     static HashSet<String> currentlyActiveKeys;
@@ -25,17 +26,36 @@ public class Bomber extends Entity {
         super( x, y, img);
         prepareActionHandlers();
         velocity = new Vector2D();
+        rect.setWidth(20);
+        rect.setHeight(20);
 
 
     }
 
     @Override
     public void update() {
-        //System.out.println(this.x);
-        //this.x++;
+        //get input
         actionHandler();
+        //chage position
+
+
+        rect.setX(position.x);
+        rect.setY(position.y);
+
+        Grass tmp = new Grass();
+
+        for (Entity object : stillObjects) {
+            if(object.rect.intersects(this.rect.getX(), this.rect.getY(), this.rect.getWidth(), this.rect.getHeight())
+            && object.getClass() != tmp.getClass()) {
+                System.out.println("COLLISON");
+                velocity.x = -velocity.x;
+                velocity.y = -velocity.y;
+            }
+        }
+        //update pos sau khi nhan va cham
         position.x += velocity.x;
         position.y += velocity.y;
+
     }
 
     public void actionHandler () {
@@ -72,7 +92,7 @@ public class Bomber extends Entity {
         // use a set so duplicates are not possible
         currentlyActiveKeys = new HashSet<String>();
         releasedKey = new HashSet<String>();
-        BombermanGame.scene.setOnKeyPressed(new EventHandler<KeyEvent>()
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>()
         {
             @Override
             public void handle(KeyEvent event)
@@ -82,7 +102,7 @@ public class Bomber extends Entity {
             }
 
         });
-        BombermanGame.scene.setOnKeyReleased(new EventHandler<KeyEvent>()
+        scene.setOnKeyReleased(new EventHandler<KeyEvent>()
         {
             @Override
             public void handle(KeyEvent event)

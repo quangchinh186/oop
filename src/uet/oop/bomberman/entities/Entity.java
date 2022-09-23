@@ -12,10 +12,13 @@ import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class Entity {
 
+    public Entity() {}
+    //Rectangle de lam collision.
     protected Rectangle rect;
+
+
     //Tọa độ X tính từ góc trái trên trong Canvas
     //Tọa độ Y tính từ góc trái trên trong Canvas
-
     protected Vector2D position;
 
     protected Image img;
@@ -24,19 +27,21 @@ public abstract class Entity {
     public Entity( int xUnit, int yUnit, Image img) {
         position = new Vector2D(xUnit * Sprite.SCALED_SIZE, yUnit * Sprite.SCALED_SIZE);
         this.img = img;
-        rect = new Rectangle(xUnit,yUnit, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        rect = new Rectangle(xUnit * Sprite.SCALED_SIZE, yUnit * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+
     }
 
     public void render(GraphicsContext gc) {
         gc.drawImage(img, position.x, position.y);
         //write a draw function for rect.
-
-        rect.setStroke(Color.RED);
-
-        gc.setStroke(Color.YELLOW);
-        gc.strokeRect(position.x,position.y,Sprite.SCALED_SIZE,Sprite.SCALED_SIZE);
+        drawRect(gc);
 
 
     }
     public abstract void update();
+
+    public void drawRect(GraphicsContext gc) {
+        gc.setStroke(Color.YELLOW);
+        gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+    }
 }
