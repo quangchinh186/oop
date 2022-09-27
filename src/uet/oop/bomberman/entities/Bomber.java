@@ -7,6 +7,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
+import uet.oop.bomberman.map.GameMap;
 
 import java.awt.*;
 import java.util.HashSet;
@@ -42,27 +43,38 @@ public class Bomber extends Entity {
         Grass tmp = new Grass();
 
         //nextFrame position
+
+        //sau cai nay thi phai het va cham;
         nextFrameRect.setX(this.rect.getX() + velocity.x);
         nextFrameRect.setY(this.rect.getY() + velocity.y);
 
 
         // test checkcollision kieu moi(o trong file map)/
+        if(GameMap.checkCollision(nextFrameRect)) {
 
-
-        //
-        for (Entity object : stillObjects) {
-            if(object.rect.intersects(nextFrameRect.getX(), nextFrameRect.getY(),
-                    nextFrameRect.getWidth(), nextFrameRect.getHeight())
-            && object.getClass() != tmp.getClass()) {
-                System.out.println("COLLISON!");
-                velocity.x = 0;
-                velocity.y = 0;
-            }
+        }
+        else {
+            position.x += velocity.x;
+            position.y += velocity.y;
         }
 
+        //
+
+        /**
+         * for (Entity object : stillObjects) {
+         *             if(object.rect.intersects(nextFrameRect.getX(), nextFrameRect.getY(),
+         *                     nextFrameRect.getWidth(), nextFrameRect.getHeight())
+         *             && object.getClass() != tmp.getClass()) {
+         *                 //System.out.println("COLLISON!");
+         *                 velocity.x = 0;
+         *                 velocity.y = 0;
+         *             }
+         *         }
+         */
+
+
         //update pos sau khi nhan va cham
-        position.x += velocity.x;
-        position.y += velocity.y;
+
 
         rect.setX(position.x);
         rect.setY(position.y);
