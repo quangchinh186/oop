@@ -81,6 +81,8 @@ public class GameMap extends BombermanGame {
                 if(map.get(i).charAt(j) == '#'
                 || map.get(i).charAt(j) == '*') {
                     if(rect.intersects(j * Sprite.SCALED_SIZE, i * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                        //determine xem la left or right. dua vao velocity.
+
                         return true;
                     }
                 }

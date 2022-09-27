@@ -26,12 +26,12 @@ public class Bomber extends Entity {
 
     public int health;
     public Bomber(int x, int y, Image img) {
-        super( x, y, img);
+        super( x + 1, y, img);
         prepareActionHandlers();
         velocity = new Vector2D();
-        rect.setWidth(20);
-        rect.setHeight(20);
-        nextFrameRect = new Rectangle(20,20);
+        rect.setWidth(30);
+        rect.setHeight(30);
+        nextFrameRect = new Rectangle(30,30);
 
     }
 
@@ -41,44 +41,40 @@ public class Bomber extends Entity {
         //get input
         actionHandler();
         Grass tmp = new Grass();
-
         //nextFrame position
 
-        //sau cai nay thi phai het va cham;
-        nextFrameRect.setX(this.rect.getX() + velocity.x);
-        nextFrameRect.setY(this.rect.getY() + velocity.y);
-
-
-        // test checkcollision kieu moi(o trong file map)/
-        if(GameMap.checkCollision(nextFrameRect)) {
-
-        }
-        else {
-            position.x += velocity.x;
-            position.y += velocity.y;
-        }
+        handleCollision();
 
         //
 
-        /**
-         * for (Entity object : stillObjects) {
-         *             if(object.rect.intersects(nextFrameRect.getX(), nextFrameRect.getY(),
-         *                     nextFrameRect.getWidth(), nextFrameRect.getHeight())
-         *             && object.getClass() != tmp.getClass()) {
-         *                 //System.out.println("COLLISON!");
-         *                 velocity.x = 0;
-         *                 velocity.y = 0;
-         *             }
-         *         }
-         */
-
-
         //update pos sau khi nhan va cham
-
 
         rect.setX(position.x);
         rect.setY(position.y);
 
+    }
+
+
+    public void handleCollision() {
+
+        //check if x or y cause the collision.
+
+        nextFrameRect.setX(this.rect.getX() + velocity.x);
+        nextFrameRect.setY(this.rect.getY());
+        if(GameMap.checkCollision(nextFrameRect)) {
+        }
+        else {
+            position.x += velocity.x;
+        }
+
+        nextFrameRect.setX(this.rect.getX());
+        nextFrameRect.setY(this.rect.getY() + velocity.y);
+
+        if(GameMap.checkCollision(nextFrameRect)) {
+        }
+        else {
+            position.y += velocity.y;
+        }
     }
 
     public void actionHandler () {
