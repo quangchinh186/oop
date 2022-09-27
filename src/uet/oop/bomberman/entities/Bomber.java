@@ -7,6 +7,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
+import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
 import java.util.HashSet;
@@ -17,6 +18,8 @@ public class Bomber extends Entity {
 
     private Rectangle nextFrameRect;
 
+    private Vector2D prevPosition;
+
     private Paint pt;
     static HashSet<String> currentlyActiveKeys;
     static HashSet<String> releasedKey;
@@ -24,6 +27,7 @@ public class Bomber extends Entity {
     private Vector2D velocity;
 
     public int health;
+    public static int cd = 0;
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
         prepareActionHandlers();
@@ -40,6 +44,7 @@ public class Bomber extends Entity {
         //get input
         actionHandler();
         Grass tmp = new Grass();
+        if(cd > 0) cd--;
 
         nextFrameRect.setX(this.rect.getX() + velocity.x);
         nextFrameRect.setY(this.rect.getY() + velocity.y);
@@ -48,18 +53,21 @@ public class Bomber extends Entity {
             if(object.rect.intersects(nextFrameRect.getX(), nextFrameRect.getY(),
                     nextFrameRect.getWidth(), nextFrameRect.getHeight())
             && object.getClass() != tmp.getClass()) {
-                System.out.println("COLLISON!");
+                //System.out.println("COLLISON!");
                 velocity.x = 0;
                 velocity.y = 0;
             }
         }
 
         //update pos sau khi nhan va cham
+
         position.x += velocity.x;
         position.y += velocity.y;
 
         rect.setX(position.x);
         rect.setY(position.y);
+
+        System.out.println(cd);
 
     }
 
@@ -76,6 +84,14 @@ public class Bomber extends Entity {
         }
         if (currentlyActiveKeys.contains("DOWN")){
             velocity.y = 1;
+        }
+        if (currentlyActiveKeys.contains("SPACE") && cd <= 0){
+            int x = (int) ((position.x + rect.getWidth()/2) / 32);
+            int y = (int) ((position.y + rect.getHeight()/2) / 32);
+            Entity bom = new Bomb(x, y, Sprite.bomb.getFxImage());
+            item.add(bom);
+
+            cd = 300;
         }
 
         //on released
