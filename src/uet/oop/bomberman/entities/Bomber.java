@@ -89,7 +89,7 @@ public class Bomber extends Entity {
             int x = (int) ((position.x + rect.getWidth()/2) / 32);
             int y = (int) ((position.y + rect.getHeight()/2) / 32);
             Entity bom = new Bomb(x, y, Sprite.bomb.getFxImage());
-            item.add(bom);
+            bomb.add(bom);
 
             cd = 300;
         }
