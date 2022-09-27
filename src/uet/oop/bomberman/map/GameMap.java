@@ -71,16 +71,21 @@ public class GameMap extends BombermanGame {
         double posX = rect.getX();
         double posY = rect.getY();
 
-        int startX = (int)rect.getX()/Sprite.SCALED_SIZE - 1;
-        int startY = (int)rect.getY()/Sprite.SCALED_SIZE - 1;
+        int startX = Math.max((int)(rect.getX()/Sprite.SCALED_SIZE) - 1, 0);
+        int startY = Math.max((int)(rect.getY()/Sprite.SCALED_SIZE) - 1, 0);
 
-        for (int i = startX; i < startX + 3; i++) {
-            for (int j = startY; j < startY + 3; j++) {
-                System.out.print(map.get(i).charAt(j));
+        //System.out.println(startX + ","  + startY);
+
+        for (int i = startY; i < startY + 3; i++) {
+            for (int j = startX; j < startX + 3; j++) {
+                if(map.get(i).charAt(j) == '#'
+                || map.get(i).charAt(j) == '*') {
+                    if(rect.intersects(j * Sprite.SCALED_SIZE, i * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                        return true;
+                    }
+                }
             }
-            System.out.println();
         }
-
-        return true;
+        return false;
     }
 }
