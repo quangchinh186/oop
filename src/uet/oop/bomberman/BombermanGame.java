@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Balloon;
@@ -77,7 +78,7 @@ public class BombermanGame extends Application {
         bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         entities.add(bomberman);
         GameMap.createMap(level);
-
+        GameMap.checkCollision(new Rectangle(1,2,4,5));
 
         AnimationTimer timer = new AnimationTimer() {
             @Override

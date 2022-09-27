@@ -41,9 +41,15 @@ public class Bomber extends Entity {
         actionHandler();
         Grass tmp = new Grass();
 
+        //nextFrame position
         nextFrameRect.setX(this.rect.getX() + velocity.x);
         nextFrameRect.setY(this.rect.getY() + velocity.y);
 
+
+        // test checkcollision kieu moi(o trong file map)/
+
+
+        //
         for (Entity object : stillObjects) {
             if(object.rect.intersects(nextFrameRect.getX(), nextFrameRect.getY(),
                     nextFrameRect.getWidth(), nextFrameRect.getHeight())

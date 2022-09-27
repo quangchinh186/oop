@@ -1,5 +1,6 @@
 package uet.oop.bomberman.map;
 
+import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
@@ -64,5 +65,22 @@ public class GameMap extends BombermanGame {
             e.printStackTrace();
         }
 
+    }
+
+    public static boolean checkCollision(Rectangle rect) {
+        double posX = rect.getX();
+        double posY = rect.getY();
+
+        int startX = (int)rect.getX()/Sprite.SCALED_SIZE - 1;
+        int startY = (int)rect.getY()/Sprite.SCALED_SIZE - 1;
+
+        for (int i = startX; i < startX + 3; i++) {
+            for (int j = startY; j < startY + 3; j++) {
+                System.out.print(map.get(i).charAt(j));
+            }
+            System.out.println();
+        }
+
+        return true;
     }
 }
