@@ -10,6 +10,7 @@ import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
+import java.time.Clock;
 import java.util.HashSet;
 
 import static uet.oop.bomberman.BombermanGame.*;
@@ -26,14 +27,14 @@ public class Bomber extends Entity {
 
     private Vector2D velocity;
 
-    public int health;
+    public int is_looking = 0;
     public static int cd = 0;
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
         prepareActionHandlers();
         velocity = new Vector2D();
-        rect.setWidth(20);
-        rect.setHeight(20);
+        rect.setWidth(30);
+        rect.setHeight(30);
         nextFrameRect = new Rectangle(20,20);
 
     }
@@ -53,7 +54,6 @@ public class Bomber extends Entity {
             if(object.rect.intersects(nextFrameRect.getX(), nextFrameRect.getY(),
                     nextFrameRect.getWidth(), nextFrameRect.getHeight())
             && object.getClass() != tmp.getClass()) {
-                //System.out.println("COLLISON!");
                 velocity.x = 0;
                 velocity.y = 0;
             }
@@ -67,23 +67,47 @@ public class Bomber extends Entity {
         rect.setX(position.x);
         rect.setY(position.y);
 
-        System.out.println(cd);
+        if(velocity.x != 0 || velocity.y != 0){
+            animated();
+        }
+    }
 
+    public void animated(){
+        this.timer++;
+        if(timer > 100) timer = 0;
+        switch (is_looking){
+            case 1:
+                this.img = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1, Sprite.player_down_2, this.timer, 40).getFxImage();
+                break;
+            case 2:
+                this.img = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1, Sprite.player_left_2, this.timer, 40).getFxImage();
+                break;
+            case 3:
+                this.img = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1, Sprite.player_up_2, this.timer, 40).getFxImage();
+                break;
+            default:
+                this.img = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1, Sprite.player_right_2, this.timer, 40).getFxImage();
+                break;
+        }
     }
 
     public void actionHandler () {
 
         if(currentlyActiveKeys.contains("LEFT")) {
             velocity.x = -1;
+            is_looking = 2;
         }
         if (currentlyActiveKeys.contains("RIGHT")){
             velocity.x = 1;
+            is_looking = 0;
         }
         if (currentlyActiveKeys.contains("UP")){
             velocity.y = -1;
+            is_looking = 3;
         }
         if (currentlyActiveKeys.contains("DOWN")){
             velocity.y = 1;
+            is_looking = 1;
         }
         if (currentlyActiveKeys.contains("SPACE") && cd <= 0){
             int x = (int) ((position.x + rect.getWidth()/2) / 32);

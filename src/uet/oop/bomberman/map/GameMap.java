@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GameMap extends BombermanGame {
-    static ArrayList <String> map = new ArrayList<>();
+    public static ArrayList <String> map = new ArrayList<>();
 
     public static void createMap(int level) {
         String path = "map" + (level) + ".txt";
