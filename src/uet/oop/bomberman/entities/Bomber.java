@@ -1,15 +1,14 @@
 package uet.oop.bomberman.entities;
 
+import uet.oop.bomberman.States.State;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.map.GameMap;
 
-import java.awt.*;
 import java.util.HashSet;
 
 import static uet.oop.bomberman.BombermanGame.*;
@@ -17,10 +16,16 @@ import static uet.oop.bomberman.BombermanGame.*;
 public class Bomber extends Entity {
 
 
-    private String checkStuck = "";
+    private final double PLAYER_SPEED_NORMAL = 1;
 
+    private final double PLAYER_SPEED_BOOSTED = 1.5;
+
+    private String checkStuck = "";
     private String twoFrameBackStuck = "";
     private String prevCheckStuck = "";
+
+    private State state;
+
     private Rectangle nextFrameRect;
 
     private Paint pt;
@@ -34,8 +39,8 @@ public class Bomber extends Entity {
         super( x + 1, y, img);
         prepareActionHandlers();
         velocity = new Vector2D();
-        rect.setWidth(31);
-        rect.setHeight(31);
+        rect.setWidth(30);
+        rect.setHeight(30);
         nextFrameRect = new Rectangle(30,30);
 
     }
@@ -51,7 +56,6 @@ public class Bomber extends Entity {
         handleCollision();
 
         //
-
         //update pos sau khi nhan va cham
 
         rect.setX(position.x);
@@ -109,25 +113,31 @@ public class Bomber extends Entity {
     public void actionHandler () {
 
         if(currentlyActiveKeys.contains("LEFT")) {
-            velocity.x = -1;
+            velocity.x = -PLAYER_SPEED_NORMAL;
+            state = State.LEFT;
         }
         if (currentlyActiveKeys.contains("RIGHT")){
-            velocity.x = 1;
+            velocity.x = PLAYER_SPEED_NORMAL;
+            state = State.RIGHT;
         }
         if (currentlyActiveKeys.contains("UP")){
-            velocity.y = -1;
+            velocity.y = -PLAYER_SPEED_NORMAL;
+            state = State.UP;
         }
         if (currentlyActiveKeys.contains("DOWN")){
-            velocity.y = 1;
+            velocity.y = PLAYER_SPEED_NORMAL;
+            state = State.DOWN;
         }
 
         //on released
         if(releasedKey.contains("LEFT") || releasedKey.contains("RIGHT")) {
             velocity.x = 0;
+            state = State.STOP;
         }
 
         if (releasedKey.contains("UP") || releasedKey.contains("DOWN")){
             velocity.y = 0;
+            state = State.STOP;
         }
     }
     public void setVel(int velX, int velY) {

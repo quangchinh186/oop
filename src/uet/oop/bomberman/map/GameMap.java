@@ -3,6 +3,7 @@ package uet.oop.bomberman.map;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.File;
@@ -45,6 +46,7 @@ public class GameMap extends BombermanGame {
                         break;
                 }
                 stillObjects.add(object);
+                //items.add(object);
             }
         }
     }

@@ -47,7 +47,7 @@ public class BombermanGame extends Application {
     public static List<Entity> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
 
-
+    public static List<Entity> items = new ArrayList<>();
 
 
 
@@ -112,6 +112,7 @@ public class BombermanGame extends Application {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
+        items.forEach(g -> g.render(gc));
     }
 
 
