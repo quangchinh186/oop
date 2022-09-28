@@ -16,6 +16,11 @@ import static uet.oop.bomberman.BombermanGame.*;
 
 public class Bomber extends Entity {
 
+
+    private String checkStuck = "";
+
+    private String twoFrameBackStuck = "";
+    private String prevCheckStuck = "";
     private Rectangle nextFrameRect;
 
     private Paint pt;
@@ -29,8 +34,8 @@ public class Bomber extends Entity {
         super( x + 1, y, img);
         prepareActionHandlers();
         velocity = new Vector2D();
-        rect.setWidth(30);
-        rect.setHeight(30);
+        rect.setWidth(31);
+        rect.setHeight(31);
         nextFrameRect = new Rectangle(30,30);
 
     }
@@ -52,6 +57,8 @@ public class Bomber extends Entity {
         rect.setX(position.x);
         rect.setY(position.y);
 
+        //System.out.println(rect.toString());
+
     }
 
 
@@ -62,8 +69,11 @@ public class Bomber extends Entity {
         nextFrameRect.setX(this.rect.getX() + velocity.x);
         nextFrameRect.setY(this.rect.getY());
         if(GameMap.checkCollision(nextFrameRect)) {
+            //System.out.println("COLLIDED X");
+            checkStuck += "X";
         }
         else {
+
             position.x += velocity.x;
         }
 
@@ -71,10 +81,29 @@ public class Bomber extends Entity {
         nextFrameRect.setY(this.rect.getY() + velocity.y);
 
         if(GameMap.checkCollision(nextFrameRect)) {
+            //System.out.println("COLLIDED Y");
+            checkStuck += "Y";
         }
         else {
             position.y += velocity.y;
         }
+
+        if(checkStuck.equals("XY")) {
+            //only work for x-> travel.
+            //if previous la collideX
+
+            if(twoFrameBackStuck.equals("X")) {
+                position.y -= velocity.y;
+            }
+            else if(twoFrameBackStuck.equals("Y")) {
+                position.x -= velocity.x;
+            }
+        }
+
+        //System.out.println(twoFrameBackStuck + "," + prevCheckStuck + "," + checkStuck);
+        twoFrameBackStuck = prevCheckStuck;
+        prevCheckStuck = checkStuck;
+        checkStuck = "";
     }
 
     public void actionHandler () {
