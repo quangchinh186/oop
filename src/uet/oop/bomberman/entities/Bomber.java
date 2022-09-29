@@ -8,37 +8,42 @@ import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.map.GameMap;
-import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
-import java.time.Clock;
 import java.util.HashSet;
 
 import static uet.oop.bomberman.BombermanGame.*;
 
 public class Bomber extends Entity {
 
-    private Rectangle nextFrameRect;
 
-    private Vector2D prevPosition;
+    public static final double PLAYER_SPEED_NORMAL = 1;
+
+    public static final double PLAYER_SPEED_BOOSTED = 1.5;
+
+    private String checkStuck = "";
+    private String twoFrameBackStuck = "";
+    private String prevCheckStuck = "";
+
+    private State state;
+
+    private Rectangle nextFrameRect;
 
     private Paint pt;
     static HashSet<String> currentlyActiveKeys;
     static HashSet<String> releasedKey;
 
     private Vector2D velocity;
+    public static double playerSpeed = 1;
 
-    public int is_looking = 0;
-    public static int cd = 0;
+    public int health;
     public Bomber(int x, int y, Image img) {
         super( x + 1, y, img);
         prepareActionHandlers();
         velocity = new Vector2D();
         rect.setWidth(30);
         rect.setHeight(30);
-
         nextFrameRect = new Rectangle(30,30);
-
 
     }
 
@@ -48,37 +53,27 @@ public class Bomber extends Entity {
         //get input
         actionHandler();
         Grass tmp = new Grass();
-        if(cd > 0) cd--;
+        //nextFrame position
 
-        handleCollision();
+        handleMapCollision();
+        handleItemCollision();
+
+        //
+
+        //update pos sau khi nhan va cham
 
         rect.setX(position.x);
         rect.setY(position.y);
 
-        if(velocity.x != 0 || velocity.y != 0){
-            animated();
-        }
     }
 
-    public void animated(){
-        this.timer++;
-        if(timer > 100) timer = 0;
-        switch (is_looking){
-            case 1:
-                this.img = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1, Sprite.player_down_2, this.timer, 20).getFxImage();
-                break;
-            case 2:
-                this.img = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1, Sprite.player_left_2, this.timer, 20).getFxImage();
-                break;
-            case 3:
-                this.img = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1, Sprite.player_up_2, this.timer, 20).getFxImage();
-                break;
-            default:
-                this.img = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1, Sprite.player_right_2, this.timer, 20).getFxImage();
-                break;
+    private void handleItemCollision() {
+        for(Item entity : items) {
+            if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
+                entity.destroy();
+            }
         }
     }
-
 
     public void handleCollision() {
 
@@ -87,8 +82,11 @@ public class Bomber extends Entity {
         nextFrameRect.setX(this.rect.getX() + velocity.x);
         nextFrameRect.setY(this.rect.getY());
         if(GameMap.checkCollision(nextFrameRect)) {
+            //System.out.println("COLLIDED X");
+            checkStuck += "X";
         }
         else {
+
             position.x += velocity.x;
         }
 
@@ -96,10 +94,29 @@ public class Bomber extends Entity {
         nextFrameRect.setY(this.rect.getY() + velocity.y);
 
         if(GameMap.checkCollision(nextFrameRect)) {
+            //System.out.println("COLLIDED Y");
+            checkStuck += "Y";
         }
         else {
             position.y += velocity.y;
         }
+
+        if(checkStuck.equals("XY")) {
+            //only work for x-> travel.
+            //if previous la collideX
+
+            if(twoFrameBackStuck.equals("X")) {
+                position.y -= velocity.y;
+            }
+            else if(twoFrameBackStuck.equals("Y")) {
+                position.x -= velocity.x;
+            }
+        }
+
+        //System.out.println(twoFrameBackStuck + "," + prevCheckStuck + "," + checkStuck);
+        twoFrameBackStuck = prevCheckStuck;
+        prevCheckStuck = checkStuck;
+        checkStuck = "";
     }
 
     public void actionHandler () {
@@ -143,6 +160,11 @@ public class Bomber extends Entity {
         this.velocity.y = velocity.y;
     }
 
+    public void becomeChad() {
+        this.img = Sprite.player_chad.getFxImage();
+    }
+
+
     private static void prepareActionHandlers()
     {
         // use a set so duplicates are not possible
@@ -167,5 +189,9 @@ public class Bomber extends Entity {
                 releasedKey.add(event.getCode().toString());
             }
         });
+    }
+
+    public void setPlayerSpeed(double speed) {
+        playerSpeed = speed;
     }
 }

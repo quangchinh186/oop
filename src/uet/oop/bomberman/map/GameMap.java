@@ -3,12 +3,14 @@ package uet.oop.bomberman.map;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.item.FlameItem;
+import uet.oop.bomberman.entities.item.Item;
+import uet.oop.bomberman.entities.item.SpeedItem;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class GameMap extends BombermanGame {
@@ -60,6 +62,8 @@ public class GameMap extends BombermanGame {
         getMap(path);
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).length(); j++) {
+                System.out.print(map.get(i).charAt(j));
+
                 Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                 switch (map.get(i).charAt(j)) {
                     case '1' :
@@ -81,12 +85,24 @@ public class GameMap extends BombermanGame {
                     case 'x':
                         object = new Portal(j, i, Sprite.portal.getFxImage());
                         break;
+                    case 'S':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Item speedItem = new SpeedItem(j, i, Sprite.powerup_speed.getFxImage());
+                        items.add(speedItem);
+                        break;
+                    case 'F':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Item flameItem = new FlameItem(j, i, Sprite.powerup_flames.getFxImage());
+                        items.add(flameItem);
+                        break;
                     default:
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         break;
                 }
                 stillObjects.add(object);
+                //items.add(object);
             }
+            System.out.println();
         }
     }
 

@@ -10,13 +10,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import uet.oop.bomberman.entities.Bomber;
-import uet.oop.bomberman.entities.Balloon;
-import uet.oop.bomberman.entities.Brick;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.Grass;
-import uet.oop.bomberman.entities.Wall;
-import uet.oop.bomberman.graphics.Flames;
+import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
@@ -41,17 +36,14 @@ public class BombermanGame extends Application {
 
     public static Scene scene;
 
-    static Entity bomberman;
+    public static Bomber bomberman;
 
     private GraphicsContext gc;
     private Canvas canvas;
     public static List<Entity> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
-    public static List<Entity> bomb = new ArrayList<>();
-    public static List<Entity> item = new ArrayList<>();
-    public static List<Entity> visualEffect = new ArrayList<>();
 
-
+    public static List<Item> items = new ArrayList<>();
 
 
 
@@ -110,20 +102,14 @@ public class BombermanGame extends Application {
 
     public void update() {
         entities.forEach(Entity::update);
-        if(Bomber.cd == 10){
-            bomb.clear();
-            visualEffect.clear();
-        }
-        bomb.forEach(Entity::update);
-        visualEffect.forEach(Entity::update);
+        items.forEach(Entity::update);
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
-        bomb.forEach(g -> g.render(gc));
-        visualEffect.forEach(g -> g.render(gc));
+        items.forEach(g -> g.render(gc));
     }
 
 
