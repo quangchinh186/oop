@@ -103,8 +103,17 @@ public class BombermanGame extends Application {
 //>>>>>>> test2
 
     public void update() {
+
+        bombs.forEach(Entity::update) {
+            if(bomberman.getCd() == 10) {
+
+            }
+        }
+
         entities.forEach(Entity::update);
         items.forEach(Entity::update);
+
+        visualEffects.forEach(Entity::update);
     }
 
     public void render() {
@@ -112,6 +121,8 @@ public class BombermanGame extends Application {
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
         items.forEach(g -> g.render(gc));
+        bombs.forEach(g -> g.render(gc));
+        visualEffects.forEach(g -> g.render(gc));
     }
 
 

@@ -195,6 +195,14 @@ public class Bomber extends Entity {
         });
     }
 
+    public void setCd(int cd) {
+        this.cd = cd;
+    }
+
+    public int getCd() {
+        return cd;
+    }
+
     public void setPlayerSpeed(double speed) {
         playerSpeed = speed;
     }
