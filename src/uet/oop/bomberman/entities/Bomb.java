@@ -6,13 +6,9 @@ import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Bomb extends Entity {
-    private int x;
-    private int y;
 
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
-        this.x = x;
-        this.y = y;
     }
 
     @Override

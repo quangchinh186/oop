@@ -114,6 +114,7 @@ public class BombermanGame extends Application {
             visualEffect.clear();
         }
         bomb.forEach(Entity::update);
+        visualEffect.forEach(Entity::update);
     }
 
     public void render() {
