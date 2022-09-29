@@ -104,10 +104,12 @@ public class BombermanGame extends Application {
 
     public void update() {
 
-        bombs.forEach(Entity::update) {
-            if(bomberman.getCd() == 10) {
+        bombs.forEach(Entity::update);
 
-            }
+        if(bomberman.getCd() == 10) {
+            bombs.clear();
+            visualEffects.clear();
+
         }
 
         entities.forEach(Entity::update);

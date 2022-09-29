@@ -59,6 +59,8 @@ public class Bomber extends Entity {
         Grass tmp = new Grass();
         //nextFrame position
 
+        if(cd > 0) cd--;
+
         handleMapCollision();
         handleItemCollision();
 
