@@ -64,13 +64,31 @@ public class Bomber extends Entity {
         handleMapCollision();
         handleItemCollision();
 
-        //
-
-        //update pos sau khi nhan va cham
-
+        if(velocity.x != 0 || velocity.y != 0){
+            animated();
+        }
         rect.setX(position.x);
         rect.setY(position.y);
 
+    }
+
+    public void animated(){
+        this.timer++;
+        if(timer > 100) timer = 0;
+        switch (state){
+            case DOWN:
+                this.img = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1, Sprite.player_down_2, this.timer, 20).getFxImage();
+                break;
+            case LEFT:
+                this.img = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1, Sprite.player_left_2, this.timer, 20).getFxImage();
+                break;
+            case UP:
+                this.img = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1, Sprite.player_up_2, this.timer, 20).getFxImage();
+                break;
+            default:
+                this.img = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1, Sprite.player_right_2, this.timer, 20).getFxImage();
+                break;
+        }
     }
 
     private void handleItemCollision() {
@@ -82,7 +100,6 @@ public class Bomber extends Entity {
     }
 
     public void handleMapCollision() {
-
         //check if x or y cause the collision.
 
         nextFrameRect.setX(this.rect.getX() + velocity.x);

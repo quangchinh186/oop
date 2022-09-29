@@ -37,11 +37,8 @@ public class BombermanGame extends Application {
     private Canvas canvas;
     public static List<Entity> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
-
     public static List<Item> items = new ArrayList<>();
-
     public static List<Entity> bombs = new ArrayList<>();
-
     public static List<Entity> visualEffects = new ArrayList<>();
 
     public static void main(String[] args)  {
@@ -85,15 +82,6 @@ public class BombermanGame extends Application {
 
     }
 
-    public void getInput(){
-
-    }
-
-
-
-
-
-//>>>>>>> test2
 
     public void update() {
 
