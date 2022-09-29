@@ -19,6 +19,7 @@ import static uet.oop.bomberman.BombermanGame.*;
 
 public class Bomber extends Entity {
 
+    private int cd = 0;
 
     public static final double PLAYER_SPEED_NORMAL = 1;
 
@@ -78,7 +79,7 @@ public class Bomber extends Entity {
         }
     }
 
-    public void handleCollision() {
+    public void handleMapCollision() {
 
         //check if x or y cause the collision.
 

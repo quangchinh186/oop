@@ -30,13 +30,13 @@ public class Bomb extends Entity {
             for(int i = y-1; i <= y+1; i++){
                 if(i != y){
                     Entity f = new Flames(x, i, Sprite.explosion_vertical.getFxImage());
-                    BombermanGame.visualEffect.add(f);
+                    BombermanGame.visualEffects.add(f);
                 }
             }
             for(int i = x-1; i <= x+1; i++){
                 if(i != x){
                     Entity f = new Flames(i, y, Sprite.explosion_horizontal.getFxImage());
-                    BombermanGame.visualEffect.add(f);
+                    BombermanGame.visualEffects.add(f);
                 }
             }
         }
