@@ -16,7 +16,6 @@ public class SpeedItem extends Item {
         if(!isActive) {
             bomberman.setPlayerSpeed(PLAYER_SPEED_BOOSTED);
         }
-
         super.update();
 
     }

@@ -15,11 +15,6 @@ import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -90,8 +85,6 @@ public class BombermanGame extends Application {
 
     }
 
-
-
     public void getInput(){
 
     }
@@ -126,8 +119,5 @@ public class BombermanGame extends Application {
         bombs.forEach(g -> g.render(gc));
         visualEffects.forEach(g -> g.render(gc));
     }
-
-
-
 
 }

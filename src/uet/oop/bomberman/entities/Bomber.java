@@ -128,19 +128,19 @@ public class Bomber extends Entity {
     public void actionHandler () {
 
         if(currentlyActiveKeys.contains("LEFT")) {
-            velocity.x = -1;
+            velocity.x = -playerSpeed;
             state = State.LEFT;
         }
         if (currentlyActiveKeys.contains("RIGHT")){
-            velocity.x = 1;
+            velocity.x = playerSpeed;
             state = State.RIGHT;
         }
         if (currentlyActiveKeys.contains("UP")){
-            velocity.y = -1;
+            velocity.y = -playerSpeed;
             state = State.UP;
         }
         if (currentlyActiveKeys.contains("DOWN")){
-            velocity.y = 1;
+            velocity.y = playerSpeed;
             state = State.DOWN;
         }
         if (currentlyActiveKeys.contains("SPACE") && cd <= 0){
