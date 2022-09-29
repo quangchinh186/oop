@@ -13,7 +13,9 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import static uet.oop.bomberman.BombermanGame.*;
 
@@ -92,11 +94,14 @@ public class Bomber extends Entity {
     }
 
     private void handleItemCollision() {
+        List<Item> toRemove = new ArrayList<>();
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
-                entity.destroy();
+                //entity.doEffect();
+                toRemove.add(entity);
             }
         }
+        items.removeAll(toRemove);
     }
 
     public void handleMapCollision() {
@@ -109,7 +114,6 @@ public class Bomber extends Entity {
             checkStuck += "X";
         }
         else {
-
             position.x += velocity.x;
         }
 
@@ -140,6 +144,7 @@ public class Bomber extends Entity {
         twoFrameBackStuck = prevCheckStuck;
         prevCheckStuck = checkStuck;
         checkStuck = "";
+        System.out.println(cd);
     }
 
     public void actionHandler () {
@@ -160,13 +165,13 @@ public class Bomber extends Entity {
             velocity.y = playerSpeed;
             state = State.DOWN;
         }
-        if (currentlyActiveKeys.contains("SPACE") && cd <= 0){
+        if (currentlyActiveKeys.contains("SPACE") && cd == 0){
             int x = (int) ((position.x + rect.getWidth()/2) / 32);
             int y = (int) ((position.y + rect.getHeight()/2) / 32);
             Entity bom = new Bomb(x, y, Sprite.bomb.getFxImage());
             bombs.add(bom);
 
-            cd = 300;
+            cd = 200;
         }
 
         //on released

@@ -59,8 +59,6 @@ public class GameMap extends BombermanGame {
         getMap(path);
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).length(); j++) {
-                System.out.print(map.get(i).charAt(j));
-
                 Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                 switch (map.get(i).charAt(j)) {
                     case '1' :
