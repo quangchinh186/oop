@@ -7,6 +7,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.Physics.Vector2D;
+import uet.oop.bomberman.entities.item.Item;
+import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
 import java.util.HashSet;
@@ -16,9 +18,9 @@ import static uet.oop.bomberman.BombermanGame.*;
 public class Bomber extends Entity {
 
 
-    private final double PLAYER_SPEED_NORMAL = 1;
+    public static final double PLAYER_SPEED_NORMAL = 1;
 
-    private final double PLAYER_SPEED_BOOSTED = 1.5;
+    public static final double PLAYER_SPEED_BOOSTED = 1.5;
 
     private String checkStuck = "";
     private String twoFrameBackStuck = "";
@@ -33,6 +35,7 @@ public class Bomber extends Entity {
     static HashSet<String> releasedKey;
 
     private Vector2D velocity;
+    public static double playerSpeed = 1;
 
     public int health;
     public Bomber(int x, int y, Image img) {
@@ -53,7 +56,8 @@ public class Bomber extends Entity {
         Grass tmp = new Grass();
         //nextFrame position
 
-        handleCollision();
+        handleMapCollision();
+        handleItemCollision();
 
         //
         //update pos sau khi nhan va cham
@@ -65,8 +69,16 @@ public class Bomber extends Entity {
 
     }
 
+    private void handleItemCollision() {
+        for(Item entity : items) {
+            if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
+                entity.destroy();
+            }
+        }
+    }
 
-    public void handleCollision() {
+
+    public void handleMapCollision() {
 
         //check if x or y cause the collision.
 
@@ -113,19 +125,19 @@ public class Bomber extends Entity {
     public void actionHandler () {
 
         if(currentlyActiveKeys.contains("LEFT")) {
-            velocity.x = -PLAYER_SPEED_NORMAL;
+            velocity.x = -playerSpeed;
             state = State.LEFT;
         }
         if (currentlyActiveKeys.contains("RIGHT")){
-            velocity.x = PLAYER_SPEED_NORMAL;
+            velocity.x = playerSpeed;
             state = State.RIGHT;
         }
         if (currentlyActiveKeys.contains("UP")){
-            velocity.y = -PLAYER_SPEED_NORMAL;
+            velocity.y = -playerSpeed;
             state = State.UP;
         }
         if (currentlyActiveKeys.contains("DOWN")){
-            velocity.y = PLAYER_SPEED_NORMAL;
+            velocity.y = playerSpeed;
             state = State.DOWN;
         }
 
@@ -144,6 +156,11 @@ public class Bomber extends Entity {
         this.velocity.x = velocity.x;
         this.velocity.y = velocity.y;
     }
+
+    public void becomeChad() {
+        this.img = Sprite.player_chad.getFxImage();
+    }
+
 
     private static void prepareActionHandlers()
     {
@@ -169,5 +186,9 @@ public class Bomber extends Entity {
                 releasedKey.add(event.getCode().toString());
             }
         });
+    }
+
+    public void setPlayerSpeed(double speed) {
+        playerSpeed = speed;
     }
 }

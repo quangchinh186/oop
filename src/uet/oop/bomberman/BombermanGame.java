@@ -2,31 +2,19 @@ package uet.oop.bomberman;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import uet.oop.bomberman.entities.Bomber;
-import uet.oop.bomberman.entities.Balloon;
-import uet.oop.bomberman.entities.Brick;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.Grass;
-import uet.oop.bomberman.entities.Wall;
+import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -40,14 +28,14 @@ public class BombermanGame extends Application {
 
     public static Scene scene;
 
-    static Entity bomberman;
+    public static Bomber bomberman;
 
     private GraphicsContext gc;
     private Canvas canvas;
     public static List<Entity> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
 
-    public static List<Entity> items = new ArrayList<>();
+    public static List<Item> items = new ArrayList<>();
 
 
 
@@ -106,6 +94,7 @@ public class BombermanGame extends Application {
 
     public void update() {
         entities.forEach(Entity::update);
+        items.forEach(Entity::update);
     }
 
     public void render() {
