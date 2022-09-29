@@ -16,6 +16,7 @@ import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.entities.Wall;
+import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
@@ -46,6 +47,9 @@ public class BombermanGame extends Application {
     private Canvas canvas;
     public static List<Entity> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
+    public static List<Entity> bomb = new ArrayList<>();
+    public static List<Entity> item = new ArrayList<>();
+    public static List<Entity> visualEffect = new ArrayList<>();
 
 
 
@@ -106,12 +110,20 @@ public class BombermanGame extends Application {
 
     public void update() {
         entities.forEach(Entity::update);
+        if(Bomber.cd == 10){
+            bomb.clear();
+            visualEffect.clear();
+        }
+        bomb.forEach(Entity::update);
+        visualEffect.forEach(Entity::update);
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
+        bomb.forEach(g -> g.render(gc));
+        visualEffect.forEach(g -> g.render(gc));
     }
 
 

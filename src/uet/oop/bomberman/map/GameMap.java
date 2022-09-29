@@ -12,7 +12,48 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GameMap extends BombermanGame {
-    static ArrayList <String> map = new ArrayList<>();
+    public static ArrayList <String> map = new ArrayList<>();
+
+    public static void updateMap(int x, int y){
+        stillObjects.clear();
+        String temp = map.get(y).substring(0, x) + ' ' + map.get(y).substring(x+1);
+        map.set(y, temp);
+        for(int i = 0; i < map.size(); i++){
+            System.out.println(map.get(i));
+        }
+
+        for (int i = 0; i < map.size(); i++) {
+            for (int j = 0; j < map.get(i).length(); j++) {
+                Entity object = new Grass(j, i, Sprite.grass.getFxImage());
+                switch (map.get(i).charAt(j)) {
+                    case '1' :
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Entity balloon = new Balloon(j, i, Sprite.balloom_left3.getFxImage());
+                        entities.add(balloon);
+                        break;
+                    case '2':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Entity oneal = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
+                        entities.add(oneal);
+                        break;
+                    case '#':
+                        object = new Wall(j, i, Sprite.wall.getFxImage());
+                        break;
+                    case '*':
+                        object = new Brick(j, i, Sprite.brick.getFxImage());
+                        break;
+                    case 'x':
+                        object = new Portal(j, i, Sprite.portal.getFxImage());
+                        break;
+                    default:
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        break;
+                }
+                stillObjects.add(object);
+            }
+        }
+
+    }
 
     public static void createMap(int level) {
         String path = "map" + (level) + ".txt";

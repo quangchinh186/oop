@@ -16,6 +16,9 @@ public abstract class Entity {
     //Rectangle de lam collision.
     protected Rectangle rect;
 
+    protected int timer = 0;
+
+    protected int x, y;
 
     //Tọa độ X tính từ góc trái trên trong Canvas
     //Tọa độ Y tính từ góc trái trên trong Canvas
@@ -27,6 +30,8 @@ public abstract class Entity {
     public Entity( int xUnit, int yUnit, Image img) {
         position = new Vector2D(xUnit * Sprite.SCALED_SIZE, yUnit * Sprite.SCALED_SIZE);
         this.img = img;
+        this.x = xUnit;
+        this.y = yUnit;
         rect = new Rectangle(xUnit * Sprite.SCALED_SIZE, yUnit * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 
     }
