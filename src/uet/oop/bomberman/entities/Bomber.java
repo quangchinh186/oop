@@ -7,6 +7,9 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
+import uet.oop.bomberman.States.State;
+import uet.oop.bomberman.entities.item.Item;
+import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
 import java.awt.*;
@@ -123,25 +126,25 @@ public class Bomber extends Entity {
 
         if(currentlyActiveKeys.contains("LEFT")) {
             velocity.x = -1;
-            is_looking = 2;
+            state = State.LEFT;
         }
         if (currentlyActiveKeys.contains("RIGHT")){
             velocity.x = 1;
-            is_looking = 0;
+            state = State.RIGHT;
         }
         if (currentlyActiveKeys.contains("UP")){
             velocity.y = -1;
-            is_looking = 3;
+            state = State.UP;
         }
         if (currentlyActiveKeys.contains("DOWN")){
             velocity.y = 1;
-            is_looking = 1;
+            state = State.DOWN;
         }
         if (currentlyActiveKeys.contains("SPACE") && cd <= 0){
             int x = (int) ((position.x + rect.getWidth()/2) / 32);
             int y = (int) ((position.y + rect.getHeight()/2) / 32);
             Entity bom = new Bomb(x, y, Sprite.bomb.getFxImage());
-            bomb.add(bom);
+            bombs.add(bom);
 
             cd = 300;
         }
