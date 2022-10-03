@@ -8,20 +8,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import uet.oop.bomberman.entities.Bomber;
-import uet.oop.bomberman.entities.Balloon;
-import uet.oop.bomberman.entities.Brick;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.Grass;
-import uet.oop.bomberman.entities.Wall;
+import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 
 import java.util.ArrayList;
@@ -39,16 +31,18 @@ public class BombermanGame extends Application {
 
     public static Scene scene;
 
-    static Entity bomberman;
+    public static Bomber bomberman;
 
     private GraphicsContext gc;
     private Canvas canvas;
     public static List<Entity> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
 
+    public static List<Item> items = new ArrayList<>();
 
+    public static List<Entity> bombs = new ArrayList<>();
 
-
+    public static List<Entity> visualEffects = new ArrayList<>();
 
     public static void main(String[] args)  {
         //System.setIn(new FileInputStream("D:\Input.txt"));
@@ -77,7 +71,7 @@ public class BombermanGame extends Application {
         bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         entities.add(bomberman);
         GameMap.createMap(level);
-
+        GameMap.checkCollision(new Rectangle(1,2,4,5));
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -91,8 +85,6 @@ public class BombermanGame extends Application {
 
     }
 
-
-
     public void getInput(){
 
     }
@@ -104,16 +96,28 @@ public class BombermanGame extends Application {
 //>>>>>>> test2
 
     public void update() {
+
+        bombs.forEach(Entity::update);
+
+        if(bomberman.getCd() == 10) {
+            bombs.clear();
+            visualEffects.clear();
+
+        }
+
         entities.forEach(Entity::update);
+        items.forEach(Entity::update);
+
+        visualEffects.forEach(Entity::update);
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
+        items.forEach(g -> g.render(gc));
+        bombs.forEach(g -> g.render(gc));
+        visualEffects.forEach(g -> g.render(gc));
     }
-
-
-
 
 }
