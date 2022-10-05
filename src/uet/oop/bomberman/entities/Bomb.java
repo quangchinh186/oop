@@ -15,7 +15,10 @@ public class Bomb extends Entity {
     private Sprite s1, s2, s3;
     public static int power = 1;
 
-    public static int bombRange = 1;
+    public static void increasePower() {
+        power++;
+    }
+
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
         this.time = 100;

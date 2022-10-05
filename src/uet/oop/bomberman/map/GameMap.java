@@ -5,6 +5,7 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Enemies.Balloon;
 import uet.oop.bomberman.entities.Oneal;
+import uet.oop.bomberman.entities.item.BombPowerUp;
 import uet.oop.bomberman.entities.item.FlameItem;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.SpeedItem;
@@ -91,6 +92,11 @@ public class GameMap extends BombermanGame {
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         Item flameItem = new FlameItem(j, i, Sprite.powerup_flames.getFxImage());
                         items.add(flameItem);
+                        break;
+                    case 'B':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Item bombPowerUp = new BombPowerUp(j, i, Sprite.powerup_bombs.getFxImage());
+                        items.add(bombPowerUp);
                         break;
                     default:
                         object = new Grass(j, i, Sprite.grass.getFxImage());

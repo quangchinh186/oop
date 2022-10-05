@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import uet.oop.bomberman.BombermanGame;
+
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.item.Item;
@@ -74,20 +74,6 @@ public class Bomber extends Entity {
         //System.out.println(currentlyActiveKeys);
     }
 
-    private void handleItemCollision() {
-        List<Item> toRemove = new ArrayList<>();
-
-
-        for (Item entity : items) {
-            if (entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
-                toRemove.add(entity);
-                entity.doEffect();
-            }
-
-        }
-        items.remove(toRemove);
-    }
-
     public void animated(){
         this.timer++;
         if(timer > 100) timer = 0;
@@ -107,6 +93,16 @@ public class Bomber extends Entity {
         }
     }
 
+    private void handleItemCollision() {
+        List<Item> toRemove = new ArrayList<>();
+        for(Item entity : items) {
+            if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
+                entity.doEffect();
+                toRemove.add(entity);
+            }
+        }
+        items.removeAll(toRemove);
+    }
 
     public void handleMapCollision() {
         //check if x or y cause the collision.
@@ -202,9 +198,6 @@ public class Bomber extends Entity {
         this.img = Sprite.player_chad.getFxImage();
     }
 
-    public void increaseBombRange() {
-
-    }
 
     private static void prepareActionHandlers()
     {
@@ -242,5 +235,9 @@ public class Bomber extends Entity {
 
     public void setPlayerSpeed(double speed) {
         playerSpeed = speed;
+    }
+
+    public void increaseBombRange() {
+        Bomb.increasePower();
     }
 }
