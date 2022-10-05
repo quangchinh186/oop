@@ -3,6 +3,8 @@ package uet.oop.bomberman.map;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.Enemies.Balloon;
+import uet.oop.bomberman.entities.Oneal;
 import uet.oop.bomberman.entities.item.FlameItem;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.SpeedItem;
@@ -20,9 +22,6 @@ public class GameMap extends BombermanGame {
         stillObjects.clear();
         String temp = map.get(y).substring(0, x) + ' ' + map.get(y).substring(x+1);
         map.set(y, temp);
-        for(int i = 0; i < map.size(); i++){
-            System.out.println(map.get(i));
-        }
 
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).length(); j++) {
@@ -62,8 +61,6 @@ public class GameMap extends BombermanGame {
         getMap(path);
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).length(); j++) {
-                System.out.print(map.get(i).charAt(j));
-
                 Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                 switch (map.get(i).charAt(j)) {
                     case '1' :
@@ -102,7 +99,6 @@ public class GameMap extends BombermanGame {
                 stillObjects.add(object);
                 //items.add(object);
             }
-            System.out.println();
         }
     }
 
@@ -130,8 +126,6 @@ public class GameMap extends BombermanGame {
 
         int startX = Math.max((int)(rect.getX()/Sprite.SCALED_SIZE) - 1, 0);
         int startY = Math.max((int)(rect.getY()/Sprite.SCALED_SIZE) - 1, 0);
-
-        //System.out.println(startX + ","  + startY);
 
         for (int i = startY; i < startY + 3; i++) {
             for (int j = startX; j < startX + 3; j++) {

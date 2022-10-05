@@ -16,9 +16,10 @@ public abstract class Entity {
     //Rectangle de lam collision.
     protected Rectangle rect;
 
-    protected int timer = 0;
+    protected int timer = 100;
 
     protected int x, y;
+
 
     //Tọa độ X tính từ góc trái trên trong Canvas
     //Tọa độ Y tính từ góc trái trên trong Canvas

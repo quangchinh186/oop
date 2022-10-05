@@ -37,11 +37,8 @@ public class BombermanGame extends Application {
     private Canvas canvas;
     public static List<Entity> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
-
     public static List<Item> items = new ArrayList<>();
-
     public static List<Entity> bombs = new ArrayList<>();
-
     public static List<Entity> visualEffects = new ArrayList<>();
 
     public static void main(String[] args)  {
@@ -85,29 +82,21 @@ public class BombermanGame extends Application {
 
     }
 
-    public void getInput(){
-
-    }
-
-
-
-
-
-//>>>>>>> test2
 
     public void update() {
 
         bombs.forEach(Entity::update);
-
-        if(bomberman.getCd() == 10) {
-            bombs.clear();
-            visualEffects.clear();
-
+        stillObjects.forEach(Entity::update);
+        if(bomberman.getCd() == 0 && !(bombs.isEmpty())) {
+            Bomb b = (Bomb) bombs.get(0);
+            if(b.getTime() == 0){
+                visualEffects.removeAll(b.getVisual());
+                bombs.remove(b);
+            }
         }
 
         entities.forEach(Entity::update);
         items.forEach(Entity::update);
-
         visualEffects.forEach(Entity::update);
     }
 

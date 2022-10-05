@@ -40,7 +40,7 @@ public class Bomber extends Entity {
     static HashSet<String> releasedKey;
 
     private Vector2D velocity;
-    public static double playerSpeed = 1;
+    public static double playerSpeed = 1.5;
 
     public int health;
     public Bomber(int x, int y, Image img) {
@@ -66,42 +66,57 @@ public class Bomber extends Entity {
         handleMapCollision();
         handleItemCollision();
 
-        //
-
-        //update pos sau khi nhan va cham
-
+        if(velocity.x != 0 || velocity.y != 0){
+            animated();
+        }
         rect.setX(position.x);
         rect.setY(position.y);
-
+        //System.out.println(currentlyActiveKeys);
     }
 
     private void handleItemCollision() {
         List<Item> toRemove = new ArrayList<>();
 
 
-        for(Item entity : items) {
-            if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
+        for (Item entity : items) {
+            if (entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 toRemove.add(entity);
                 entity.doEffect();
             }
+
         }
-
         items.remove(toRemove);
-
     }
 
-    public void handleMapCollision() {
+    public void animated(){
+        this.timer++;
+        if(timer > 100) timer = 0;
+        switch (state){
+            case DOWN:
+                this.img = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1, Sprite.player_down_2, this.timer, 20).getFxImage();
+                break;
+            case LEFT:
+                this.img = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1, Sprite.player_left_2, this.timer, 20).getFxImage();
+                break;
+            case UP:
+                this.img = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1, Sprite.player_up_2, this.timer, 20).getFxImage();
+                break;
+            default:
+                this.img = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1, Sprite.player_right_2, this.timer, 20).getFxImage();
+                break;
+        }
+    }
 
+
+    public void handleMapCollision() {
         //check if x or y cause the collision.
 
         nextFrameRect.setX(this.rect.getX() + velocity.x);
         nextFrameRect.setY(this.rect.getY());
         if(GameMap.checkCollision(nextFrameRect)) {
-            //System.out.println("COLLIDED X");
             checkStuck += "X";
         }
         else {
-
             position.x += velocity.x;
         }
 
@@ -109,7 +124,6 @@ public class Bomber extends Entity {
         nextFrameRect.setY(this.rect.getY() + velocity.y);
 
         if(GameMap.checkCollision(nextFrameRect)) {
-            //System.out.println("COLLIDED Y");
             checkStuck += "Y";
         }
         else {
@@ -136,6 +150,15 @@ public class Bomber extends Entity {
 
     public void actionHandler () {
 
+        if(currentlyActiveKeys.isEmpty()){
+            velocity.x = 0;
+            velocity.y = 0;
+            state = State.STOP;
+        }
+        if(currentlyActiveKeys.contains("A")) {
+            currentlyActiveKeys.remove("A");
+            Bomb.power++;
+        }
         if(currentlyActiveKeys.contains("LEFT")) {
             velocity.x = -playerSpeed;
             state = State.LEFT;
@@ -152,23 +175,23 @@ public class Bomber extends Entity {
             velocity.y = playerSpeed;
             state = State.DOWN;
         }
-        if (currentlyActiveKeys.contains("SPACE") && cd <= 0){
-            int x = (int) ((position.x + rect.getWidth()/2) / 32);
-            int y = (int) ((position.y + rect.getHeight()/2) / 32);
+        if (currentlyActiveKeys.contains("SPACE") && cd == 0){
+            currentlyActiveKeys.remove("SPACE");
+            int x = (int) ((position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE);
+            int y = (int) ((position.y + Sprite.DEFAULT_SIZE)/ Sprite.SCALED_SIZE);
             Entity bom = new Bomb(x, y, Sprite.bomb.getFxImage());
             bombs.add(bom);
-
-            cd = 300;
+            System.out.println(x + " " + y);
+            cd = 0;
         }
 
-        //on released
         if(releasedKey.contains("LEFT") || releasedKey.contains("RIGHT")) {
             velocity.x = 0;
         }
-
         if (releasedKey.contains("UP") || releasedKey.contains("DOWN")){
             velocity.y = 0;
         }
+
     }
     public void setVel(int velX, int velY) {
         this.velocity.x = velocity.x;
