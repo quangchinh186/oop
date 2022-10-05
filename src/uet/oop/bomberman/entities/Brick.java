@@ -22,6 +22,5 @@ public class Brick extends Entity{
             this.timer++;
             this.img = Sprite.movingSprite(Sprite.brick_exploded, Sprite.brick_exploded1, Sprite.brick_exploded2, timer, 100).getFxImage();
         }
-
     }
 }

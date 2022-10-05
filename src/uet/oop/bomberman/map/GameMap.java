@@ -3,6 +3,8 @@ package uet.oop.bomberman.map;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.Enemies.Balloon;
+import uet.oop.bomberman.entities.Oneal;
 import uet.oop.bomberman.entities.item.FlameItem;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.SpeedItem;
@@ -97,7 +99,6 @@ public class GameMap extends BombermanGame {
                 stillObjects.add(object);
                 //items.add(object);
             }
-            System.out.println();
         }
     }
 

@@ -86,15 +86,17 @@ public class BombermanGame extends Application {
     public void update() {
 
         bombs.forEach(Entity::update);
-
-        if(bomberman.getCd() == 0) {
-            bombs.clear();
-            visualEffects.clear();
+        stillObjects.forEach(Entity::update);
+        if(bomberman.getCd() == 0 && !(bombs.isEmpty())) {
+            Bomb b = (Bomb) bombs.get(0);
+            if(b.getTime() == 0){
+                visualEffects.removeAll(b.getVisual());
+                bombs.remove(b);
+            }
         }
 
         entities.forEach(Entity::update);
         items.forEach(Entity::update);
-
         visualEffects.forEach(Entity::update);
     }
 

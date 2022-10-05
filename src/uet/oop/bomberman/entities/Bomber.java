@@ -40,7 +40,7 @@ public class Bomber extends Entity {
     static HashSet<String> releasedKey;
 
     private Vector2D velocity;
-    public static double playerSpeed = 1;
+    public static double playerSpeed = 1.5;
 
     public int health;
     public Bomber(int x, int y, Image img) {
@@ -71,7 +71,7 @@ public class Bomber extends Entity {
         }
         rect.setX(position.x);
         rect.setY(position.y);
-
+        //System.out.println(currentlyActiveKeys);
     }
 
     public void animated(){
@@ -110,7 +110,6 @@ public class Bomber extends Entity {
         nextFrameRect.setX(this.rect.getX() + velocity.x);
         nextFrameRect.setY(this.rect.getY());
         if(GameMap.checkCollision(nextFrameRect)) {
-            //System.out.println("COLLIDED X");
             checkStuck += "X";
         }
         else {
@@ -121,7 +120,6 @@ public class Bomber extends Entity {
         nextFrameRect.setY(this.rect.getY() + velocity.y);
 
         if(GameMap.checkCollision(nextFrameRect)) {
-            //System.out.println("COLLIDED Y");
             checkStuck += "Y";
         }
         else {
@@ -144,11 +142,19 @@ public class Bomber extends Entity {
         twoFrameBackStuck = prevCheckStuck;
         prevCheckStuck = checkStuck;
         checkStuck = "";
-        System.out.println(cd);
     }
 
     public void actionHandler () {
 
+        if(currentlyActiveKeys.isEmpty()){
+            velocity.x = 0;
+            velocity.y = 0;
+            state = State.STOP;
+        }
+        if(currentlyActiveKeys.contains("A")) {
+            currentlyActiveKeys.remove("A");
+            Bomb.power++;
+        }
         if(currentlyActiveKeys.contains("LEFT")) {
             velocity.x = -playerSpeed;
             state = State.LEFT;
@@ -166,22 +172,22 @@ public class Bomber extends Entity {
             state = State.DOWN;
         }
         if (currentlyActiveKeys.contains("SPACE") && cd == 0){
-            int x = (int) ((position.x + rect.getWidth()/2) / 32);
-            int y = (int) ((position.y + rect.getHeight()/2) / 32);
+            currentlyActiveKeys.remove("SPACE");
+            int x = (int) ((position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE);
+            int y = (int) ((position.y + Sprite.DEFAULT_SIZE)/ Sprite.SCALED_SIZE);
             Entity bom = new Bomb(x, y, Sprite.bomb.getFxImage());
             bombs.add(bom);
-
-            cd = 200;
+            System.out.println(x + " " + y);
+            cd = 0;
         }
 
-        //on released
         if(releasedKey.contains("LEFT") || releasedKey.contains("RIGHT")) {
             velocity.x = 0;
         }
-
         if (releasedKey.contains("UP") || releasedKey.contains("DOWN")){
             velocity.y = 0;
         }
+
     }
     public void setVel(int velX, int velY) {
         this.velocity.x = velocity.x;
