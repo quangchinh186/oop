@@ -7,6 +7,7 @@ import uet.oop.bomberman.graphics.Sprite;
 
 public class Bomb extends Entity {
 
+    public static int bombRange = 1;
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
     }
@@ -27,13 +28,13 @@ public class Bomb extends Entity {
 
     public void explode(){
         if(timer == 95){
-            for(int i = y-1; i <= y+1; i++){
+            for(int i = Math.max(0, y - bombRange); i <= Math.max(0, y + bombRange); i++){
                 if(i != y){
                     Entity f = new Flames(x, i, Sprite.explosion_vertical.getFxImage());
                     BombermanGame.visualEffects.add(f);
                 }
             }
-            for(int i = x-1; i <= x+1; i++){
+            for(int i = Math.max(0, x - bombRange); i <= Math.max(0, x + bombRange); i++){
                 if(i != x){
                     Entity f = new Flames(i, y, Sprite.explosion_horizontal.getFxImage());
                     BombermanGame.visualEffects.add(f);

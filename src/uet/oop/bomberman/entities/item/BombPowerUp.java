@@ -11,11 +11,12 @@ public class BombPowerUp extends Item {
     }
     @Override
     public void update() {
-        if(!isActive) {
-            bomberman.increaseBombRange();
-        }
         super.update();
+    }
 
+    @Override
+    public void doEffect() {
+        bomberman.increaseBombRange();
     }
 }
 

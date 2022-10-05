@@ -26,7 +26,7 @@ public class Item extends Entity {
         }
     }
 
-    public void checkStatus() {
+    public void doEffect() {
 
     }
 

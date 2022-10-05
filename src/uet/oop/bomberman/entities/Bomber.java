@@ -13,7 +13,9 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import static uet.oop.bomberman.BombermanGame.*;
 
@@ -74,11 +76,18 @@ public class Bomber extends Entity {
     }
 
     private void handleItemCollision() {
+        List<Item> toRemove = new ArrayList<>();
+
+
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
-                entity.destroy();
+                toRemove.add(entity);
+                entity.doEffect();
             }
         }
+
+        items.remove(toRemove);
+
     }
 
     public void handleMapCollision() {
@@ -170,6 +179,9 @@ public class Bomber extends Entity {
         this.img = Sprite.player_chad.getFxImage();
     }
 
+    public void increaseBombRange() {
+
+    }
 
     private static void prepareActionHandlers()
     {
