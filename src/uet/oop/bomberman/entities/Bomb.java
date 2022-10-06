@@ -18,9 +18,9 @@ public class Bomb extends Entity {
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
         this.time = 100;
-        s1 = Sprite.bomb;
-        s2 = Sprite.bomb_1;
-        s3 = Sprite.bomb_2;
+        this.s1 = Sprite.bomb;
+        this.s2 = Sprite.bomb_1;
+        this.s3 = Sprite.bomb_2;
     }
     public List getVisual(){
         return this.flames;
@@ -35,9 +35,9 @@ public class Bomb extends Entity {
     public void update() {
         if(this.time == 50){
             explode();
-            s1 = Sprite.bomb_exploded;
-            s2 = Sprite.bomb_exploded1;
-            s3 = Sprite.bomb_exploded2;
+            this.s1 = Sprite.bomb_exploded;
+            this.s2 = Sprite.bomb_exploded1;
+            this.s3 = Sprite.bomb_exploded2;
         }
         else{
             this.img = Sprite.movingSprite(s1, s2, s3, this.timer - time, 50).getFxImage();
@@ -117,6 +117,16 @@ public class Bomb extends Entity {
             default:
                 break;
         }
+    }
+
+    public boolean equals(Object obj){
+        if(obj instanceof Bomb){
+            Bomb b = (Bomb) obj;
+            if(this.x == b.x && this.y == b.y){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

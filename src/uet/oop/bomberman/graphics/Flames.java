@@ -15,7 +15,6 @@ public class Flames extends Entity {
     public State state;
     public boolean vertical = false;
     public boolean last = false;
-    private Sprite s1, s2, s3;
     private int time;
     public Flames(int x, int y, Image img, State s){
         super(x, y, img);
@@ -32,18 +31,18 @@ public class Flames extends Entity {
     public void setHorizontal(boolean horizontal) {
         this.horizontal = horizontal;
         if(!last){
-            s1 = Sprite.explosion_horizontal;
-            s2 = Sprite.explosion_horizontal1;
-            s3 = Sprite.explosion_horizontal2;
+            this.s1 = Sprite.explosion_horizontal;
+            this.s2 = Sprite.explosion_horizontal1;
+            this.s3 = Sprite.explosion_horizontal2;
         }else {
             if(state == State.LEFT){
-                s1 = Sprite.explosion_horizontal_left_last;
-                s2 = Sprite.explosion_horizontal_left_last1;
-                s3 = Sprite.explosion_horizontal_left_last2;
+                this.s1 = Sprite.explosion_horizontal_left_last;
+                this.s2 = Sprite.explosion_horizontal_left_last1;
+                this.s3 = Sprite.explosion_horizontal_left_last2;
             }else{
-                s1 = Sprite.explosion_horizontal_right_last;
-                s2 = Sprite.explosion_horizontal_right_last1;
-                s3 = Sprite.explosion_horizontal_right_last2;
+                this.s1 = Sprite.explosion_horizontal_right_last;
+                this.s2 = Sprite.explosion_horizontal_right_last1;
+                this.s3 = Sprite.explosion_horizontal_right_last2;
             }
         }
     }
@@ -51,18 +50,18 @@ public class Flames extends Entity {
     public void setVertical(boolean vertical) {
         this.vertical = vertical;
         if(!last){
-            s1 = Sprite.explosion_vertical;
-            s2 = Sprite.explosion_vertical1;
-            s3 = Sprite.explosion_vertical2;
+            this.s1 = Sprite.explosion_vertical;
+            this.s2 = Sprite.explosion_vertical1;
+            this.s3 = Sprite.explosion_vertical2;
         }else {
             if(state == State.UP){
-                s1 = Sprite.explosion_vertical_top_last;
-                s2 = Sprite.explosion_vertical_top_last1;
-                s3 = Sprite.explosion_vertical_top_last2;
+                this.s1 = Sprite.explosion_vertical_top_last;
+                this.s2 = Sprite.explosion_vertical_top_last1;
+                this.s3 = Sprite.explosion_vertical_top_last2;
             }else{
-                s1 = Sprite.explosion_vertical_down_last;
-                s2 = Sprite.explosion_vertical_down_last1;
-                s3 = Sprite.explosion_vertical_down_last2;
+                this.s1 = Sprite.explosion_vertical_down_last;
+                this.s2 = Sprite.explosion_vertical_down_last1;
+                this.s3 = Sprite.explosion_vertical_down_last2;
             }
         }
     }
@@ -71,7 +70,7 @@ public class Flames extends Entity {
     public void update() {
         this.time--;
         if(BombermanGame.stillObjects.get(y*31 + x) instanceof Grass){
-            this.img = Sprite.movingSprite(s1, s2, s3, this.timer - time,80).getFxImage();
+            this.img = Sprite.movingSprite(this.s1, this.s2, this.s3, this.timer - time,80).getFxImage();
         }else{
             this.img = null;
         }

@@ -15,7 +15,7 @@ public abstract class Entity {
     public Entity() {}
     //Rectangle de lam collision.
     protected Rectangle rect;
-
+    protected Sprite s1, s2, s3;
     protected int timer = 100;
 
     protected int x, y;
