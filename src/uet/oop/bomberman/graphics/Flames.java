@@ -21,7 +21,7 @@ public class Flames extends Entity {
         this.x = x;
         this.y = y;
         this.state = s;
-        this.time = 100;
+        this.time = 15;
     }
 
     public void setLast(boolean last) {
@@ -70,11 +70,11 @@ public class Flames extends Entity {
     public void update() {
         this.time--;
         if(BombermanGame.stillObjects.get(y*31 + x) instanceof Grass){
-            this.img = Sprite.movingSprite(this.s1, this.s2, this.s3, this.timer - time,80).getFxImage();
+            this.img = Sprite.movingSprite(this.s1, this.s2, this.s3, time%15,16).getFxImage();
         }else{
             this.img = null;
         }
-        if(GameMap.map.get(this.y).charAt(this.x) == '*' && time == 10){
+        if(GameMap.map.get(this.y).charAt(this.x) == '*' && time == 0){
             GameMap.updateMap(this.x, this.y);
         }
 

@@ -33,14 +33,14 @@ public class Bomb extends Entity {
 
     @Override
     public void update() {
-        if(this.time == 50){
+        if(this.time == 20){
             explode();
             this.s1 = Sprite.bomb_exploded;
             this.s2 = Sprite.bomb_exploded1;
             this.s3 = Sprite.bomb_exploded2;
         }
         else{
-            this.img = Sprite.movingSprite(s1, s2, s3, this.timer - time, 50).getFxImage();
+            this.img = Sprite.movingSprite(s1, s2, s3, this.timer - time, 16).getFxImage();
         }
         this.time--;
     }

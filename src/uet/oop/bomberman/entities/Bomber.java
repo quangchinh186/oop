@@ -39,19 +39,20 @@ public class Bomber extends Entity {
     static HashSet<String> releasedKey;
 
     private Vector2D velocity;
-    public static double playerSpeed = 1.5;
+    public static double playerSpeed = 1;
 
     public int health;
     public Bomber(int x, int y, Image img) {
-        super( x + 1 , y, img);
+        super(x +1, y, img);
         spawnX = x+1;
         spawnY = y;
         prepareActionHandlers();
         velocity = new Vector2D();
-        rect.setWidth(30);
-        rect.setHeight(30);
+
         nextFrameRect = new Rectangle(30,30);
         state = State.STOP;
+        System.out.println(rect.getX() + " " + rect.getY());
+        System.out.println(position.x + " " + position.y);
     }
 
     @Override
@@ -63,8 +64,9 @@ public class Bomber extends Entity {
         handleMapCollision();
         handleItemCollision();
 
-        if(state != State.STOP){
+        if(velocity.x != 0 || velocity.y != 0){
             animated();
+
         }
 
         rect.setX(position.x);
@@ -72,8 +74,7 @@ public class Bomber extends Entity {
     }
 
     public void animated(){
-        this.timer++;
-        if(timer > 100) timer = 0;
+        timer = timer > Sprite.DEFAULT_SIZE ? 0 : timer+1;
         switch (state){
             case DOWN:
                 this.s1 = Sprite.player_down;
@@ -103,6 +104,7 @@ public class Bomber extends Entity {
         }
 
         this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+
     }
 
     private void handleItemCollision() {
@@ -118,7 +120,6 @@ public class Bomber extends Entity {
 
     public void handleMapCollision() {
         //check if x or y cause the collision.
-
         nextFrameRect.setX(this.rect.getX() + velocity.x);
         nextFrameRect.setY(this.rect.getY());
         if(GameMap.checkCollision(nextFrameRect)) {
@@ -127,21 +128,17 @@ public class Bomber extends Entity {
         else {
             position.x += velocity.x;
         }
-
         nextFrameRect.setX(this.rect.getX());
         nextFrameRect.setY(this.rect.getY() + velocity.y);
-
         if(GameMap.checkCollision(nextFrameRect)) {
             checkStuck += "Y";
         }
         else {
             position.y += velocity.y;
         }
-
         if(checkStuck.equals("XY")) {
             //only work for x-> travel.
             //if previous la collideX
-
             if(twoFrameBackStuck.equals("X")) {
                 position.y -= velocity.y;
             }
@@ -149,20 +146,16 @@ public class Bomber extends Entity {
                 position.x -= velocity.x;
             }
         }
-
-        //System.out.println(twoFrameBackStuck + "," + prevCheckStuck + "," + checkStuck);
         twoFrameBackStuck = prevCheckStuck;
         prevCheckStuck = checkStuck;
         checkStuck = "";
     }
 
     public void actionHandler () {
-
         if(state != State.DIE){
             if(currentlyActiveKeys.isEmpty()){
                 velocity.x = 0;
                 velocity.y = 0;
-                state = State.STOP;
             }
             if(currentlyActiveKeys.contains("A")) {
                 currentlyActiveKeys.remove("A");
@@ -212,10 +205,8 @@ public class Bomber extends Entity {
                 if(check){
                     bombs.add(bom);
                     cd = 0;
-                    System.out.println(x + " " + y);
                 }
             }
-            //if(releasedKey.contains("LEFT") || )
         }
     }
     public double getX() {
@@ -269,10 +260,9 @@ public class Bomber extends Entity {
     }
 
     public void die(){
+        timer = 0;
         state = State.DIE;
         velocity.x = 0;
         velocity.y = 0;
-        //position.x = spawnX * Sprite.SCALED_SIZE;
-        //position.y = spawnY * Sprite.SCALED_SIZE;
     }
 }

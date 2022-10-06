@@ -33,7 +33,7 @@ public abstract class Entity {
         this.img = img;
         this.x = xUnit;
         this.y = yUnit;
-        rect = new Rectangle(xUnit * Sprite.SCALED_SIZE, yUnit * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        rect = new Rectangle(xUnit * Sprite.SCALED_SIZE + 1 , yUnit * Sprite.SCALED_SIZE + 1 , Sprite.SCALED_SIZE-2, Sprite.SCALED_SIZE-2);
 
     }
 

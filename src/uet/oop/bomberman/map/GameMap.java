@@ -106,6 +106,9 @@ public class GameMap extends BombermanGame {
                 }
             }
         }
+
+
+
         return false;
     }
 }
