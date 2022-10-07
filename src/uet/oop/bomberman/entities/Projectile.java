@@ -25,18 +25,13 @@ public class Projectile extends Entity{
 
         if(Vector2D.getDistance(position, ogPos) > range) {
             setInactive();
-            System.out.println("OUT OF RANGE");
         }
         position.x += velocity.x;
         position.y += velocity.y;
 
-
-        if(GameMap.map.get(this.y).charAt(this.x) == '*'){
-            GameMap.updateMap(this.x, this.y);
-        }
-
     }
 
-    public static class Weapon {
+    public void handleCollision() {
+
     }
 }
