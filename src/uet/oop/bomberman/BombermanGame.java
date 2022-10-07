@@ -97,7 +97,18 @@ public class BombermanGame extends Application {
 
         entities.forEach(Entity::update);
         items.forEach(Entity::update);
+
+
         visualEffects.forEach(Entity::update);
+
+
+        clearInactiveEntity(visualEffects);
+        //remove projectile
+        //nen de rieng or lam chung voi visual effect.
+
+
+
+
     }
 
     public void render() {
@@ -107,6 +118,16 @@ public class BombermanGame extends Application {
         items.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
         visualEffects.forEach(g -> g.render(gc));
+    }
+
+    public void clearInactiveEntity(List<Entity> lst) {
+        List<Entity> toRemove = new ArrayList<>();
+        for(Entity entity : lst) {
+            if(entity.isActive() == false) {
+                toRemove.add(entity);
+            }
+        }
+        lst.removeAll(toRemove);
     }
 
 }

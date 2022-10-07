@@ -20,7 +20,7 @@ public abstract class Entity {
 
     protected int x, y;
 
-
+    protected boolean isActive = true;
     //Tọa độ X tính từ góc trái trên trong Canvas
     //Tọa độ Y tính từ góc trái trên trong Canvas
     protected Vector2D position;
@@ -49,5 +49,12 @@ public abstract class Entity {
     public void drawRect(GraphicsContext gc) {
         gc.setStroke(Color.YELLOW);
         gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+    }
+
+    public void setInactive() {
+        isActive = false;
+    }
+    public boolean isActive() {
+        return isActive;
     }
 }

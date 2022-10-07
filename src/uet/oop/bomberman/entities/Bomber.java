@@ -16,6 +16,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static uet.oop.bomberman.BombermanGame.*;
 
@@ -149,7 +150,7 @@ public class Bomber extends Entity {
         if(currentlyActiveKeys.isEmpty()){
             velocity.x = 0;
             velocity.y = 0;
-            state = State.STOP;
+            //state = State.STOP;
         }
         if(currentlyActiveKeys.contains("A")) {
             currentlyActiveKeys.remove("A");
@@ -180,15 +181,62 @@ public class Bomber extends Entity {
             System.out.println(x + " " + y);
             cd = 0;
         }
+        if (currentlyActiveKeys.contains("K")){
+            currentlyActiveKeys.remove("K");
+            createProjectile();
+        }
 
-        if(releasedKey.contains("LEFT") || releasedKey.contains("RIGHT")) {
+
+        if(releasedKey.contains("LEFT") ) {
             velocity.x = 0;
+            state = state.LEFT;
         }
-        if (releasedKey.contains("UP") || releasedKey.contains("DOWN")){
+        if(releasedKey.contains("RIGHT") ) {
+            velocity.x = 0;
+            state = state.RIGHT;
+        }
+
+        if(releasedKey.contains("UP") ) {
             velocity.y = 0;
+            state = state.UP;
         }
+        if(releasedKey.contains("DOWN") ) {
+            velocity.y = 0;
+            state = state.DOWN;
+        }
+
 
     }
+
+    private void createProjectile() {
+
+        Vector2D direction = new Vector2D(0,0);
+        switch(state) {
+            case UP:
+                direction.y = -3;
+                break;
+            case DOWN:y:
+                // code block
+                direction.y = 3;
+                break;
+            case LEFT:
+                // code block
+                direction.x = -3;
+                break;
+            case RIGHT:
+                // code block
+                direction.x = 3;
+                break;
+            default:
+                // code block
+        }
+
+        Projectile pj = new Projectile((int)position.x/Sprite.SCALED_SIZE, (int)position.y/Sprite.SCALED_SIZE,
+                Sprite.minvo_right2.getFxImage(), direction);
+        visualEffects.add(pj);
+        //System.out.println("IM CUMMIN");
+    }
+
     public void setVel(int velX, int velY) {
         this.velocity.x = velocity.x;
         this.velocity.y = velocity.y;
