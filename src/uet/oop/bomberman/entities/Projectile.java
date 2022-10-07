@@ -1,7 +1,10 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
+import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.map.GameMap;
 
 public class Projectile extends Entity{
 
@@ -26,6 +29,12 @@ public class Projectile extends Entity{
         }
         position.x += velocity.x;
         position.y += velocity.y;
+
+
+        if(GameMap.map.get(this.y).charAt(this.x) == '*'){
+            GameMap.updateMap(this.x, this.y);
+        }
+
     }
 
     public static class Weapon {
