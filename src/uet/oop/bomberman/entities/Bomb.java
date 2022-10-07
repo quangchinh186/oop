@@ -40,7 +40,7 @@ public class Bomb extends Entity {
             this.s3 = Sprite.bomb_exploded2;
         }
         else{
-            this.img = Sprite.movingSprite(s1, s2, s3, this.timer - time, 16).getFxImage();
+            this.img = Sprite.movingSprite(s1, s2, s3, 100 - time, Sprite.DEFAULT_SIZE).getFxImage();
         }
         this.time--;
     }
@@ -48,6 +48,7 @@ public class Bomb extends Entity {
     public void explode(){
         int width_lim = GameMap.WIDTH-1;
         int height_lim = GameMap.HEIGHT-1;
+        destroy(x, y);
         //up
         for(int i = y-1; i >= Math.max(y-power, 0); i--){
             Flames f = new Flames(x, i, Sprite.explosion_vertical.getFxImage(), State.UP);
@@ -108,14 +109,15 @@ public class Bomb extends Entity {
     }
 
     public void destroy(int _x, int _y) {
-        switch (GameMap.map.get(_y).charAt(_x)){
-            case '*' :
-                Brick temp = (Brick) BombermanGame.stillObjects.get(_y*31 + _x);
-                temp.setExploded(true);
-                break;
-
-            default:
-                break;
+        if(GameMap.map.get(_y).charAt(_x) == '*'){
+            Brick temp = (Brick) BombermanGame.stillObjects.get(_y*31 + _x);
+            temp.setExploded(true);
+        }
+        for (Entity t : BombermanGame.entities)
+        {
+            if(t.x == _x && t.y == _y){
+                t.die();
+            }
         }
     }
 

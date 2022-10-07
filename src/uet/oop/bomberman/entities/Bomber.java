@@ -31,46 +31,43 @@ public class Bomber extends Entity {
     private String twoFrameBackStuck = "";
     private String prevCheckStuck = "";
 
-    private State state;
-
     private Rectangle nextFrameRect;
     int spawnX, spawnY;
     static HashSet<String> currentlyActiveKeys;
     static HashSet<String> releasedKey;
 
     private Vector2D velocity;
-    public static double playerSpeed = 1;
+    public static double playerSpeed = 1.5;
 
-    public int health;
+    public int lives;
     public Bomber(int x, int y, Image img) {
-        super(x +1, y, img);
-        spawnX = x+1;
+        super(x, y, img);
+        lives = 3;
+        spawnX = x;
         spawnY = y;
         prepareActionHandlers();
         velocity = new Vector2D();
-
         nextFrameRect = new Rectangle(30,30);
         state = State.STOP;
-        System.out.println(rect.getX() + " " + rect.getY());
-        System.out.println(position.x + " " + position.y);
     }
 
     @Override
     public void update() {
-
         //get input
+        x = (int) (position.x / Sprite.SCALED_SIZE);
+        y = (int) (position.y / Sprite.SCALED_SIZE);
         actionHandler();
         if(cd > 0) cd--;
         handleMapCollision();
         handleItemCollision();
-
         if(velocity.x != 0 || velocity.y != 0){
             animated();
-
+            rect.setX(position.x);
+            rect.setY(position.y);
         }
-
-        rect.setX(position.x);
-        rect.setY(position.y);
+        if(state == State.DIE && timer % 16 != 0){
+            animated();
+        }
     }
 
     public void animated(){
@@ -95,6 +92,7 @@ public class Bomber extends Entity {
                 this.s1 = Sprite.player_dead1;
                 this.s2 = Sprite.player_dead2;
                 this.s3 = Sprite.player_dead3;
+
                 break;
             default:
                 this.s1 = Sprite.player_right;
@@ -207,6 +205,11 @@ public class Bomber extends Entity {
                     cd = 0;
                 }
             }
+        } else {
+            if(currentlyActiveKeys.contains("SPACE")){
+                currentlyActiveKeys.remove("SPACE");
+                revive();
+            }
         }
     }
     public double getX() {
@@ -215,12 +218,16 @@ public class Bomber extends Entity {
     public double getY() {
         return this.position.y;
     }
-
     public void becomeChad() {
         this.img = Sprite.player_chad.getFxImage();
     }
 
-
+    public void revive(){
+        state = State.STOP;
+        this.img = Sprite.player_right.getFxImage();
+        position.x = spawnX * Sprite.SCALED_SIZE;
+        position.y = spawnY * Sprite.SCALED_SIZE;
+    }
     private static void prepareActionHandlers()
     {
         // use a set so duplicates are not possible
@@ -258,9 +265,8 @@ public class Bomber extends Entity {
     public void setPlayerSpeed(double speed) {
         playerSpeed = speed;
     }
-
     public void die(){
-        timer = 0;
+        timer = 1;
         state = State.DIE;
         velocity.x = 0;
         velocity.y = 0;
