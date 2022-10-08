@@ -56,10 +56,17 @@ public class Bomb extends Entity {
         int height_lim = GameMap.HEIGHT-1;
         destroy(x, y);
         //up
-        for(int i = y-1; i >= Math.max(y-power, 0); i--) {
+        for(int i = y-1; i >= Math.max(y-power, 0); i--){
             Flames f = new Flames(x, i, Sprite.explosion_vertical.getFxImage(), State.UP);
-            if (i == Math.max(y - power, 0) || GameMap.map.get(i + 1).charAt(x) == '#') {
+            if(i == Math.max(y-power, 0) || GameMap.map.get(i+1).charAt(x) == '#'){
                 f.setLast(true);
+            }
+            f.setVertical(true);
+            BombermanGame.visualEffects.add(f);
+            flames.add(f);
+            destroy(x, i);
+            if(!(BombermanGame.stillObjects.get(i*31 + x) instanceof Grass)){
+                break;
             }
         }
         //down

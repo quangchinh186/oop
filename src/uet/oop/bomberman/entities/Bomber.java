@@ -49,7 +49,7 @@ public class Bomber extends Entity {
         prepareActionHandlers();
         velocity = new Vector2D();
         nextFrameRect = new Rectangle(30,30);
-        state = State.STOP;
+        state = State.RIGHT;
     }
 
     @Override
@@ -261,7 +261,7 @@ public class Bomber extends Entity {
     }
 
     public void revive(){
-        state = State.STOP;
+        state = State.RIGHT;
         this.img = Sprite.player_right.getFxImage();
         position.x = spawnX * Sprite.SCALED_SIZE;
         position.y = spawnY * Sprite.SCALED_SIZE;
