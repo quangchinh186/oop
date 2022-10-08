@@ -39,9 +39,7 @@ public abstract class Entity {
     public void render(GraphicsContext gc) {
         gc.drawImage(img, position.x, position.y);
         //write a draw function for rect.
-        drawRect(gc);
-
-
+        //drawRect(gc);
     }
     public abstract void update();
 

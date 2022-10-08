@@ -39,8 +39,6 @@ public class BombermanGame extends Application {
     public static List<Entity> visualEffects = new ArrayList<>();
 
     public static void main(String[] args)  {
-        //System.setIn(new FileInputStream("D:\Input.txt"));
-
         Application.launch(BombermanGame.class);
     }
 
@@ -63,7 +61,7 @@ public class BombermanGame extends Application {
         stage.show();
 
         bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
+        //entities.add(bomberman);
         GameMap.createMap(level);
         GameMap.checkCollision(new Rectangle(1,2,4,5));
 
@@ -81,7 +79,7 @@ public class BombermanGame extends Application {
 
 
     public void update() {
-
+        bomberman.update();
         bombs.forEach(Entity::update);
         stillObjects.forEach(Entity::update);
         if(bomberman.getCd() == 0 && !(bombs.isEmpty())) {

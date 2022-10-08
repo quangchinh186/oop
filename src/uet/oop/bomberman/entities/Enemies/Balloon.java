@@ -2,17 +2,11 @@ package uet.oop.bomberman.entities.Enemies;
 
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.States.State;
-import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
-public class Balloon extends Entity {
-    private int turn;
-    private int animateTime;
-    private double[] v_x = {1, 0, -1, 0, 0};
-    private double[] v_y = {0, 1, 0, -1, 0};
+public class Balloon extends Enemy {
     public Balloon(int x, int y, Image img) {
         super(x, y, img);
         this.s1 = Sprite.balloom_right1;
@@ -24,16 +18,8 @@ public class Balloon extends Entity {
     }
     @Override
     public void update() {
-        this.x = (int) (position.x / Sprite.SCALED_SIZE);
-        this.y = (int) (position.y / Sprite.SCALED_SIZE);
-        if(state != State.DIE){
-            checkMeetBomber();
-            move();
-        }
+        super.update();
         animate();
-        this.rect.setX(position.x);
-        this.rect.setY(position.y);
-        System.out.println(state);
     }
 
     public void animate(){
@@ -66,13 +52,6 @@ public class Balloon extends Entity {
         animateTime = Sprite.SCALED_SIZE;
         this.img = Sprite.balloom_dead.getFxImage();
     }
-    public void checkMeetBomber(){
-        double x = BombermanGame.bomberman.getX();
-        double y = BombermanGame.bomberman.getY();
-        if(this.rect.intersects(x + 5 , y + 5, Sprite.SCALED_SIZE - 5, Sprite.SCALED_SIZE - 5)){
-            BombermanGame.bomberman.die();
-        }
-    }
 
     public void move(){
         double nX = position.x + v_x[turn], nY = position.y + v_y[turn];
@@ -93,7 +72,7 @@ public class Balloon extends Entity {
         }
         if(GameMap.map.get(i).charAt(j) == '#' || GameMap.map.get(i).charAt(j) == '*'){
             if(position.x % 32 == 0 && position.y % 32 == 0){
-                turn = turn > 2 ? 0 : turn+1;
+                turn = timer % 4;
             } else {
                 position.x += v_x[turn];
                 position.y += v_y[turn];
