@@ -22,9 +22,9 @@ public class Bomb extends Entity {
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
         this.time = 100;
-        s1 = Sprite.bomb;
-        s2 = Sprite.bomb_1;
-        s3 = Sprite.bomb_2;
+        this.s1 = Sprite.bomb;
+        this.s2 = Sprite.bomb_1;
+        this.s3 = Sprite.bomb_2;
     }
     public List getVisual(){
         return this.flames;
@@ -37,51 +37,45 @@ public class Bomb extends Entity {
 
     @Override
     public void update() {
-        if(this.time == 50){
+        if(this.time == 20){
             explode();
-            s1 = Sprite.bomb_exploded;
-            s2 = Sprite.bomb_exploded1;
-            s3 = Sprite.bomb_exploded2;
+            this.s1 = Sprite.bomb_exploded;
+            this.s2 = Sprite.bomb_exploded1;
+            this.s3 = Sprite.bomb_exploded2;
         }
         else{
-            this.img = Sprite.movingSprite(s1, s2, s3, this.timer - time, 50).getFxImage();
+            this.img = Sprite.movingSprite(s1, s2, s3, 100 - time, Sprite.DEFAULT_SIZE).getFxImage();
         }
         this.time--;
     }
 
-    public void explode() {
 
-            int width_lim = GameMap.WIDTH - 1;
-            int height_lim = GameMap.HEIGHT - 1;
-            //up
-            for (int i = y - 1; i >= Math.max(y - power, 0); i--) {
-                Flames f = new Flames(x, i, Sprite.explosion_vertical.getFxImage(), State.UP);
-                if (i == Math.max(y - power, 0) || GameMap.map.get(i + 1).charAt(x) == '#') {
-                    f.setLast(true);
-                }
-                f.setVertical(true);
-                BombermanGame.visualEffects.add(f);
-                flames.add(f);
-                destroy(x, i);
-                if (!(BombermanGame.stillObjects.get(i * 31 + x) instanceof Grass)) {
-                    break;
 
-                }
+    public void explode(){
+        int width_lim = GameMap.WIDTH-1;
+        int height_lim = GameMap.HEIGHT-1;
+        destroy(x, y);
+        //up
+        for(int i = y-1; i >= Math.max(y-power, 0); i--) {
+            Flames f = new Flames(x, i, Sprite.explosion_vertical.getFxImage(), State.UP);
+            if (i == Math.max(y - power, 0) || GameMap.map.get(i + 1).charAt(x) == '#') {
+                f.setLast(true);
             }
-            //down
-            for (int i = y + 1; i < Math.min(y + power + 1, height_lim); i++) {
-                Flames f = new Flames(x, i, Sprite.explosion_vertical.getFxImage(), State.DOWN);
-                if (i == Math.min(y + power, height_lim) || GameMap.map.get(i + 1).charAt(x) == '#') {
-                    f.setLast(true);
-                }
-                f.setVertical(true);
-                BombermanGame.visualEffects.add(f);
-                flames.add(f);
-                destroy(x, i);
-                if (!(BombermanGame.stillObjects.get(i * 31 + x) instanceof Grass)) {
-                    break;
-                }
+        }
+        //down
+        for (int i = y + 1; i < Math.min(y + power + 1, height_lim); i++) {
+            Flames f = new Flames(x, i, Sprite.explosion_vertical.getFxImage(), State.DOWN);
+            if (i == Math.min(y + power, height_lim) || GameMap.map.get(i + 1).charAt(x) == '#') {
+                f.setLast(true);
             }
+            f.setVertical(true);
+            BombermanGame.visualEffects.add(f);
+            flames.add(f);
+            destroy(x, i);
+            if (!(BombermanGame.stillObjects.get(i * 31 + x) instanceof Grass)) {
+                break;
+            }
+        }
             //left
             for (int i = x - 1; i >= Math.max(x - power, 0); i--) {
                 Flames f = new Flames(i, y, Sprite.explosion_horizontal.getFxImage(), State.LEFT);
@@ -115,16 +109,28 @@ public class Bomb extends Entity {
 
 
 
-    public void destroy(int _x, int _y) {
-        switch (GameMap.map.get(_y).charAt(_x)){
-            case '*' :
-                Brick temp = (Brick) BombermanGame.stillObjects.get(_y*31 + _x);
-                temp.setExploded(true);
-                break;
 
-            default:
-                break;
+    public void destroy(int _x, int _y) {
+        if(GameMap.map.get(_y).charAt(_x) == '*'){
+            Brick temp = (Brick) BombermanGame.stillObjects.get(_y*31 + _x);
+            temp.setExploded(true);
         }
+        for (Entity t : BombermanGame.entities)
+        {
+            if(t.x == _x && t.y == _y){
+                t.die();
+            }
+        }
+    }
+
+    public boolean equals(Object obj){
+        if(obj instanceof Bomb){
+            Bomb b = (Bomb) obj;
+            if(this.x == b.x && this.y == b.y){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

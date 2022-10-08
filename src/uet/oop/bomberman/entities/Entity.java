@@ -1,13 +1,12 @@
 package uet.oop.bomberman.entities;
 
-import javafx.geometry.Rectangle2D;
-import javafx.scene.SnapshotParameters;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.Physics.Vector2D;
+import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class Entity {
@@ -15,9 +14,9 @@ public abstract class Entity {
     public Entity() {}
     //Rectangle de lam collision.
     protected Rectangle rect;
-
-    protected int timer = 100;
-
+    protected Sprite s1, s2, s3;
+    protected int timer = 0;
+    protected State state;
     protected int x, y;
 
     protected boolean isActive = true;
@@ -33,19 +32,18 @@ public abstract class Entity {
         this.img = img;
         this.x = xUnit;
         this.y = yUnit;
-        rect = new Rectangle(xUnit * Sprite.SCALED_SIZE, yUnit * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        rect = new Rectangle(xUnit * Sprite.SCALED_SIZE + 1 , yUnit * Sprite.SCALED_SIZE + 1 , Sprite.SCALED_SIZE-2, Sprite.SCALED_SIZE-2);
 
     }
 
     public void render(GraphicsContext gc) {
         gc.drawImage(img, position.x, position.y);
         //write a draw function for rect.
-        drawRect(gc);
-
-
+        //drawRect(gc);
     }
     public abstract void update();
 
+    public void die(){};
     public void drawRect(GraphicsContext gc) {
         gc.setStroke(Color.YELLOW);
         gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
