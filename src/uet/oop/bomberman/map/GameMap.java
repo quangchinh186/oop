@@ -5,16 +5,15 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Enemies.Balloon;
 import uet.oop.bomberman.entities.Oneal;
-import uet.oop.bomberman.entities.item.BombPowerUp;
-import uet.oop.bomberman.entities.item.FlameItem;
-import uet.oop.bomberman.entities.item.Item;
-import uet.oop.bomberman.entities.item.SpeedItem;
+import uet.oop.bomberman.entities.item.*;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import static uet.oop.bomberman.entities.Bomber.weaponsSet;
 
 public class GameMap extends BombermanGame {
     public static ArrayList <String> map = new ArrayList<>();
@@ -97,6 +96,10 @@ public class GameMap extends BombermanGame {
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         Item bombPowerUp = new BombPowerUp(j, i, Sprite.powerup_bombs.getFxImage());
                         items.add(bombPowerUp);
+                        break;
+                    case 'G':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Item gun = new Weapon(j, i, Sprite.player_chad.getFxImage());
                         break;
                     default:
                         object = new Grass(j, i, Sprite.grass.getFxImage());

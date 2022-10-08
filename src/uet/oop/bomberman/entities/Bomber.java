@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities;
 
 import javafx.event.EventHandler;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
@@ -9,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.item.Item;
+import uet.oop.bomberman.entities.item.Weapon;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
@@ -16,7 +18,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static uet.oop.bomberman.BombermanGame.*;
 
@@ -38,6 +39,13 @@ public class Bomber extends Entity {
 
     private Paint pt;
     static HashSet<String> currentlyActiveKeys;
+
+
+    //dung de luu weapons
+    public static HashSet<String> weaponsSet = new HashSet<>();
+    public List<Weapon> weapons;
+    //
+
     static HashSet<String> releasedKey;
 
     private Vector2D velocity;
@@ -66,6 +74,8 @@ public class Bomber extends Entity {
 
         handleMapCollision();
         handleItemCollision();
+        //update weapons.
+        //weapons.forEach(Entity::update);
 
         if(velocity.x != 0 || velocity.y != 0){
             animated();
@@ -75,9 +85,17 @@ public class Bomber extends Entity {
         //System.out.println(currentlyActiveKeys);
     }
 
+    @Override
+    public void render(GraphicsContext gc) {
+        super.render(gc);
+
+        //weapons.forEach(g -> g.render(gc));
+    }
+
     public void animated(){
         this.timer++;
         if(timer > 100) timer = 0;
+
         switch (state){
             case DOWN:
                 this.img = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1, Sprite.player_down_2, this.timer, 20).getFxImage();
@@ -147,6 +165,8 @@ public class Bomber extends Entity {
 
     public void actionHandler () {
 
+
+
         if(currentlyActiveKeys.isEmpty()){
             velocity.x = 0;
             velocity.y = 0;
@@ -183,7 +203,9 @@ public class Bomber extends Entity {
         }
         if (currentlyActiveKeys.contains("K")){
             currentlyActiveKeys.remove("K");
-            createProjectile();
+            if(!weaponsSet.isEmpty()) {
+                weapons.get(0).useWeapon();
+            }
         }
 
 
@@ -206,36 +228,10 @@ public class Bomber extends Entity {
         }
 
 
+
     }
 
-    private void createProjectile() {
 
-        Vector2D direction = new Vector2D(0,0);
-        switch(state) {
-            case UP:
-                direction.y = -3;
-                break;
-            case DOWN:y:
-                // code block
-                direction.y = 3;
-                break;
-            case LEFT:
-                // code block
-                direction.x = -3;
-                break;
-            case RIGHT:
-                // code block
-                direction.x = 3;
-                break;
-            default:
-                // code block
-        }
-
-        Projectile pj = new Projectile((int)position.x/Sprite.SCALED_SIZE, (int)position.y/Sprite.SCALED_SIZE,
-                Sprite.minvo_right2.getFxImage(), direction);
-        visualEffects.add(pj);
-        //System.out.println("IM CUMMIN");
-    }
 
     public void setVel(int velX, int velY) {
         this.velocity.x = velocity.x;
@@ -287,5 +283,9 @@ public class Bomber extends Entity {
 
     public void increaseBombRange() {
         Bomb.increasePower();
+    }
+
+    public State getState() {
+        return state;
     }
 }

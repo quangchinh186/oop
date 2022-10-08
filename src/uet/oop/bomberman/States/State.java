@@ -1,7 +1,7 @@
 package uet.oop.bomberman.States;
 
 public enum State {
-    UP, RIGHT, DOWN, LEFT, STOP, DIE;
+    UP, RIGHT, DOWN, LEFT, STOP, DIE, CHAD;
 
     public int in_num(){
         switch (this){

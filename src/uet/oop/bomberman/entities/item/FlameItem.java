@@ -15,6 +15,7 @@ public class FlameItem extends Item {
     }
 
     public void doEffect() {
+        System.out.println("CHADIFY");
         bomberman.becomeChad();
     }
 }
