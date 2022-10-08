@@ -115,6 +115,10 @@ public class Bomb extends Entity {
             Brick temp = (Brick) BombermanGame.stillObjects.get(_y*31 + _x);
             temp.setExploded(true);
         }
+        if(BombermanGame.bomberman.x == _x && BombermanGame.bomberman.y == _y){
+            BombermanGame.bomberman.die();
+        }
+
         for (Entity t : BombermanGame.entities)
         {
             if(t.x == _x && t.y == _y){
