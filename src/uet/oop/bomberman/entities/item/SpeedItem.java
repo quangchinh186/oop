@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import static uet.oop.bomberman.BombermanGame.bomberman;
 import static uet.oop.bomberman.entities.Bomber.PLAYER_SPEED_BOOSTED;
 
-public class SpeedItem extends Item {
+public class SpeedItem extends PowerUp {
 
     public SpeedItem(int x, int y, Image img) {
         super(x, y, img);
@@ -14,11 +14,11 @@ public class SpeedItem extends Item {
     @Override
     public void update() {
         super.update();
-
     }
 
     @Override
     public void doEffect() {
+        super.doEffect();
         bomberman.setPlayerSpeed(PLAYER_SPEED_BOOSTED);
     }
 }

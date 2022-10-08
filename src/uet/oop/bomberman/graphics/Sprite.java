@@ -58,7 +58,7 @@ public class Sprite {
 
 
 
-	public static Sprite player_chad = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.gigaTiles, 16, 16);
+	public static Sprite player_chad = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.gigaTiles, 8, 8);
 	
 	/*
 	|--------------------------------------------------------------------------

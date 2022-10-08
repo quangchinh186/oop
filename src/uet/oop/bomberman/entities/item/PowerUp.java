@@ -15,7 +15,7 @@ public class PowerUp extends Item {
 
     @Override
     public void doEffect() {
-        super.doEffect();
+        System.out.println("Powerup done");
         setInactive();
     }
 }

@@ -10,6 +10,7 @@ import static uet.oop.bomberman.BombermanGame.visualEffects;
 
 public class Weapon extends Item{
 
+    private boolean armed = false;
     private int ammo = 20;
     public Weapon(int x, int y, Image img) {
         super(x, y, img);
@@ -21,18 +22,23 @@ public class Weapon extends Item{
     @Override
     public void update() {
         super.update();
+        if(armed) {
+            this.position = bomberman.getPosition();
+        }
     }
 
     public void useWeapon() {
         //dung de overload.
-        if(ammo > 0 ) createProjectile();
+        if(ammo > 0 && armed) {
+            createProjectile();
+        }
         ammo--;
 
     }
 
     @Override
     public void doEffect() {
-
+        armed = true;
     }
 
     private void createProjectile() {

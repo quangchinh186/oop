@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import static uet.oop.bomberman.BombermanGame.bomberman;
 
 
-public class FlameItem extends Item {
+public class FlameItem extends PowerUp {
 
     public FlameItem(int x, int y, Image img) {
             super(x, y, img);
@@ -15,6 +15,7 @@ public class FlameItem extends Item {
     }
 
     public void doEffect() {
+        super.doEffect();
         System.out.println("CHADIFY");
         bomberman.becomeChad();
     }

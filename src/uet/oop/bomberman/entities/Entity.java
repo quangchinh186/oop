@@ -57,4 +57,6 @@ public abstract class Entity {
     public boolean isActive() {
         return isActive;
     }
+
+
 }

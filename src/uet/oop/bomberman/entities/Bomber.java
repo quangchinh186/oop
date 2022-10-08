@@ -7,6 +7,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.item.Item;
@@ -33,7 +34,7 @@ public class Bomber extends Entity {
     private String twoFrameBackStuck = "";
     private String prevCheckStuck = "";
 
-    private State state;
+    private State state = State.RIGHT;
 
     private Rectangle nextFrameRect;
 
@@ -43,7 +44,7 @@ public class Bomber extends Entity {
 
     //dung de luu weapons
     public static HashSet<String> weaponsSet = new HashSet<>();
-    public List<Weapon> weapons;
+    public static List<Weapon> weapons = new ArrayList<>();
     //
 
     static HashSet<String> releasedKey;
@@ -59,6 +60,7 @@ public class Bomber extends Entity {
         rect.setWidth(30);
         rect.setHeight(30);
         nextFrameRect = new Rectangle(30,30);
+
 
     }
 
@@ -117,10 +119,11 @@ public class Bomber extends Entity {
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();
-                toRemove.add(entity);
+                //toRemove.add(entity);
             }
         }
-        items.removeAll(toRemove);
+        //items.removeAll(toRemove);
+        BombermanGame.clearInactiveItem(items);
     }
 
     public void handleMapCollision() {
@@ -203,9 +206,13 @@ public class Bomber extends Entity {
         }
         if (currentlyActiveKeys.contains("K")){
             currentlyActiveKeys.remove("K");
-            if(!weaponsSet.isEmpty()) {
-                weapons.get(0).useWeapon();
+            //
+            for(Item wp : items) {
+                if(wp instanceof Weapon) {
+                    ((Weapon) wp).useWeapon();
+                }
             }
+
         }
 
 
@@ -269,6 +276,8 @@ public class Bomber extends Entity {
         });
     }
 
+
+    public Vector2D getPosition() { return this.position; }
     public void setCd(int cd) {
         this.cd = cd;
     }

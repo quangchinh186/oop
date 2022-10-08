@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static uet.oop.bomberman.entities.Bomber.weapons;
 import static uet.oop.bomberman.entities.Bomber.weaponsSet;
 
 public class GameMap extends BombermanGame {
@@ -99,7 +100,9 @@ public class GameMap extends BombermanGame {
                         break;
                     case 'G':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Item gun = new Weapon(j, i, Sprite.player_chad.getFxImage());
+                        Weapon gun = new Weapon(j, i, Sprite.player_chad.getFxImage());
+                        items.add(gun);
+                        weaponsSet.add("G");
                         break;
                     default:
                         object = new Grass(j, i, Sprite.grass.getFxImage());

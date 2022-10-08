@@ -2,12 +2,10 @@ package uet.oop.bomberman;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
@@ -16,8 +14,8 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
 
+import javax.swing.border.EmptyBorder;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -120,7 +118,17 @@ public class BombermanGame extends Application {
         visualEffects.forEach(g -> g.render(gc));
     }
 
-    public void clearInactiveEntity(List<Entity> lst) {
+    public static void clearInactiveEntity(List<Entity> lst) {
+        List<Entity> toRemove = new ArrayList<>();
+        for(Entity entity : lst) {
+            if(entity.isActive() == false) {
+                toRemove.add(entity);
+            }
+        }
+        lst.removeAll(toRemove);
+    }
+
+    public static void clearInactiveItem(List<Item> lst) {
         List<Entity> toRemove = new ArrayList<>();
         for(Entity entity : lst) {
             if(entity.isActive() == false) {
