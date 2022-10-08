@@ -2,12 +2,10 @@ package uet.oop.bomberman;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
@@ -17,7 +15,6 @@ import uet.oop.bomberman.map.GameMap;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -42,8 +39,6 @@ public class BombermanGame extends Application {
     public static List<Entity> visualEffects = new ArrayList<>();
 
     public static void main(String[] args)  {
-        //System.setIn(new FileInputStream("D:\Input.txt"));
-
         Application.launch(BombermanGame.class);
     }
 
@@ -66,7 +61,7 @@ public class BombermanGame extends Application {
         stage.show();
 
         bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
+        //entities.add(bomberman);
         GameMap.createMap(level);
         GameMap.checkCollision(new Rectangle(1,2,4,5));
 
@@ -84,28 +79,51 @@ public class BombermanGame extends Application {
 
 
     public void update() {
-
+        bomberman.update();
         bombs.forEach(Entity::update);
-
-        if(bomberman.getCd() == 10) {
-            bombs.clear();
-            visualEffects.clear();
-
+        stillObjects.forEach(Entity::update);
+        if(bomberman.getCd() == 0 && !(bombs.isEmpty())) {
+            Bomb b = (Bomb) bombs.get(0);
+            if(b.getTime() == 0){
+                visualEffects.removeAll(b.getVisual());
+                bombs.remove(b);
+            }
         }
 
         entities.forEach(Entity::update);
         items.forEach(Entity::update);
 
+
         visualEffects.forEach(Entity::update);
+
+
+        clearInactiveEntity(visualEffects);
+        //remove projectile
+        //nen de rieng or lam chung voi visual effect.
+
+
+
+
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
+        bomberman.render(gc);
         items.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
         visualEffects.forEach(g -> g.render(gc));
+    }
+
+    public void clearInactiveEntity(List<Entity> lst) {
+        List<Entity> toRemove = new ArrayList<>();
+        for(Entity entity : lst) {
+            if(entity.isActive() == false) {
+                toRemove.add(entity);
+            }
+        }
+        lst.removeAll(toRemove);
     }
 
 }

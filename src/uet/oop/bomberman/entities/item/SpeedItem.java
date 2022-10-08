@@ -13,10 +13,12 @@ public class SpeedItem extends Item {
 
     @Override
     public void update() {
-        if(!isActive) {
-            bomberman.setPlayerSpeed(PLAYER_SPEED_BOOSTED);
-        }
         super.update();
 
+    }
+
+    @Override
+    public void doEffect() {
+        bomberman.setPlayerSpeed(PLAYER_SPEED_BOOSTED);
     }
 }

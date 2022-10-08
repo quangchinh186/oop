@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import static uet.oop.bomberman.BombermanGame.bomberman;
 
 
+
 public class BombPowerUp extends Item {
 
     public BombPowerUp(int x, int y, Image img) {
@@ -11,11 +12,13 @@ public class BombPowerUp extends Item {
     }
     @Override
     public void update() {
-        if(!isActive) {
-            bomberman.increaseBombRange();
-        }
         super.update();
+    }
 
+    @Override
+    public void doEffect() {
+        bomberman.increaseBombRange();
+        System.out.println("BOMB TO");
     }
 }
 

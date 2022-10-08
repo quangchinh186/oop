@@ -11,11 +11,11 @@ public class FlameItem extends Item {
     }
     @Override
     public void update() {
-        if(!isActive) {
-            bomberman.becomeChad();
-        }
         super.update();
+    }
 
+    public void doEffect() {
+        bomberman.becomeChad();
     }
 }
 
