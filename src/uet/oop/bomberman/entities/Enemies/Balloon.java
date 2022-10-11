@@ -55,7 +55,6 @@ public class Balloon extends Enemy {
 
     public void move(){
         double nX = position.x + v_x[turn], nY = position.y + v_y[turn];
-        Rectangle nextMove = new Rectangle(nX, nY, nX+30, nY+30);
         int j = (int) (nX / Sprite.SCALED_SIZE);
         int i = (int) (nY / Sprite.SCALED_SIZE);
         switch (turn){
@@ -70,7 +69,8 @@ public class Balloon extends Enemy {
             default:
                 break;
         }
-        if(GameMap.map.get(i).charAt(j) == '#' || GameMap.map.get(i).charAt(j) == '*'){
+        char c = GameMap.map.get(i).charAt(j);
+        if(c == '#' || c == '*' || c == 'o'){
             if(position.x % 32 == 0 && position.y % 32 == 0){
                 turn = timer % 4;
             } else {

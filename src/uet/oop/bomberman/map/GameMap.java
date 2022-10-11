@@ -2,8 +2,10 @@ package uet.oop.bomberman.map;
 
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Enemies.Balloon;
+import uet.oop.bomberman.entities.Enemies.Enemy;
 import uet.oop.bomberman.entities.item.BombPowerUp;
 import uet.oop.bomberman.entities.Enemies.Oneal;
 import uet.oop.bomberman.entities.item.FlameItem;
@@ -19,6 +21,7 @@ import java.util.Scanner;
 
 public class GameMap extends BombermanGame {
     public static List <String> map = new ArrayList<>();
+    public static List<Vector2D> nextLevel = new ArrayList<>();
 
     public static void updateMap(int x, int y){
         String temp = map.get(y).substring(0, x) + ' ' + map.get(y).substring(x+1);
@@ -26,7 +29,13 @@ public class GameMap extends BombermanGame {
         Entity t = new Grass(x, y, Sprite.grass.getFxImage());
         BombermanGame.stillObjects.set(y*31 + x, t);
     }
+    public static void occupyBlock(int x, int y) {
+        String temp = map.get(y).substring(0, x) + 'o' + map.get(y).substring(x+1);
+        map.set(y, temp);
+    }
     public static void createMap(int level) {
+        map.clear();
+        nextLevel.clear();
         BombermanGame.stillObjects.clear();
         String path = "src/uet/oop/bomberman/map/map" + (level) + ".txt";
         getMap(path);
@@ -34,24 +43,32 @@ public class GameMap extends BombermanGame {
             for (int j = 0; j < map.get(i).length(); j++) {
                 Entity object;
                 switch (map.get(i).charAt(j)) {
+                    case 'p' :
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        bomberman = new Bomber(j, i, Sprite.player_right.getFxImage());
+                        break;
                     case '1' :
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Entity balloon = new Balloon(j, i, Sprite.balloom_left3.getFxImage());
+                        Enemy balloon = new Balloon(j, i, Sprite.balloom_left3.getFxImage());
                         entities.add(balloon);
                         break;
                     case '2':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Entity oneal = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
+                        Enemy oneal = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
                         entities.add(oneal);
                         break;
                     case '#':
                         object = new Wall(j, i, Sprite.wall.getFxImage());
                         break;
                     case '*':
-                        object = new Brick(j, i, Sprite.brick.getFxImage());
+                        object = new Brick(j, i, Sprite.brick.getFxImage(), false);
                         break;
                     case 'x':
-                        object = new Portal(j, i, Sprite.portal.getFxImage());
+                        String temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);
+                        map.set(i, temp);
+                        object = new Brick(j, i, Sprite.brick.getFxImage(), true);
+                        Vector2D v = new Vector2D(j, i);
+                        nextLevel.add(v);
                         break;
                     case 'S':
                         object = new Grass(j, i, Sprite.grass.getFxImage());

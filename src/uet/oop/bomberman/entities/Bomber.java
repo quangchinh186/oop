@@ -1,11 +1,12 @@
 package uet.oop.bomberman.entities;
 
+import javafx.util.Pair;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.item.Item;
@@ -21,26 +22,21 @@ import java.util.function.Predicate;
 import static uet.oop.bomberman.BombermanGame.*;
 
 public class Bomber extends Entity {
-
     private int cd = 0;
-
     public static final double PLAYER_SPEED_NORMAL = 1;
-
     public static final double PLAYER_SPEED_BOOSTED = 1.5;
-
     private String checkStuck = "";
     private String twoFrameBackStuck = "";
     private String prevCheckStuck = "";
-
     private Rectangle nextFrameRect;
     int spawnX, spawnY;
     static HashSet<String> currentlyActiveKeys;
     static HashSet<String> releasedKey;
-
     private Vector2D velocity;
     public static double playerSpeed = 1.5;
-
     public int lives;
+    private boolean atPortal;
+
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
         lives = 3;
@@ -50,6 +46,7 @@ public class Bomber extends Entity {
         velocity = new Vector2D();
         nextFrameRect = new Rectangle(30,30);
         state = State.RIGHT;
+        atPortal = false;
     }
 
     @Override
@@ -111,7 +108,9 @@ public class Bomber extends Entity {
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();
-                toRemove.add(entity);
+                if(!(entity instanceof Portal)){
+                    toRemove.add(entity);
+                }
             }
         }
         items.removeAll(toRemove);
@@ -155,6 +154,10 @@ public class Bomber extends Entity {
             if(currentlyActiveKeys.isEmpty()){
                 velocity.x = 0;
                 velocity.y = 0;
+            }
+            if(currentlyActiveKeys.contains("ESCAPE")) {
+                currentlyActiveKeys.remove("ESCAPE");
+                isPause = !isPause;
             }
             if(currentlyActiveKeys.contains("A")) {
                 currentlyActiveKeys.remove("A");
@@ -206,6 +209,7 @@ public class Bomber extends Entity {
                 }
                if(check){
                     bombs.add(bom);
+                    GameMap.occupyBlock(x, y);
                     cd = 0;
                }
             }
@@ -243,18 +247,13 @@ public class Bomber extends Entity {
         Projectile pj = new Projectile((int)position.x/Sprite.SCALED_SIZE, (int)position.y/Sprite.SCALED_SIZE,
                 Sprite.minvo_right2.getFxImage(), direction);
         visualEffects.add(pj);
-        //System.out.println("IM CUMMIN");
     }
-
-
-
 
     public double getX() {
         return this.position.x;
     }
     public double getY() {
         return this.position.y;
-
     }
     public void becomeChad() {
         this.img = Sprite.player_chad.getFxImage();
@@ -307,13 +306,19 @@ public class Bomber extends Entity {
     public void increaseBombRange() {
         Bomb.increasePower();
     }
-
-
     public void die(){
         timer = 1;
         state = State.DIE;
         velocity.x = 0;
         velocity.y = 0;
+    }
+
+    public boolean isAtPortal() {
+        return atPortal;
+    }
+
+    public void setAtPortal(boolean atPortal) {
+        this.atPortal = atPortal;
     }
 }
 

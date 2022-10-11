@@ -55,6 +55,7 @@ public class Bomb extends Entity {
         int width_lim = GameMap.WIDTH-1;
         int height_lim = GameMap.HEIGHT-1;
         destroy(x, y);
+        GameMap.updateMap(x, y);
         //up
         for(int i = y-1; i >= Math.max(y-power, 0); i--){
             Flames f = new Flames(x, i, Sprite.explosion_vertical.getFxImage(), State.UP);

@@ -30,7 +30,7 @@ public class Enemy extends Entity {
     public void checkMeetBomber(){
         targetX = BombermanGame.bomberman.getX();
         targetY = BombermanGame.bomberman.getY();
-        if(this.rect.intersects(targetX + 5 , targetY + 5, Sprite.SCALED_SIZE - 5, Sprite.SCALED_SIZE - 5)){
+        if(this.rect.intersects(targetX, targetY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)){
             BombermanGame.bomberman.die();
         }
     }

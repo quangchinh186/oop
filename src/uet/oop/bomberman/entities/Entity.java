@@ -10,7 +10,6 @@ import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class Entity {
-
     public Entity() {}
     //Rectangle de lam collision.
     protected Rectangle rect;
@@ -19,6 +18,9 @@ public abstract class Entity {
     protected State state;
     protected int x, y;
 
+    public State getState(){
+        return state;
+    }
     protected boolean isActive = true;
     //Tọa độ X tính từ góc trái trên trong Canvas
     //Tọa độ Y tính từ góc trái trên trong Canvas

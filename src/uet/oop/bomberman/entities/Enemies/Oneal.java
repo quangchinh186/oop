@@ -52,9 +52,10 @@ public class Oneal extends Enemy {
         animateTime = Sprite.SCALED_SIZE;
         this.img = Sprite.oneal_dead.getFxImage();
     }
-    private int findPlayer(){
+    private int findPlayer(int startX, int startY){
         int tX = (int) (targetX/Sprite.SCALED_SIZE);
         int tY = (int) (targetY/Sprite.SCALED_SIZE);
+        int[] neighbor = {255, 255, 255, 255};
         int min = 10000, ans = 0;
         for(int i = 0; i < 4; i++){
             int t = (int) (x + v_x[i] + y + v_y[i]);
@@ -67,6 +68,9 @@ public class Oneal extends Enemy {
         return ans;
     }
     public void move(){
+        if(position.x % 32 == 0 && position.y % 32 == 0){
+            turn = findPlayer(this.x, this.y);
+        }
         double nX = position.x + v_x[turn], nY = position.y + v_y[turn];
         int j = (int) (nX / Sprite.SCALED_SIZE);
         int i = (int) (nY / Sprite.SCALED_SIZE);
@@ -82,10 +86,7 @@ public class Oneal extends Enemy {
             default:
                 break;
         }
-        if(position.x % 32 == 0 && position.y % 32 == 0){
-            turn = findPlayer();
-            System.out.println(turn);
-        }
+
 
         if(GameMap.map.get(i).charAt(j) == '#' || GameMap.map.get(i).charAt(j) == '*'){
             if(position.x % 32 != 0 && position.y % 32 != 0){

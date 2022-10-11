@@ -8,7 +8,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.Enemies.Enemy;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
@@ -19,7 +21,7 @@ import java.util.List;
 
 
 public class BombermanGame extends Application {
-
+    public static boolean isPause = false;
 
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
@@ -29,10 +31,9 @@ public class BombermanGame extends Application {
     public static Scene scene;
 
     public static Bomber bomberman;
-
     private GraphicsContext gc;
     private Canvas canvas;
-    public static List<Entity> entities = new ArrayList<>();
+    public static List<Enemy> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
     public static List<Item> items = new ArrayList<>();
     public static List<Entity> bombs = new ArrayList<>();
@@ -48,7 +49,6 @@ public class BombermanGame extends Application {
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
 
-
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
@@ -59,22 +59,17 @@ public class BombermanGame extends Application {
         // Them scene vao stage
         stage.setScene(scene);
         stage.show();
-
-        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        //entities.add(bomberman);
         GameMap.createMap(level);
-        GameMap.checkCollision(new Rectangle(1,2,4,5));
-
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 render();
-                update();
+                if(!isPause){
+                    update();
+                }
             }
         };
         timer.start();
-
-
     }
 
 
@@ -89,31 +84,46 @@ public class BombermanGame extends Application {
                 bombs.remove(b);
             }
         }
-
-        entities.forEach(Entity::update);
+        for (Enemy e : entities)
+        {
+           if(e.getState() != State.DIE){
+               e.update();
+           }else {
+               entities.remove(e);
+               break;
+           }
+        }
         items.forEach(Entity::update);
-
-
         visualEffects.forEach(Entity::update);
 
+        if(bomberman.isAtPortal() && entities.isEmpty()){
+            newLevel();
+            System.out.println("Level: " + level);
+        }
 
         clearInactiveEntity(visualEffects);
         //remove projectile
         //nen de rieng or lam chung voi visual effect.
-
-
-
-
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
-        bomberman.render(gc);
         items.forEach(g -> g.render(gc));
+        entities.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
         visualEffects.forEach(g -> g.render(gc));
+        bomberman.render(gc);
+    }
+
+    public void newLevel(){
+        entities.clear();
+        bombs.clear();
+        visualEffects.clear();
+        items.clear();
+        bomberman.revive();
+        level++;
+        GameMap.createMap(level);
     }
 
     public void clearInactiveEntity(List<Entity> lst) {
