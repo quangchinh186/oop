@@ -23,13 +23,14 @@ import java.util.List;
 import static uet.oop.bomberman.BombermanGame.*;
 
 public class Bomber extends Entity {
-
     private int cd = 0;
+    private Sprite s1, s2, s3;
 
     public static final double PLAYER_SPEED_NORMAL = 1;
 
     public static final double PLAYER_SPEED_BOOSTED = 1.5;
 
+    private boolean poweredUp = false;
     private String checkStuck = "";
     private String twoFrameBackStuck = "";
     private String prevCheckStuck = "";
@@ -41,8 +42,8 @@ public class Bomber extends Entity {
     private Paint pt;
     static HashSet<String> currentlyActiveKeys;
 
-
     //dung de luu weapons
+
     public static HashSet<String> weaponsSet = new HashSet<>();
     public static List<Weapon> weapons = new ArrayList<>();
     //
@@ -95,23 +96,44 @@ public class Bomber extends Entity {
     }
 
     public void animated(){
-        this.timer++;
-        if(timer > 100) timer = 0;
+
+        timer = timer > Sprite.DEFAULT_SIZE ? 0 : timer+1;
 
         switch (state){
             case DOWN:
-                this.img = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1, Sprite.player_down_2, this.timer, 20).getFxImage();
+                this.s1 = Sprite.player_down;
+                this.s2 = Sprite.player_down_1;
+                this.s3 = Sprite.player_down_2;
                 break;
             case LEFT:
-                this.img = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1, Sprite.player_left_2, this.timer, 20).getFxImage();
+                this.s1 = Sprite.player_left;
+                this.s2 = Sprite.player_left_1;
+                this.s3 = Sprite.player_left_2;
                 break;
             case UP:
-                this.img = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1, Sprite.player_up_2, this.timer, 20).getFxImage();
+                this.s1 = Sprite.player_up;
+                this.s2 = Sprite.player_up_1;
+                this.s3 = Sprite.player_up_2;
+                break;
+            case DIE:
+                this.s1 = Sprite.player_dead1;
+                this.s2 = Sprite.player_dead2;
+                this.s3 = Sprite.player_dead3;
+                break;
+            case CHAD:
+                this.s1 = Sprite.player_chad;
+                this.s2 = Sprite.player_chad;
+                this.s3 = Sprite.player_chad;
                 break;
             default:
-                this.img = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1, Sprite.player_right_2, this.timer, 20).getFxImage();
+                this.s1 = Sprite.player_right;
+                this.s2 = Sprite.player_right_1;
+                this.s3 = Sprite.player_right_2;
                 break;
         }
+
+        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+
     }
 
     private void handleItemCollision() {
@@ -168,8 +190,6 @@ public class Bomber extends Entity {
 
     public void actionHandler () {
 
-
-
         if(currentlyActiveKeys.isEmpty()){
             velocity.x = 0;
             velocity.y = 0;
@@ -212,9 +232,7 @@ public class Bomber extends Entity {
                     ((Weapon) wp).useWeapon();
                 }
             }
-
         }
-
 
         if(releasedKey.contains("LEFT") ) {
             velocity.x = 0;
@@ -235,7 +253,6 @@ public class Bomber extends Entity {
         }
 
 
-
     }
 
 
@@ -246,7 +263,7 @@ public class Bomber extends Entity {
     }
 
     public void becomeChad() {
-        this.img = Sprite.player_chad.getFxImage();
+        state = State.CHAD;
     }
 
 
