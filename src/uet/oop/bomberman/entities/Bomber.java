@@ -13,6 +13,7 @@ import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.Weapon;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.graphics.SpriteSheet;
 import uet.oop.bomberman.map.GameMap;
 
 import java.awt.*;
@@ -21,10 +22,15 @@ import java.util.HashSet;
 import java.util.List;
 
 import static uet.oop.bomberman.BombermanGame.*;
+import static uet.oop.bomberman.graphics.SpriteSheet.gTiles;
+import static uet.oop.bomberman.graphics.SpriteSheet.tiles;
 
 public class Bomber extends Entity {
     private int cd = 0;
     private Sprite s1, s2, s3;
+
+
+    private SpriteSheet playerSheet;
 
     public static final double PLAYER_SPEED_NORMAL = 1;
 
@@ -45,7 +51,8 @@ public class Bomber extends Entity {
     //dung de luu weapons
 
     public static HashSet<String> weaponsSet = new HashSet<>();
-    public static List<Weapon> weapons = new ArrayList<>();
+    public static List<Weapon> weapons = new ArrayList<>() {
+    };
     //
 
     static HashSet<String> releasedKey;
@@ -62,6 +69,7 @@ public class Bomber extends Entity {
         rect.setHeight(30);
         nextFrameRect = new Rectangle(30,30);
 
+        playerSheet = tiles;
 
     }
 
@@ -97,42 +105,40 @@ public class Bomber extends Entity {
 
     public void animated(){
 
+        int sheetX = 0, sheetY = 0;
+
         timer = timer > Sprite.DEFAULT_SIZE ? 0 : timer+1;
 
         switch (state){
             case DOWN:
-                this.s1 = Sprite.player_down;
-                this.s2 = Sprite.player_down_1;
-                this.s3 = Sprite.player_down_2;
+                sheetY = 0;
+                sheetX = 2;
                 break;
             case LEFT:
-                this.s1 = Sprite.player_left;
-                this.s2 = Sprite.player_left_1;
-                this.s3 = Sprite.player_left_2;
+                sheetY = 0;
+                sheetX = 3;
                 break;
             case UP:
-                this.s1 = Sprite.player_up;
-                this.s2 = Sprite.player_up_1;
-                this.s3 = Sprite.player_up_2;
+                sheetY = 0;
+                sheetX = 0;
                 break;
             case DIE:
-                this.s1 = Sprite.player_dead1;
-                this.s2 = Sprite.player_dead2;
-                this.s3 = Sprite.player_dead3;
-                break;
-            case CHAD:
-                this.s1 = Sprite.player_chad;
-                this.s2 = Sprite.player_chad;
-                this.s3 = Sprite.player_chad;
                 break;
             default:
-                this.s1 = Sprite.player_right;
-                this.s2 = Sprite.player_right_1;
-                this.s3 = Sprite.player_right_2;
+                sheetY = 0;
+                sheetX = 1;
                 break;
         }
 
-        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+        /**
+         * else {
+         *             this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+         *         }
+         */
+
+
+        this.img = Sprite.movingSpriteSheet(playerSheet, sheetX, sheetY, 3,
+            this.timer, Sprite.DEFAULT_SIZE).getFxImage();
 
     }
 
@@ -141,11 +147,15 @@ public class Bomber extends Entity {
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();
-                //toRemove.add(entity);
+                if(entity instanceof Weapon) {
+                    if(weapons.isEmpty()) weapons.add((Weapon) entity);
+                }
             }
         }
-        //items.removeAll(toRemove);
         BombermanGame.clearInactiveItem(items);
+
+
+
     }
 
     public void handleMapCollision() {
@@ -227,10 +237,8 @@ public class Bomber extends Entity {
         if (currentlyActiveKeys.contains("K")){
             currentlyActiveKeys.remove("K");
             //
-            for(Item wp : items) {
-                if(wp instanceof Weapon) {
-                    ((Weapon) wp).useWeapon();
-                }
+            if(!weapons.isEmpty()) {
+                weapons.get(0).useWeapon();
             }
         }
 
@@ -264,6 +272,7 @@ public class Bomber extends Entity {
 
     public void becomeChad() {
         state = State.CHAD;
+        playerSheet = gTiles;
     }
 
 

@@ -5,16 +5,33 @@ import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.entities.Projectile;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static uet.oop.bomberman.BombermanGame.bomberman;
 import static uet.oop.bomberman.BombermanGame.visualEffects;
 
+
+
+class Helper extends TimerTask
+{
+    public static int i = 0;
+    public void run()
+    {
+        Weapon.createProjectile();
+    }
+}
+
+
 public class Weapon extends Item{
 
-    private boolean armed = false;
-    private int ammo = 20;
+
+    protected Timer timer = new Timer();
+    protected boolean armed = false;
+    private int ammo;
     public Weapon(int x, int y, Image img) {
         super(x, y, img);
-
+        ammo = 10;
         //void equip.
 
     }
@@ -25,23 +42,32 @@ public class Weapon extends Item{
         if(armed) {
             this.position = bomberman.getPosition();
         }
+
     }
 
     public void useWeapon() {
         //dung de overload.
         if(ammo > 0 && armed) {
+
+            TimerTask task = new Helper();
+            //timer.schedule(task, 1000);
             createProjectile();
+            ammo--;
         }
-        ammo--;
+
+        if(ammo == 0 && armed) setInactive();
 
     }
 
+    public void reloadAmmo() {
+        ammo = 10;
+    }
     @Override
     public void doEffect() {
         armed = true;
     }
 
-    private void createProjectile() {
+    public static void createProjectile() {
 
         Vector2D direction = new Vector2D(0,0);
         switch(bomberman.getState()) {
@@ -64,7 +90,8 @@ public class Weapon extends Item{
                 // code block
         }
 
-        Projectile pj = new Projectile((int)position.x/ Sprite.SCALED_SIZE, (int)position.y/Sprite.SCALED_SIZE,
+        Projectile pj = new Projectile((int)((bomberman.position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE ) ,
+                (int)(bomberman.position.y + Sprite.DEFAULT_SIZE) /Sprite.SCALED_SIZE,
                 Sprite.minvo_right2.getFxImage(), direction);
         visualEffects.add(pj);
         //System.out.println("IM CUMMIN");

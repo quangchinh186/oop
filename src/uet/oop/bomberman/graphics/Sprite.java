@@ -59,6 +59,12 @@ public class Sprite {
 
 
 	public static Sprite player_chad = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.gigaTiles, 8, 8);
+
+	public static Sprite gold_1 = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.gTiles, 8, 8);
+	public static Sprite gold_2 = new Sprite(DEFAULT_SIZE, 0, 1, SpriteSheet.gTiles, 8, 8);
+	public static Sprite gold_3 = new Sprite(DEFAULT_SIZE, 0, 2, SpriteSheet.gTiles, 8, 8);
+
+
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -239,6 +245,21 @@ public class Sprite {
 		int diff = time / 2;
 		return (animate % time > diff) ? x1 : x2; 
 	}
+
+	public static Sprite movingSpriteSheet(SpriteSheet sheet ,int xPos, int yPos, int numOfSprite, int animate, int time) {
+		int calc = animate % time;
+		int diff = time / (numOfSprite - 1);
+
+		//dif == 32/3
+		// animate <= sprite_size..
+
+		yPos += (int) animate/ diff;
+		//this shit leak bo nho.
+		return new Sprite(DEFAULT_SIZE, xPos, yPos, sheet, 16, 16);
+
+		//tao ra mang 2 chieu luu cac sprite nho voi moi sheet duoc tao
+	}
+
 	
 	public int getSize() {
 		return SIZE;

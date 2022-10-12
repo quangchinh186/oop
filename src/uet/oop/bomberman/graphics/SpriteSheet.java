@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Tất cả sprite (hình ảnh game) được lưu trữ vào một ảnh duy nhất
@@ -11,6 +13,7 @@ import java.net.URL;
  */
 public class SpriteSheet {
 
+	List<Sprite> spriteList = new ArrayList<>();
 	private String _path;
 	public final int SIZE;
 	public int[] _pixels;
@@ -20,7 +23,7 @@ public class SpriteSheet {
 
 	public static SpriteSheet gigaTiles = new SpriteSheet("/textures/arnold.png", 16);
 
-	
+	public static SpriteSheet gTiles = new SpriteSheet("/textures/player_gold.png", 64);
 	public SpriteSheet(String path, int size) {
 		_path = path;
 		SIZE = size;

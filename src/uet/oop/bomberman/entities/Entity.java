@@ -23,7 +23,7 @@ public abstract class Entity {
     protected boolean isActive = true;
     //Tọa độ X tính từ góc trái trên trong Canvas
     //Tọa độ Y tính từ góc trái trên trong Canvas
-    protected Vector2D position;
+    public Vector2D position;
 
     protected Image img;
 
