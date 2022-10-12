@@ -71,6 +71,8 @@ public class Bomber extends Entity {
 
         playerSheet = tiles;
 
+        weapons.clear();
+
     }
 
     @Override
@@ -86,7 +88,7 @@ public class Bomber extends Entity {
         handleMapCollision();
         handleItemCollision();
         //update weapons.
-        //weapons.forEach(Entity::update);
+        weapons.forEach(Entity::update);
 
         if(velocity.x != 0 || velocity.y != 0){
             animated();
@@ -100,7 +102,7 @@ public class Bomber extends Entity {
     public void render(GraphicsContext gc) {
         super.render(gc);
 
-        //weapons.forEach(g -> g.render(gc));
+        weapons.forEach(g -> g.render(gc));
     }
 
     public void animated(){
@@ -147,16 +149,51 @@ public class Bomber extends Entity {
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();
-                if(entity instanceof Weapon) {
-                    if(weapons.isEmpty()) weapons.add((Weapon) entity);
-                }
+
             }
         }
+
+        int countArmed = 0;
+
+        for(Weapon wp : weapons) {
+
+            if(wp.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
+                wp.doEffect();
+            }
+            if(wp.isArmed()) countArmed++;
+
+        }
+
+        if(countArmed > 1) {
+            for(int i = 0; i < countArmed - 1; i++) {
+                weapons.get(i).setInactive();
+            }
+        }
+
         BombermanGame.clearInactiveItem(items);
+
+        BombermanGame.clearInactiveWeapon(weapons);
 
 
 
     }
+
+    public void addWeapons(String key, Item wp) {
+            //replace weapon voi key.
+        if(!weapons.isEmpty()) {
+            for(Item item : items) {
+                if(item instanceof Weapon && ((Weapon) item).isArmed()) {
+                    item.setInactive();
+                    break;
+                }
+            }
+            weapons.clear();
+        }
+        weapons.add((Weapon) wp);
+    }
+
+
+
 
     public void handleMapCollision() {
         //check if x or y cause the collision.

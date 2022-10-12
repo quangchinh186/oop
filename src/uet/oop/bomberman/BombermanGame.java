@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.item.Item;
+import uet.oop.bomberman.entities.item.Weapon;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
@@ -129,6 +130,16 @@ public class BombermanGame extends Application {
     }
 
     public static void clearInactiveItem(List<Item> lst) {
+        List<Entity> toRemove = new ArrayList<>();
+        for(Entity entity : lst) {
+            if(entity.isActive() == false) {
+                toRemove.add(entity);
+            }
+        }
+        lst.removeAll(toRemove);
+    }
+
+    public static void clearInactiveWeapon(List<Weapon> lst) {
         List<Entity> toRemove = new ArrayList<>();
         for(Entity entity : lst) {
             if(entity.isActive() == false) {

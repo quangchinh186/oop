@@ -97,4 +97,8 @@ public class Weapon extends Item{
         //System.out.println("IM CUMMIN");
     }
 
+
+    public boolean isArmed() {
+        return armed;
+    }
 }

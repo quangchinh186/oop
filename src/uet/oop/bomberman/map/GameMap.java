@@ -101,8 +101,8 @@ public class GameMap extends BombermanGame {
                     case 'G':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         Weapon gun = new Weapon(j, i, Sprite.player_chad.getFxImage());
-                        items.add(gun);
-                        weaponsSet.add("G");
+                        weapons.add(gun);
+                        //weaponsSet.add("G");
                         break;
                     default:
                         object = new Grass(j, i, Sprite.grass.getFxImage());
