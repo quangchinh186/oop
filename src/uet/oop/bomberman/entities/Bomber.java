@@ -52,8 +52,8 @@ public class Bomber extends Entity {
     @Override
     public void update() {
         //get input
-        x = (int) (position.x / Sprite.SCALED_SIZE);
-        y = (int) (position.y / Sprite.SCALED_SIZE);
+        x = (int) ((position.x + 8) / Sprite.SCALED_SIZE);
+        y = (int) ((position.y + 8) / Sprite.SCALED_SIZE);
         actionHandler();
         if(cd > 0) cd--;
         handleMapCollision();
@@ -249,11 +249,11 @@ public class Bomber extends Entity {
         visualEffects.add(pj);
     }
 
-    public double getX() {
-        return this.position.x;
+    public int getX() {
+        return this.x;
     }
-    public double getY() {
-        return this.position.y;
+    public int getY() {
+        return this.y;
     }
     public void becomeChad() {
         this.img = Sprite.player_chad.getFxImage();

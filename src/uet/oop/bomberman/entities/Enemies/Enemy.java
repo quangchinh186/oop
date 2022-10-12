@@ -10,8 +10,8 @@ public class Enemy extends Entity {
     public static double targetX, targetY;
     protected int animateTime;
     protected int turn;
-    protected double[] v_x = {1, 0, -1, 0, 0};
-    protected double[] v_y = {0, 1, 0, -1, 0};
+    protected static double[] v_x = {1, 0, -1, 0, 0};
+    protected static double[] v_y = {0, 1, 0, -1, 0};
     public Enemy(int x, int y, Image img){
         super(x, y, img);
     }
@@ -30,7 +30,8 @@ public class Enemy extends Entity {
     public void checkMeetBomber(){
         targetX = BombermanGame.bomberman.getX();
         targetY = BombermanGame.bomberman.getY();
-        if(this.rect.intersects(targetX, targetY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)){
+        System.out.println(targetX + " " + targetY);
+        if(this.rect.intersects(targetX * Sprite.SCALED_SIZE, targetY * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)){
             BombermanGame.bomberman.die();
         }
     }
