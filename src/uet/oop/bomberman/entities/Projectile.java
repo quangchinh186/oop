@@ -37,6 +37,7 @@ public class Projectile extends Entity{
 
         if(GameMap.checkCollision(rect)) {
             System.out.println("VA CHAM");
+
             setInactive();
         }
 

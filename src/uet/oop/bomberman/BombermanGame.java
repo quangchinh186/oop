@@ -102,6 +102,7 @@ public class BombermanGame extends Application {
 
 
         clearInactiveEntity(visualEffects);
+        //clearInactiveEntity(stillObjects);
         //remove projectile
         //nen de rieng or lam chung voi visual effect.
 

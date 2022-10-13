@@ -100,8 +100,14 @@ public class GameMap extends BombermanGame {
                         break;
                     case 'G':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Weapon gun = new Weapon(j, i, Sprite.player_chad.getFxImage());
+                        Gun gun = new Gun(j, i, Sprite.player_chad.getFxImage());
                         weapons.add(gun);
+                        //weaponsSet.add("G");
+                        break;
+                    case 'T':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        FlameThrower flameThrower = new FlameThrower(j, i, Sprite.brick_exploded2.getFxImage());
+                        weapons.add(flameThrower);
                         //weaponsSet.add("G");
                         break;
                     default:
@@ -153,4 +159,17 @@ public class GameMap extends BombermanGame {
         }
         return false;
     }
+
+    public void destroy(int _x, int _y) {
+        switch (GameMap.map.get(_y).charAt(_x)){
+            case '*' :
+                Brick temp = (Brick) BombermanGame.stillObjects.get(_y*31 + _x);
+                temp.setExploded(true);
+                break;
+
+            default:
+                break;
+        }
+    }
+
 }

@@ -10,11 +10,15 @@ import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.Timer;
+
 public abstract class Entity {
 
     public Entity() {}
     //Rectangle de lam collision.
     protected Rectangle rect;
+
+    protected Timer timerF = new Timer();
 
     protected int timer = 100;
 

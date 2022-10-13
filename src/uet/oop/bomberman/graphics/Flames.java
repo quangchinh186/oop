@@ -10,6 +10,9 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.map.GameMap;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Flames extends Entity {
     public boolean horizontal = false;
     public State state;
@@ -17,12 +20,24 @@ public class Flames extends Entity {
     public boolean last = false;
     private Sprite s1, s2, s3;
     private int time;
+
+    private Timer timerF = new Timer();
+
+
     public Flames(int x, int y, Image img, State s){
         super(x, y, img);
         this.x = x;
         this.y = y;
         this.state = s;
         this.time = 100;
+
+        timerF.schedule(new TimerTask(){
+            @Override
+            public void run() {
+                setInactive();
+            }
+        }, 500);
+
     }
 
     public void setLast(boolean last) {

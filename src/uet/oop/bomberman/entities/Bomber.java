@@ -274,8 +274,11 @@ public class Bomber extends Entity {
         if (currentlyActiveKeys.contains("K")){
             currentlyActiveKeys.remove("K");
             //
-            if(!weapons.isEmpty()) {
-                weapons.get(0).useWeapon();
+            for(Weapon wp : weapons) {
+                if(wp.isArmed()) {
+                    wp.useWeapon();
+                    break;
+                }
             }
         }
 
