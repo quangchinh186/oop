@@ -1,9 +1,11 @@
 package uet.oop.bomberman.map;
 
 import javafx.scene.shape.Rectangle;
+import org.apache.http.impl.execchain.TunnelRefusedException;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Enemies.Balloon;
+import uet.oop.bomberman.entities.Enemies.Turret;
 import uet.oop.bomberman.entities.Oneal;
 import uet.oop.bomberman.entities.item.*;
 import uet.oop.bomberman.graphics.Sprite;
@@ -73,6 +75,12 @@ public class GameMap extends BombermanGame {
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         Entity oneal = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
                         entities.add(oneal);
+                        break;
+                    case 'P':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Turret turret = new Turret(j, i, Sprite.player_up_2.getFxImage());
+                        entities.add(turret);
+                        //weaponsSet.add("G");
                         break;
                     case '#':
                         object = new Wall(j, i, Sprite.wall.getFxImage());
@@ -160,7 +168,10 @@ public class GameMap extends BombermanGame {
         return false;
     }
 
-    public void destroy(int _x, int _y) {
+
+
+
+    public static void destroy(int _x, int _y) {
         switch (GameMap.map.get(_y).charAt(_x)){
             case '*' :
                 Brick temp = (Brick) BombermanGame.stillObjects.get(_y*31 + _x);

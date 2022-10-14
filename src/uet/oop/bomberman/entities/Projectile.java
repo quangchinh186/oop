@@ -1,10 +1,15 @@
 package uet.oop.bomberman.entities;
 
+import com.fasterxml.jackson.databind.node.POJONode;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
+
+import javax.sound.sampled.Port;
+
+import static uet.oop.bomberman.BombermanGame.stillObjects;
 
 public class Projectile extends Entity{
 
@@ -12,11 +17,11 @@ public class Projectile extends Entity{
 
     private Vector2D ogPos;
 
-    private int range = 400;
+    private int range = 200;
 
     public Projectile(int x, int y, Image img, Vector2D vel) {
         super(x, y, img);
-        ogPos = new Vector2D(x,y);
+        ogPos = new Vector2D(x * Sprite.SCALED_SIZE,y * Sprite.SCALED_SIZE);
 
         velocity = vel;
 
@@ -32,15 +37,20 @@ public class Projectile extends Entity{
     public void update() {
 
         if(Vector2D.getDistance(position, ogPos) > range) {
+            System.out.println("OUT OF RANGE PROJECTILE");
             setInactive();
         }
 
-        if(GameMap.checkCollision(rect)) {
-            System.out.println("VA CHAM");
-
-            setInactive();
+        for(Entity et : stillObjects) {
+            if(et.rect.intersects(this.rect.getX(), this.rect.getY(), this.rect.getWidth(), this.rect.getHeight())) {
+                if(et instanceof Brick) {
+                    ((Brick) et).setExploded(true);
+                }
+                if(! (et instanceof Grass || et instanceof Portal)) {
+                    this.setInactive();
+                }
+            }
         }
-
         position.x += velocity.x;
         position.y += velocity.y;
         rect.setX(position.x);
@@ -49,6 +59,6 @@ public class Projectile extends Entity{
     }
 
     public void handleCollision() {
-
+        GameMap.destroy((int) position.x / Sprite.SCALED_SIZE, (int) position.y / Sprite.SCALED_SIZE);
     }
 }

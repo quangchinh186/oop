@@ -52,7 +52,7 @@ public class FlameThrower extends Weapon{
 
 
 
-            }, 750);
+            }, 400);
 
 
 
