@@ -31,6 +31,7 @@ public class Projectile extends Entity{
         rect.setY(position.y);
         rect.setWidth(20);
         rect.setHeight(20);
+
     }
 
     @Override

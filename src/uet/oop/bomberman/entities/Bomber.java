@@ -22,11 +22,10 @@ import java.util.HashSet;
 import java.util.List;
 
 import static uet.oop.bomberman.BombermanGame.*;
-import static uet.oop.bomberman.graphics.SpriteSheet.gTiles;
-import static uet.oop.bomberman.graphics.SpriteSheet.tiles;
+import static uet.oop.bomberman.graphics.SpriteSheet.*;
 
 public class Bomber extends Entity {
-    private int cd = 0;
+    private int cd = 1;
     private Sprite s1, s2, s3;
 
 
@@ -312,7 +311,7 @@ public class Bomber extends Entity {
 
     public void becomeChad() {
         state = State.CHAD;
-        playerSheet = gTiles;
+        playerSheet = middleEastTiles;
     }
 
 

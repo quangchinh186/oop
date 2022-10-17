@@ -1,36 +1,57 @@
 package uet.oop.bomberman.entities.item;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.entities.Projectile;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.graphics.SpriteSheet;
 
 import java.util.TimerTask;
 
 import static uet.oop.bomberman.BombermanGame.bomberman;
 import static uet.oop.bomberman.BombermanGame.visualEffects;
 
+
 public class Gun extends Weapon{
+
+    private int cd ;
+    private static Image gunImg = new Image("/textures/rifle.png");
+
+    private Image gunFx;
+
+    private Image gunAmmoFx;
 
     public Gun(int x, int y, Image img) {
         super(x, y, img);
+
         ammo = 7;
+        cd = 0;
+
     }
 
     @Override
     public void doEffect() {
         super.doEffect();
-        this.img = Sprite.explosion_horizontal.getFxImage();
+        this.img = gunImg;
     }
 
     @Override
     public void useWeapon() {
         super.useWeapon();
+
         if(ammo > 0 && armed) {
 
+            cd += 2;
+
+            if(cd > 360) cd = 0;
+
+            System.out.println(cd);
+
+            //this.img = Sprite.movingSpriteSheet()
             System.out.println("FIRE");
-            TimerTask task = new Helper();
-            //timer.schedule(task, 1000);
+
+
             createProjectile();
             ammo--;
         }
@@ -67,4 +88,14 @@ public class Gun extends Weapon{
         visualEffects.add(pj);
         //System.out.println("IM CUMMIN");
     }
+
+    @Override
+    public void update() {
+        super.update();
+        if(armed) {
+            cd += 3;
+        }
+    }
+
+
 }

@@ -15,7 +15,10 @@ public class SpriteSheet {
 
 	List<Sprite> spriteList = new ArrayList<>();
 	private String _path;
-	public final int SIZE;
+
+	public final int SIZE_X;
+
+	public final int SIZE_Y;
 	public int[] _pixels;
 	public BufferedImage image;
 
@@ -24,10 +27,27 @@ public class SpriteSheet {
 	public static SpriteSheet gigaTiles = new SpriteSheet("/textures/arnold.png", 16);
 
 	public static SpriteSheet gTiles = new SpriteSheet("/textures/player_gold.png", 64);
+
+	public static SpriteSheet gunTiles = new SpriteSheet("/textures/full_auto.png", 3072, 48);
+	public static SpriteSheet gunFxTiles = new SpriteSheet("/textures/fx_full_auto.png", 3072, 48);
+
+	public static SpriteSheet gunFlashTiles = new SpriteSheet("/textures/flash_full_auto.png", 3072, 48);
+
+	public static SpriteSheet middleEastTiles = new SpriteSheet("/textures/mid_man.png",64, 48);
+
 	public SpriteSheet(String path, int size) {
 		_path = path;
-		SIZE = size;
-		_pixels = new int[SIZE * SIZE];
+		SIZE_X = size;
+		SIZE_Y = size;
+		_pixels = new int[SIZE_X * SIZE_Y];
+		load();
+	}
+
+	public SpriteSheet(String path, int sizeX, int sizeY) {
+		_path = path;
+		SIZE_X = sizeX;
+		SIZE_Y = sizeY;
+		_pixels = new int[SIZE_X * SIZE_Y];
 		load();
 	}
 	

@@ -112,6 +112,12 @@ public class GameMap extends BombermanGame {
                         weapons.add(gun);
                         //weaponsSet.add("G");
                         break;
+                    case 'V':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        SuicideVest vest = new SuicideVest(j, i, Sprite.bomb_2.getFxImage());
+                        weapons.add(vest);
+                        //weaponsSet.add("G");
+                        break;
                     case 'T':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         FlameThrower flameThrower = new FlameThrower(j, i, Sprite.brick_exploded2.getFxImage());

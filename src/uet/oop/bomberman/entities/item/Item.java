@@ -24,6 +24,8 @@ public class Item extends Entity {
             //clear khoi list item.
             items.remove(this);
         }
+        rect.setX(position.x);
+        rect.setY(position.y);
     }
 
     public void doEffect() {

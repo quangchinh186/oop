@@ -1,6 +1,8 @@
 package uet.oop.bomberman.graphics;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.*;
+import javafx.scene.transform.Rotate;
 
 import java.awt.image.BufferedImage;
 import java.nio.IntBuffer;
@@ -13,7 +15,10 @@ public class Sprite {
 	public static final int DEFAULT_SIZE = 16;
 	public static final int SCALED_SIZE = DEFAULT_SIZE * 2;
     private static final int TRANSPARENT_COLOR = 0xffff00ff;
-	public final int SIZE;
+
+	public final int SIZE_X;
+
+	public final int SIZE_Y;
 	private int _x, _y;
 	public int[] _pixels;
 	protected int _realWidth;
@@ -196,10 +201,22 @@ public class Sprite {
 	public static Sprite powerup_flamepass = new Sprite(DEFAULT_SIZE, 6, 10, SpriteSheet.tiles, 16, 16);
 	
 	public Sprite(int size, int x, int y, SpriteSheet sheet, int rw, int rh) {
-		SIZE = size;
-		_pixels = new int[SIZE * SIZE];
-		_x = x * SIZE;
-		_y = y * SIZE;
+		SIZE_X = SIZE_Y = size;
+		_pixels = new int[SIZE_X * SIZE_Y];
+		_x = x * SIZE_X;
+		_y = y * SIZE_Y;
+		_sheet = sheet;
+		_realWidth = rw;
+		_realHeight = rh;
+		load();
+	}
+
+	public Sprite(int sizeX, int sizeY, int x, int y, SpriteSheet sheet, int rw, int rh) {
+		SIZE_X = sizeX;
+		SIZE_Y = sizeY;
+		_pixels = new int[SIZE_X * SIZE_Y];
+		_x = x * SIZE_X;
+		_y = y * SIZE_Y;
 		_sheet = sheet;
 		_realWidth = rw;
 		_realHeight = rh;
@@ -207,11 +224,13 @@ public class Sprite {
 	}
 	
 	public Sprite(int size, int color) {
-		SIZE = size;
-		_pixels = new int[SIZE * SIZE];
+		SIZE_X = SIZE_Y = size;
+		_pixels = new int[SIZE_X * SIZE_Y];
 		setColor(color);
 	}
-	
+
+
+
 	private void setColor(int color) {
 		for (int i = 0; i < _pixels.length; i++) {
 			_pixels[i] = color;
@@ -219,9 +238,9 @@ public class Sprite {
 	}
 
 	private void load() {
-		for (int y = 0; y < SIZE; y++) {
-			for (int x = 0; x < SIZE; x++) {
-				_pixels[x + y * SIZE] = _sheet._pixels[(x + _x) + (y + _y) * _sheet.SIZE];
+		for (int y = 0; y < SIZE_Y; y++) {
+			for (int x = 0; x < SIZE_X; x++) {
+				_pixels[x + y * SIZE_X] = _sheet._pixels[(x + _x) + (y + _y) * _sheet.SIZE_X];
 			}
 		}
 	}
@@ -260,9 +279,23 @@ public class Sprite {
 		//tao ra mang 2 chieu luu cac sprite nho voi moi sheet duoc tao
 	}
 
+	public static Sprite movingSpriteSheet(SpriteSheet sheet ,int xPos, int yPos, int numOfSprite,
+										   int animate, int time, int width, int height) {
+		int calc = animate % time;
+		int diff = time / (numOfSprite - 1);
+
+		//dif == 32/3
+		// animate <= sprite_size..
+
+		xPos += (int) animate/ width;
+		//this shit leak bo nho.
+		return new Sprite(width, height, xPos, yPos, sheet, width, height);
+
+		//tao ra mang 2 chieu luu cac sprite nho voi moi sheet duoc tao
+	}
 	
 	public int getSize() {
-		return SIZE;
+		return SIZE_X;
 	}
 
 	public int getPixel(int i) {
@@ -270,15 +303,15 @@ public class Sprite {
 	}
 
 	public Image getFxImage() {
-        WritableImage wr = new WritableImage(SIZE, SIZE);
+        WritableImage wr = new WritableImage(SIZE_X, SIZE_Y);
         PixelWriter pw = wr.getPixelWriter();
-        for (int x = 0; x < SIZE; x++) {
-            for (int y = 0; y < SIZE; y++) {
-                if ( _pixels[x + y * SIZE] == TRANSPARENT_COLOR) {
+        for (int x = 0; x < SIZE_X; x++) {
+            for (int y = 0; y < SIZE_Y; y++) {
+                if ( _pixels[x + y * SIZE_X] == TRANSPARENT_COLOR) {
                     pw.setArgb(x, y, 0);
                 }
                 else {
-                    pw.setArgb(x, y, _pixels[x + y * SIZE]);
+                    pw.setArgb(x, y, _pixels[x + y * SIZE_X]);
                 }
             }
         }
@@ -312,4 +345,40 @@ public class Sprite {
 
 		return output;
 	}
+
+
+	public static void rotate(GraphicsContext gc, double angle, double px, double py) {
+		Rotate r = new Rotate(angle, px, py);
+		gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+
+	}
+
+	/**
+	 * Draws an image on a graphics context.
+	 *
+	 * The image is drawn at (tlpx, tlpy) rotated by angle pivoted around the point:
+	 *   (tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2)
+	 *
+	 * @param gc the graphics context the image is to be drawn on.
+	 * @param angle the angle of rotation.
+	 * @param tlpx the top left x co-ordinate where the image will be plotted (in canvas co-ordinates).
+	 * @param tlpy the top left y co-ordinate where the image will be plotted (in canvas co-ordinates).
+	 */
+	public static void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
+		gc.save(); // saves the current state on stack, including the current transform
+		rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
+		gc.drawImage(image, tlpx, tlpy);
+		gc.restore(); // back to original state (before rotation)
+	}
+
+
+	public static void drawRotatedImage(GraphicsContext gc, Image image, int angle,
+										double tlpx, double tlpy, double sizeX, double sizeY) {
+		gc.save(); // saves the current state on stack, including the current transform
+		rotate(gc, angle, tlpx + sizeX / 2, tlpy + sizeY / 2);
+		gc.drawImage(image,0,0,image.getWidth(), image.getHeight(), tlpx, tlpy,
+				sizeX,sizeY );
+		gc.restore(); // back to original state (before rotation)
+	}
+
 }
