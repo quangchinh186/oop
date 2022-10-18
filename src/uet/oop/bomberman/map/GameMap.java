@@ -5,6 +5,7 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Enemies.Balloon;
+import uet.oop.bomberman.entities.Enemies.BigBallon;
 import uet.oop.bomberman.entities.Enemies.Enemy;
 import uet.oop.bomberman.entities.item.BombPowerUp;
 import uet.oop.bomberman.entities.Enemies.Oneal;
@@ -56,6 +57,11 @@ public class GameMap extends BombermanGame {
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         Enemy oneal = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
                         entities.add(oneal);
+                        break;
+                    case '3':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Enemy big = new BigBallon(j, i, Sprite.doll_left1.getFxImage());
+                        entities.add(big);
                         break;
                     case '#':
                         object = new Wall(j, i, Sprite.wall.getFxImage());
@@ -119,8 +125,8 @@ public class GameMap extends BombermanGame {
 
         for (int i = startY; i < startY + 3; i++) {
             for (int j = startX; j < startX + 3; j++) {
-                if(map.get(i).charAt(j) == '#'
-                || map.get(i).charAt(j) == '*') {
+                if(map.get(i).charAt(j) == '#' || map.get(i).charAt(j) == 'o'
+                        || map.get(i).charAt(j) == '*') {
                     if(rect.intersects((j * Sprite.SCALED_SIZE ) + 1, (i * Sprite.SCALED_SIZE) + 1, Sprite.SCALED_SIZE - 2, Sprite.SCALED_SIZE - 2)) {
                         return true;
                     }

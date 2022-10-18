@@ -54,7 +54,6 @@ public class Bomb extends Entity {
     public void explode(){
         int width_lim = GameMap.WIDTH-1;
         int height_lim = GameMap.HEIGHT-1;
-        destroy(x, y);
         GameMap.updateMap(x, y);
         //up
         for(int i = y-1; i >= Math.max(y-power, 0); i--){
@@ -113,6 +112,7 @@ public class Bomb extends Entity {
                 }
             }
             BombermanGame.visualEffects.addAll(flames);
+
     }
 
 

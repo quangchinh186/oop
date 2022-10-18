@@ -6,8 +6,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Enemies.Enemy;
@@ -16,23 +16,24 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
 
+import javax.print.attribute.standard.Media;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class BombermanGame extends Application {
     public static boolean isPause = false;
-
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-
     public static int level = 1;
-
     public static Scene scene;
-
     public static Bomber bomberman;
     private GraphicsContext gc;
     private Canvas canvas;
+    private Sound music = new Sound("src/uet/oop/bomberman/Sound/mono16.wav");
+
+    private Media media;
     public static List<Enemy> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
     public static List<Item> items = new ArrayList<>();
@@ -60,12 +61,15 @@ public class BombermanGame extends Application {
         stage.setScene(scene);
         stage.show();
         GameMap.createMap(level);
+        //music.play();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 render();
                 if(!isPause){
                     update();
+                }else{
+                    bomberman.actionHandler();
                 }
             }
         };
@@ -77,7 +81,7 @@ public class BombermanGame extends Application {
         bomberman.update();
         bombs.forEach(Entity::update);
         stillObjects.forEach(Entity::update);
-        if(bomberman.getCd() == 0 && !(bombs.isEmpty())) {
+        if(!(bombs.isEmpty())) {
             Bomb b = (Bomb) bombs.get(0);
             if(b.getTime() == 0){
                 visualEffects.removeAll(b.getVisual());
@@ -86,9 +90,8 @@ public class BombermanGame extends Application {
         }
         for (Enemy e : entities)
         {
-           if(e.getState() != State.DIE){
-               e.update();
-           }else {
+           e.update();
+           if(e.getState() == State.DIE){
                entities.remove(e);
                break;
            }
@@ -102,6 +105,7 @@ public class BombermanGame extends Application {
         }
 
         clearInactiveEntity(visualEffects);
+
         //remove projectile
         //nen de rieng or lam chung voi visual effect.
     }

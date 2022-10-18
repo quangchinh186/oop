@@ -35,6 +35,7 @@ public class Bomber extends Entity {
     private Vector2D velocity;
     public static double playerSpeed = 1.5;
     public int lives;
+    public int bombX = 0, bombY = 0;
     private boolean atPortal;
 
     public Bomber(int x, int y, Image img) {
@@ -65,6 +66,11 @@ public class Bomber extends Entity {
         }
         if(state == State.DIE && timer % 16 != 0){
             animated();
+        }
+        if(!this.rect.intersects(bombX * 32, bombY * 32, 30, 30)){
+            GameMap.occupyBlock(bombX, bombY);
+            bombX = 0;
+            bombY = 0;
         }
     }
 
@@ -150,14 +156,19 @@ public class Bomber extends Entity {
     }
 
     public void actionHandler () {
+        if(isPause){
+            if(currentlyActiveKeys.isEmpty()) return;
+            else isPause = false;
+        }
+
         if(state != State.DIE){
             if(currentlyActiveKeys.isEmpty()){
                 velocity.x = 0;
                 velocity.y = 0;
             }
-            if(currentlyActiveKeys.contains("ESCAPE")) {
+            if(currentlyActiveKeys.contains("ESCAPE")){
                 currentlyActiveKeys.remove("ESCAPE");
-                isPause = !isPause;
+                isPause = true;
             }
             if(currentlyActiveKeys.contains("A")) {
                 currentlyActiveKeys.remove("A");
@@ -209,8 +220,9 @@ public class Bomber extends Entity {
                 }
                if(check){
                     bombs.add(bom);
-                    GameMap.occupyBlock(x, y);
-                    cd = 0;
+                    bombX = x;
+                    bombY = y;
+                    cd = 100;
                }
             }
         } else {
@@ -262,6 +274,9 @@ public class Bomber extends Entity {
     public void revive(){
         state = State.RIGHT;
         this.img = Sprite.player_right.getFxImage();
+        this.s1 = Sprite.player_right;
+        this.s2 = Sprite.player_right_1;
+        this.s3 = Sprite.player_right_2;
         position.x = spawnX * Sprite.SCALED_SIZE;
         position.y = spawnY * Sprite.SCALED_SIZE;
     }

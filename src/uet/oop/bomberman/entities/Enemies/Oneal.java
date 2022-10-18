@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Oneal extends Enemy {
+    public static final double onealSpeed = 0.5;
     public Oneal(int x, int y, Image img) {
         super(x, y, img);
         this.s1 = Sprite.oneal_right1;
@@ -77,10 +78,6 @@ public class Oneal extends Enemy {
             open.remove(curr);
             close.add(curr);
 
-            if(GameMap.map.get(curr.y).charAt(curr.x) == ' '){
-                GameMap.updateMap(curr.x, curr.y);
-            }
-
             if(curr.equals(end)){
                 end.parent = curr;
                 return;
@@ -136,10 +133,13 @@ public class Oneal extends Enemy {
         //find path using A* algorithm
         find(s, e);
         Node t = e.parent;
-
+        //t is the node connected to end node
+        //if t is null means there is no way to get to bomberman
         if(t == null){
-            return timer % 4;
-        }else{
+            return turn;
+        }
+        //else we trace back to the node connected to the start node
+        else{
             while(t.parent != s){
                 t = t.parent;
             }
@@ -149,8 +149,9 @@ public class Oneal extends Enemy {
                 if(v_x[i] == vX && v_y[i] == vY) return i;
             }
         }
-        return 0;
+        return turn;
     }
+    @Override
     public void move(){
         if(position.x % Sprite.SCALED_SIZE == 0 && position.y % Sprite.SCALED_SIZE == 0){
             turn = decideDirection();
@@ -172,20 +173,24 @@ public class Oneal extends Enemy {
         }
 
         double tX = position.x, tY = position.y;
-        if(GameMap.map.get(i).charAt(j) == '#' || GameMap.map.get(i).charAt(j) == '*'){
+        if(GameMap.map.get(i).charAt(j) == '#' || GameMap.map.get(i).charAt(j) == '*'
+            || GameMap.map.get(i).charAt(j) == 'o'){
+            if(GameMap.map.get(i).charAt(j) == 'o'){
+                turn = (turn + 2) % 4;
+            }
             if(position.x % 32 != 0 && position.y % 32 != 0){
-                position.x += v_x[turn];
-                position.y += v_y[turn];
+                position.x += v_x[turn] * onealSpeed;
+                position.y += v_y[turn] * onealSpeed;
             }
         } else {
-            position.x += v_x[turn];
-            position.y += v_y[turn];
+            position.x += v_x[turn] * onealSpeed;
+            position.y += v_y[turn] * onealSpeed;
         }
         //check stuck
-        //System.out.println(position.x + " " + position.y + "||" + tX + " " + tY);
         if(tX == position.x && tY == position.y){
             position.x = ((int)((position.x + 16) / Sprite.SCALED_SIZE)) * Sprite.SCALED_SIZE;
             position.y = ((int)((position.y + 16) / Sprite.SCALED_SIZE)) * Sprite.SCALED_SIZE;
+            turn = timer % 4;
         }
 
     }
