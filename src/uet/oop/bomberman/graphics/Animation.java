@@ -1,13 +1,13 @@
 package uet.oop.bomberman.graphics;
 
 public class Animation {
-    int index;
-    int speed;
-    int frames;
+    public int index;
+    public int speed;
+    public int frames;
 
     Animation(){}
 
-    Animation(int i, int f, int s)
+    public Animation(int i, int f, int s)
     {
         index = i;
         speed = s;

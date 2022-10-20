@@ -10,12 +10,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.item.Item;
-import uet.oop.bomberman.entities.item.Weapon;
+import uet.oop.bomberman.entities.item.weapon.Weapon;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
 
-import javax.swing.border.EmptyBorder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +30,8 @@ public class BombermanGame extends Application {
     public static Scene scene;
 
     public static Bomber bomberman;
+
+    public static long javaFxTicks = 0;
 
     private GraphicsContext gc;
     private Canvas canvas;
@@ -49,6 +50,7 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage stage) {
         // Tao Canvas
+
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
 
@@ -83,6 +85,8 @@ public class BombermanGame extends Application {
 
 
     public void update() {
+
+        javaFxTicks++;
 
         bombs.forEach(Entity::update);
         stillObjects.forEach(Entity::update);
@@ -151,4 +155,7 @@ public class BombermanGame extends Application {
     }
 
 
+    public static long getJavaFxTicks() {
+        return javaFxTicks;
+    }
 }

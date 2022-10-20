@@ -11,12 +11,13 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.item.Item;
-import uet.oop.bomberman.entities.item.Weapon;
+import uet.oop.bomberman.entities.item.weapon.Weapon;
+import uet.oop.bomberman.entities.stillobjects.Grass;
+import uet.oop.bomberman.graphics.Animation;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.graphics.SpriteSheet;
 import uet.oop.bomberman.map.GameMap;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -61,16 +62,38 @@ public class Bomber extends Entity {
 
     public int health;
     public Bomber(int x, int y, Image img) {
+
+
         super( x + 1, y, img);
+        isAnimated = true;
         prepareActionHandlers();
         velocity = new Vector2D();
         rect.setWidth(30);
         rect.setHeight(30);
         nextFrameRect = new Rectangle(30,30);
 
-        playerSheet = tiles;
-
+        spriteSheet = new Image("/textures/udlf.png", 32 * 3, 32 * 4,
+                true, true);
         weapons.clear();
+
+
+
+        Animation walkUp = new Animation(0, 3, 100);
+        Animation walkDown = new Animation(1, 3, 100);
+        Animation walkLeft = new Animation(2, 3, 100);
+        Animation walkRight = new Animation(3, 3, 100);
+        Animation die = new Animation(4, 3, 100);
+        Animation idle = new Animation(0, 1, 100);
+
+
+        animations.put("WalkUp", walkUp);
+        animations.put("WalkDown", walkDown);
+        animations.put("WalkLeft", walkLeft);
+        animations.put("WalkRight", walkRight);
+        animations.put("Die", die);
+        animations.put("Idle", idle);
+
+
 
     }
 
@@ -79,8 +102,6 @@ public class Bomber extends Entity {
 
         //get input
         actionHandler();
-        Grass tmp = new Grass();
-        //nextFrame position
 
         if(cd > 0) cd--;
 
@@ -112,23 +133,22 @@ public class Bomber extends Entity {
 
         switch (state){
             case DOWN:
-                sheetY = 0;
-                sheetX = 2;
+                play("WalkDown");
                 break;
             case LEFT:
-                sheetY = 0;
-                sheetX = 3;
+                play("WalkLeft");
                 break;
             case UP:
-                sheetY = 0;
-                sheetX = 0;
+                play("WalkUp");
                 break;
             case DIE:
                 break;
-            default:
-                sheetY = 0;
-                sheetX = 1;
+            case RIGHT:
+                play("WalkRight");
                 break;
+            default:
+                break;
+
         }
 
         /**
@@ -138,8 +158,10 @@ public class Bomber extends Entity {
          */
 
 
-        this.img = Sprite.movingSpriteSheet(playerSheet, sheetX, sheetY, 3,
-            this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+        /**
+         *         this.img = Sprite.movingSpriteSheet(playerSheet, sheetX, sheetY, 3,
+         *             this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+         */
 
     }
 
@@ -299,6 +321,9 @@ public class Bomber extends Entity {
             state = state.DOWN;
         }
 
+        if(currentlyActiveKeys.isEmpty()) {
+            play("Idle");
+        }
 
     }
 

@@ -1,24 +1,41 @@
 package uet.oop.bomberman.entities;
 
-import javafx.geometry.Rectangle2D;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
+import uet.oop.bomberman.graphics.Animation;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.HashMap;
 import java.util.Timer;
+
+import uet.oop.bomberman.Timer.GTimer;
 
 public abstract class Entity {
 
     public Entity() {}
     //Rectangle de lam collision.
+
+    public boolean isAnimated = false;
+
+    //khu xu ly animation
+    public Image spriteSheet;
+    public HashMap<String, Animation> animations = new HashMap<>();
+
+    public Rectangle srcRect;
+
+    public int frames = 0;
+    public int speed = 100;
+
+    public int animIndex = 0;
+
+    //
     protected Rectangle rect;
 
-    protected Timer timerF = new Timer();
+    protected Timer jTimer = new Timer();
 
     protected int timer = 100;
 
@@ -38,11 +55,24 @@ public abstract class Entity {
         this.x = xUnit;
         this.y = yUnit;
         rect = new Rectangle(xUnit * Sprite.SCALED_SIZE, yUnit * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-
     }
 
     public void render(GraphicsContext gc) {
-        gc.drawImage(img, position.x, position.y);
+
+        //speed thay vao
+        int srcX = 0;
+        if(isAnimated) {
+            //                                                                               speed ,  % frames.
+            srcX = (Sprite.SCALED_SIZE * (int) ( (BombermanGame.getJavaFxTicks() / (GTimer.ticksInASeconds / 6)) % 3));
+            System.out.println(srcX);
+            gc.drawImage(spriteSheet,srcX,animIndex * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE,
+                    position.x, position.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        }
+        else {
+            gc.drawImage(img, position.x, position.y);
+        }
+
+
         //write a draw function for rect.
         drawRect(gc);
 
@@ -60,6 +90,12 @@ public abstract class Entity {
     }
     public boolean isActive() {
         return isActive;
+    }
+
+    public void play(String id) {
+        frames = animations.get(id).frames;
+        speed = animations.get(id).speed;
+        animIndex = animations.get(id).index;
     }
 
 

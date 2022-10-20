@@ -1,11 +1,12 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.stillobjects;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.TimerTask;
 
-public class Brick extends Entity{
+public class Brick extends Entity {
     private boolean exploded;
 
     public void setExploded(boolean exploded) {
@@ -24,7 +25,7 @@ public class Brick extends Entity{
             this.timer++;
             this.img = Sprite.movingSprite(Sprite.brick_exploded, Sprite.brick_exploded1, Sprite.brick_exploded2, timer, 100).getFxImage();
 
-            timerF.schedule(new TimerTask() {
+            jTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     setInactive();

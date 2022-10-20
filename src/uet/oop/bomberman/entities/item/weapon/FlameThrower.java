@@ -1,18 +1,16 @@
-package uet.oop.bomberman.entities.item;
+package uet.oop.bomberman.entities.item.weapon;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.States.State;
-import uet.oop.bomberman.entities.Brick;
-import uet.oop.bomberman.entities.Grass;
+import uet.oop.bomberman.entities.stillobjects.Brick;
+import uet.oop.bomberman.entities.stillobjects.Grass;
 import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
-import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
 
 public class FlameThrower extends Weapon{

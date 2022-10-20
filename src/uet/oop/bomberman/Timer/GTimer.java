@@ -1,10 +1,13 @@
 package uet.oop.bomberman.Timer;
 
-public class Timer {
+import static uet.oop.bomberman.BombermanGame.getJavaFxTicks;
+
+public class GTimer {
+
 
 
         //Initializes variables
-        Timer() {
+        GTimer() {
             mStartTicks = 0;
             mPausedTicks = 0;
 
@@ -22,7 +25,7 @@ public class Timer {
             mPaused = false;
 
             //Get the current clock time
-            //mStartTicks = SDL_GetTicks();
+            mStartTicks = getJavaFxTicks();
             mPausedTicks = 0;
         };
         void last() {
@@ -48,7 +51,7 @@ public class Timer {
                 mPaused = true;
 
                 //Calculate the paused ticks
-                //mPausedTicks = SDL_GetTicks() - mStartTicks;
+                mPausedTicks = getJavaFxTicks() - mStartTicks;
                 mStartTicks = 0;
             }
         };
@@ -61,7 +64,7 @@ public class Timer {
                 mPaused = false;
 
                 //Reset the starting ticks
-                //mStartTicks = SDL_GetTicks() - mPausedTicks;
+                mStartTicks = getJavaFxTicks() - mPausedTicks;
 
                 //Reset the paused ticks
                 mPausedTicks = 0;
@@ -86,7 +89,7 @@ public class Timer {
                 else
                 {
                     //Return the current time minus the start time
-                    //time = SDL_GetTicks() - mStartTicks;
+                    time = getJavaFxTicks() - mStartTicks;
                 }
             }
 
@@ -120,4 +123,8 @@ public class Timer {
         boolean mPaused;
         boolean mStarted;
 
+        public static final int ticksInASeconds = 60;
+
 }
+
+

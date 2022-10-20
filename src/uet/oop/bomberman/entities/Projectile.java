@@ -1,13 +1,12 @@
 package uet.oop.bomberman.entities;
 
-import com.fasterxml.jackson.databind.node.POJONode;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
+import uet.oop.bomberman.entities.stillobjects.Brick;
+import uet.oop.bomberman.entities.stillobjects.Grass;
+import uet.oop.bomberman.entities.stillobjects.Portal;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
-
-import javax.sound.sampled.Port;
 
 import static uet.oop.bomberman.BombermanGame.stillObjects;
 

@@ -1,13 +1,22 @@
 package uet.oop.bomberman.map;
 
 import javafx.scene.shape.Rectangle;
-import org.apache.http.impl.execchain.TunnelRefusedException;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Enemies.Balloon;
 import uet.oop.bomberman.entities.Enemies.Turret;
 import uet.oop.bomberman.entities.Oneal;
 import uet.oop.bomberman.entities.item.*;
+import uet.oop.bomberman.entities.item.powerup.BombPowerUp;
+import uet.oop.bomberman.entities.item.powerup.FlameItem;
+import uet.oop.bomberman.entities.item.powerup.SpeedItem;
+import uet.oop.bomberman.entities.item.weapon.FlameThrower;
+import uet.oop.bomberman.entities.item.weapon.Gun;
+import uet.oop.bomberman.entities.item.weapon.SuicideVest;
+import uet.oop.bomberman.entities.stillobjects.Brick;
+import uet.oop.bomberman.entities.stillobjects.Grass;
+import uet.oop.bomberman.entities.stillobjects.Portal;
+import uet.oop.bomberman.entities.stillobjects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.File;
@@ -16,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import static uet.oop.bomberman.entities.Bomber.weapons;
-import static uet.oop.bomberman.entities.Bomber.weaponsSet;
 
 public class GameMap extends BombermanGame {
     public static ArrayList <String> map = new ArrayList<>();

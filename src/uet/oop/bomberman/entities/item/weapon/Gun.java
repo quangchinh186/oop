@@ -1,13 +1,9 @@
-package uet.oop.bomberman.entities.item;
+package uet.oop.bomberman.entities.item.weapon;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.entities.Projectile;
 import uet.oop.bomberman.graphics.Sprite;
-import uet.oop.bomberman.graphics.SpriteSheet;
-
-import java.util.TimerTask;
 
 import static uet.oop.bomberman.BombermanGame.bomberman;
 import static uet.oop.bomberman.BombermanGame.visualEffects;

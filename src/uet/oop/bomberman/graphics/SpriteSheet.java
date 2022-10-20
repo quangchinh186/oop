@@ -50,7 +50,7 @@ public class SpriteSheet {
 		_pixels = new int[SIZE_X * SIZE_Y];
 		load();
 	}
-	
+
 	private void load() {
 		try {
 			URL a = SpriteSheet.class.getResource(_path);
