@@ -7,8 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
-import uet.oop.bomberman.Sound.Sound;
-import uet.oop.bomberman.States.State;
+import uet.oop.bomberman.sound.Sound;
+import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.enemies.Enemy;
 import uet.oop.bomberman.entities.item.Item;
@@ -24,12 +24,12 @@ public class BombermanGame extends Application {
     public static boolean isPause = false;
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-    public static int level = 2;
+    public static int level = 1;
     public static Scene scene;
     public static Bomber bomberman;
     private GraphicsContext gc;
     private Canvas canvas;
-    private Sound music = new Sound("src/uet/oop/bomberman/Sound/mono16.wav");
+    private Sound music = new Sound("src/uet/oop/bomberman/sound/mono.wav");
 
     public static List<Enemy> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
@@ -91,8 +91,8 @@ public class BombermanGame extends Application {
         {
            e.update();
            if(e.getState() == State.DIE){
-               //entities.remove(e);
-               //break;
+               entities.remove(e);
+               break;
            }
         }
         items.forEach(Entity::update);

@@ -1,11 +1,13 @@
 package uet.oop.bomberman.entities.enemies;
 
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.States.State;
+import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.Entity;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
+
+import static uet.oop.bomberman.BombermanGame.isPause;
 
 public class Enemy extends Entity {
     public static double targetX, targetY;
@@ -21,21 +23,26 @@ public class Enemy extends Entity {
     public void die(){
         timer = 1;
         state = State.STOP;
+        animateTime = Sprite.SCALED_SIZE;
     }
 
     public void dieAnimation(){
-        animateTime = Sprite.SCALED_SIZE;
         s1 = Sprite.mob_dead1;
         s2 = Sprite.mob_dead2;
         s3 = Sprite.mob_dead3;
         this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
+        timer = timer < animateTime ? timer+1 : animateTime;
+        if(timer == animateTime){
+            this.img = null;
+            state = State.DIE;
+        }
     }
     public void update() {
         targetX = BombermanGame.bomberman.x;
         targetY = BombermanGame.bomberman.y;
         this.x = (int) (position.x / Sprite.SCALED_SIZE);
         this.y = (int) (position.y / Sprite.SCALED_SIZE);
-        if(state != State.DIE){
+        if(state != State.DIE && BombermanGame.bomberman.getState() != State.DIE){
             checkMeetBomber();
             move();
         }
@@ -44,7 +51,7 @@ public class Enemy extends Entity {
     }
 
     public void checkMeetBomber(){
-        if(this.rect.intersects(targetX * Sprite.SCALED_SIZE + 3, targetY * Sprite.SCALED_SIZE + 3, Sprite.SCALED_SIZE - 2, Sprite.SCALED_SIZE - 2)){
+        if(this.rect.intersects(targetX * Sprite.SCALED_SIZE + 8, targetY * Sprite.SCALED_SIZE + 8, Sprite.DEFAULT_SIZE, Sprite.DEFAULT_SIZE)){
             BombermanGame.bomberman.die();
         }
     }

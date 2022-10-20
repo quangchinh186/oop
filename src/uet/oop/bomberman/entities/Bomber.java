@@ -5,9 +5,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 
-import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.Physics.Vector2D;
-import uet.oop.bomberman.States.State;
+import uet.oop.bomberman.physics.Vector2D;
+import uet.oop.bomberman.sound.Sound;
+import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
@@ -20,6 +20,7 @@ import static uet.oop.bomberman.BombermanGame.*;
 
 public class Bomber extends Entity {
     private int bombNumbers = 1;
+    private Sound deadNoise;
     public static final double PLAYER_SPEED_NORMAL = 1;
     public static final double PLAYER_SPEED_BOOSTED = 1.5;
     private String checkStuck = "";
@@ -44,6 +45,7 @@ public class Bomber extends Entity {
         nextFrameRect = new Rectangle(30,30);
         state = State.RIGHT;
         atPortal = false;
+        deadNoise = new Sound("src/uet/oop/bomberman/sound/oof.wav");
     }
 
     @Override
@@ -71,7 +73,7 @@ public class Bomber extends Entity {
 
     }
     public void dieAnimation(){
-        System.out.println("in dieAnimation with timer" + timer);
+        System.out.println("in dieAnimation with timer: " + timer);
         this.s1 = Sprite.player_dead1;
         this.s2 = Sprite.player_dead2;
         this.s3 = Sprite.player_dead3;
@@ -321,6 +323,7 @@ public class Bomber extends Entity {
         state = State.DIE;
         velocity.x = 0;
         velocity.y = 0;
+        deadNoise.play();
     }
 
     public boolean isAtPortal() {

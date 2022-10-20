@@ -1,10 +1,7 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.Physics.Vector2D;
-import uet.oop.bomberman.graphics.Sprite;
-import uet.oop.bomberman.map.GameMap;
+import uet.oop.bomberman.physics.Vector2D;
 
 public class Projectile extends Entity{
 

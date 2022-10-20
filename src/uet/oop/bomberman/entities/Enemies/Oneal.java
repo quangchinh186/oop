@@ -3,7 +3,7 @@ package uet.oop.bomberman.entities.enemies;
 import uet.oop.bomberman.map.Node;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.States.State;
+import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
@@ -25,7 +25,12 @@ public class Oneal extends Enemy {
     @Override
     public void update() {
         super.update();
-        animate();
+        System.out.println(state);
+        if(state == State.STOP){
+            dieAnimation();
+        }else {
+            animate();
+        }
     }
     public void animate(){
         if(turn == 0){
@@ -38,23 +43,12 @@ public class Oneal extends Enemy {
             s2 = Sprite.oneal_left2;
             s3 = Sprite.oneal_left3;
         }
-        if(state == State.DIE){
-            s1 = Sprite.mob_dead1;
-            s2 = Sprite.mob_dead2;
-            s3 = Sprite.mob_dead3;
-        }
-        if(state == State.DIE && timer % Sprite.DEFAULT_SIZE == 0){
-            this.img = null;
-        }else{
-            timer = timer > Sprite.SCALED_SIZE ? 0 :timer+1;
-            this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
-        }
+        timer = timer > Sprite.SCALED_SIZE ? 0 :timer+1;
+        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
     }
 
     public void die(){
-        this.timer = 1;
-        state = State.DIE;
-        animateTime = Sprite.SCALED_SIZE;
+        super.die();
         this.img = Sprite.oneal_dead.getFxImage();
     }
 

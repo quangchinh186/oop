@@ -1,7 +1,7 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.States.State;
+import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Balloon extends Enemy {
@@ -38,6 +38,7 @@ public class Balloon extends Enemy {
         this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
     }
 
+    @Override
     public void die(){
         super.die();
         this.img = Sprite.balloom_dead.getFxImage();

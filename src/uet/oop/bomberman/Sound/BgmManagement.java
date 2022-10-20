@@ -1,4 +1,4 @@
-package uet.oop.bomberman.Sound;
+package uet.oop.bomberman.sound;
 
 public class BgmManagement {
 

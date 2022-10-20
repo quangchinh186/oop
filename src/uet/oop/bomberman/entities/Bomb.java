@@ -2,8 +2,8 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.Sound.Sound;
-import uet.oop.bomberman.States.State;
+import uet.oop.bomberman.sound.Sound;
+import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
@@ -27,12 +27,12 @@ public class Bomb extends Entity {
         this.s1 = Sprite.bomb;
         this.s2 = Sprite.bomb_1;
         this.s3 = Sprite.bomb_2;
-        boom = new Sound("src/uet/oop/bomberman/Sound/explosion.wav");
+        boom = new Sound("src/uet/oop/bomberman/sound/explosion.wav");
     }
 
     public Bomb(int x, int y){
         super(x, y, null);
-        boom = new Sound("src/uet/oop/bomberman/Sound/explosion.wav");
+        boom = new Sound("src/uet/oop/bomberman/sound/explosion.wav");
     }
     public List getVisual(){
         return this.flames;

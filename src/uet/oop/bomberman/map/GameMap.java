@@ -2,7 +2,7 @@ package uet.oop.bomberman.map;
 
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.Physics.Vector2D;
+import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.enemies.*;
 import uet.oop.bomberman.entities.item.BombPowerUp;
