@@ -10,14 +10,12 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.Enemies.Enemy;
+import uet.oop.bomberman.entities.enemies.Enemy;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
 
-import javax.print.attribute.standard.Media;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,14 +24,13 @@ public class BombermanGame extends Application {
     public static boolean isPause = false;
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-    public static int level = 1;
+    public static int level = 2;
     public static Scene scene;
     public static Bomber bomberman;
     private GraphicsContext gc;
     private Canvas canvas;
     private Sound music = new Sound("src/uet/oop/bomberman/Sound/mono16.wav");
 
-    private Media media;
     public static List<Enemy> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
     public static List<Item> items = new ArrayList<>();
@@ -85,15 +82,17 @@ public class BombermanGame extends Application {
             Bomb b = (Bomb) bombs.get(0);
             if(b.getTime() == 0){
                 visualEffects.removeAll(b.getVisual());
+                GameMap.updateMap(b.x, b.y);
                 bombs.remove(b);
+                bomberman.setbombNumbers(bomberman.getbombNumbers()+1);
             }
         }
         for (Enemy e : entities)
         {
            e.update();
            if(e.getState() == State.DIE){
-               entities.remove(e);
-               break;
+               //entities.remove(e);
+               //break;
            }
         }
         items.forEach(Entity::update);
@@ -114,9 +113,9 @@ public class BombermanGame extends Application {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         items.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
         visualEffects.forEach(g -> g.render(gc));
+        entities.forEach(g -> g.render(gc));
         bomberman.render(gc);
     }
 

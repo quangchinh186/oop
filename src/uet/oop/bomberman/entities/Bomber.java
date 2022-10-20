@@ -1,6 +1,5 @@
 package uet.oop.bomberman.entities;
 
-import javafx.util.Pair;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -13,16 +12,14 @@ import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static uet.oop.bomberman.BombermanGame.*;
 
 public class Bomber extends Entity {
-    private int cd = 0;
+    private int bombNumbers = 1;
     public static final double PLAYER_SPEED_NORMAL = 1;
     public static final double PLAYER_SPEED_BOOSTED = 1.5;
     private String checkStuck = "";
@@ -35,7 +32,6 @@ public class Bomber extends Entity {
     private Vector2D velocity;
     public static double playerSpeed = 1.5;
     public int lives;
-    public int bombX = 0, bombY = 0;
     private boolean atPortal;
 
     public Bomber(int x, int y, Image img) {
@@ -52,11 +48,11 @@ public class Bomber extends Entity {
 
     @Override
     public void update() {
+
         //get input
         x = (int) ((position.x + 8) / Sprite.SCALED_SIZE);
         y = (int) ((position.y + 8) / Sprite.SCALED_SIZE);
         actionHandler();
-        if(cd > 0) cd--;
         handleMapCollision();
         handleItemCollision();
         if(velocity.x != 0 || velocity.y != 0){
@@ -64,13 +60,26 @@ public class Bomber extends Entity {
             rect.setX(position.x);
             rect.setY(position.y);
         }
-        if(state == State.DIE && timer % 16 != 0){
-            animated();
+        if(state == State.DIE){
+            dieAnimation();
         }
-        if(!this.rect.intersects(bombX * 32, bombY * 32, 30, 30)){
-            GameMap.occupyBlock(bombX, bombY);
-            bombX = 0;
-            bombY = 0;
+        for (Entity b : bombs) {
+            if(!this.rect.intersects(b.x * 32, b.y * 32, 30, 30)){
+                GameMap.occupyBlock(b.x, b.y);
+            }
+        }
+
+    }
+    public void dieAnimation(){
+        System.out.println("in dieAnimation with timer" + timer);
+        this.s1 = Sprite.player_dead1;
+        this.s2 = Sprite.player_dead2;
+        this.s3 = Sprite.player_dead3;
+        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+        timer = timer < 15 ? timer+1 : 15;
+        if(timer == 15){
+            this.img = null;
+            isPause = true;
         }
     }
 
@@ -92,19 +101,12 @@ public class Bomber extends Entity {
                 this.s2 = Sprite.player_up_1;
                 this.s3 = Sprite.player_up_2;
                 break;
-            case DIE:
-                this.s1 = Sprite.player_dead1;
-                this.s2 = Sprite.player_dead2;
-                this.s3 = Sprite.player_dead3;
-
-                break;
             default:
                 this.s1 = Sprite.player_right;
                 this.s2 = Sprite.player_right_1;
                 this.s3 = Sprite.player_right_2;
                 break;
         }
-
         this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
 
     }
@@ -173,6 +175,7 @@ public class Bomber extends Entity {
             if(currentlyActiveKeys.contains("A")) {
                 currentlyActiveKeys.remove("A");
                 Bomb.power++;
+                bombNumbers++;
             }
             if(currentlyActiveKeys.contains("LEFT")) {
                 if(state == State.LEFT){
@@ -206,7 +209,7 @@ public class Bomber extends Entity {
                 currentlyActiveKeys.remove("K");
                 createProjectile();
             }
-            if (currentlyActiveKeys.contains("SPACE") && cd == 0){
+            if (currentlyActiveKeys.contains("SPACE") && bombNumbers != 0){
                 currentlyActiveKeys.remove("SPACE");
                 int x = (int) ((position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE);
                 int y = (int) ((position.y + Sprite.DEFAULT_SIZE)/ Sprite.SCALED_SIZE);
@@ -220,9 +223,7 @@ public class Bomber extends Entity {
                 }
                if(check){
                     bombs.add(bom);
-                    bombX = x;
-                    bombY = y;
-                    cd = 100;
+                    bombNumbers--;
                }
             }
         } else {
@@ -261,12 +262,6 @@ public class Bomber extends Entity {
         visualEffects.add(pj);
     }
 
-    public int getX() {
-        return this.x;
-    }
-    public int getY() {
-        return this.y;
-    }
     public void becomeChad() {
         this.img = Sprite.player_chad.getFxImage();
     }
@@ -306,12 +301,12 @@ public class Bomber extends Entity {
         });
     }
 
-    public void setCd(int cd) {
-        this.cd = cd;
+    public void setbombNumbers(int bombNumbers) {
+        this.bombNumbers = bombNumbers;
     }
 
-    public int getCd() {
-        return cd;
+    public int getbombNumbers() {
+        return bombNumbers;
     }
 
     public void setPlayerSpeed(double speed) {

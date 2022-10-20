@@ -1,8 +1,7 @@
-package uet.oop.bomberman.entities.Enemies;
+package uet.oop.bomberman.entities.enemies;
 
 import uet.oop.bomberman.map.Node;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.graphics.Sprite;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Oneal extends Enemy {
-    public static final double onealSpeed = 0.5;
+    public double onealSpeed = 0.5;
     public Oneal(int x, int y, Image img) {
         super(x, y, img);
         this.s1 = Sprite.oneal_right1;
@@ -118,14 +117,20 @@ public class Oneal extends Enemy {
     public int decideDirection(){
         int stX = (int)(position.x / Sprite.SCALED_SIZE);
         int stY = (int)(position.y / Sprite.SCALED_SIZE);
-        int dis = Math.abs(stX - BombermanGame.bomberman.getX()) + Math.abs(stY - BombermanGame.bomberman.getY());
+        int dis = Math.abs(stX - BombermanGame.bomberman.x) + Math.abs(stY - BombermanGame.bomberman.y);
+        if(dis > 20){
+            onealSpeed = 1.5;
+        }
+        else{
+            onealSpeed = 0.5;
+        }
         //Init start node *aka* Oneal position
         Node s = new Node(stX, stY);
         s.g_cost = 0;
         s.h_cost = dis;
         s.setF_cost();
         //Init end node *aka* bomberman
-        Node e = new Node(BombermanGame.bomberman.getX(), BombermanGame.bomberman.getY());
+        Node e = new Node(BombermanGame.bomberman.x, BombermanGame.bomberman.y);
         e.g_cost = dis;
         e.h_cost = 0;
         e.setF_cost();
@@ -175,9 +180,6 @@ public class Oneal extends Enemy {
         double tX = position.x, tY = position.y;
         if(GameMap.map.get(i).charAt(j) == '#' || GameMap.map.get(i).charAt(j) == '*'
             || GameMap.map.get(i).charAt(j) == 'o'){
-            if(GameMap.map.get(i).charAt(j) == 'o'){
-                turn = (turn + 2) % 4;
-            }
             if(position.x % 32 != 0 && position.y % 32 != 0){
                 position.x += v_x[turn] * onealSpeed;
                 position.y += v_y[turn] * onealSpeed;

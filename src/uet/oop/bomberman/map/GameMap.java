@@ -4,11 +4,8 @@ import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.Enemies.Balloon;
-import uet.oop.bomberman.entities.Enemies.BigBallon;
-import uet.oop.bomberman.entities.Enemies.Enemy;
+import uet.oop.bomberman.entities.enemies.*;
 import uet.oop.bomberman.entities.item.BombPowerUp;
-import uet.oop.bomberman.entities.Enemies.Oneal;
 import uet.oop.bomberman.entities.item.FlameItem;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.SpeedItem;
@@ -60,8 +57,13 @@ public class GameMap extends BombermanGame {
                         break;
                     case '3':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Enemy big = new BigBallon(j, i, Sprite.doll_left1.getFxImage());
+                        Enemy big = new BigBalloon(j, i, Sprite.doll_left1.getFxImage());
                         entities.add(big);
+                        break;
+                    case '4':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Enemy creeper = new Creeper(j, i, Sprite.bomb.getFxImage());
+                        entities.add(creeper);
                         break;
                     case '#':
                         object = new Wall(j, i, Sprite.wall.getFxImage());
@@ -133,9 +135,12 @@ public class GameMap extends BombermanGame {
                 }
             }
         }
-
-
-
         return false;
+    }
+
+    public static void print(){
+        for(int i = 0 ; i < map.size(); i++) {
+            System.out.println(map.get(i));
+        }
     }
 }

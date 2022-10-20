@@ -1,10 +1,8 @@
-package uet.oop.bomberman.entities.Enemies;
+package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.graphics.Sprite;
-import uet.oop.bomberman.map.GameMap;
 
 public class Balloon extends Enemy {
     public Balloon(int x, int y, Image img) {
@@ -12,14 +10,17 @@ public class Balloon extends Enemy {
         this.s1 = Sprite.balloom_right1;
         this.s2 = Sprite.balloom_right2;
         this.s3 = Sprite.balloom_right3;
-        animateTime = Sprite.DEFAULT_SIZE;
         state = State.RIGHT;
         turn = 2;
     }
     @Override
     public void update() {
         super.update();
-        animate();
+        if(state == State.STOP){
+            dieAnimation();
+        }else {
+            animate();
+        }
     }
 
     public void animate(){
@@ -33,24 +34,12 @@ public class Balloon extends Enemy {
             s2 = Sprite.balloom_left2;
             s3 = Sprite.balloom_left3;
         }
-        if(state == State.DIE){
-            s1 = Sprite.mob_dead1;
-            s2 = Sprite.mob_dead2;
-            s3 = Sprite.mob_dead3;
-        }
-        if(state == State.DIE && timer % Sprite.DEFAULT_SIZE == 0){
-            this.img = null;
-        }else{
-            timer = timer > Sprite.SCALED_SIZE ? 0 :timer+1;
-            this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
-        }
+        timer = timer > Sprite.SCALED_SIZE ? 0 :timer+1;
+        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
     }
 
     public void die(){
-        this.timer = 1;
-        state = State.DIE;
-        animateTime = Sprite.SCALED_SIZE;
-        setInactive();
+        super.die();
         this.img = Sprite.balloom_dead.getFxImage();
     }
 

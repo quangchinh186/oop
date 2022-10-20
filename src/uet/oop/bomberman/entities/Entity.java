@@ -16,7 +16,7 @@ public abstract class Entity {
     protected Sprite s1, s2, s3;
     protected int timer = 0;
     protected State state;
-    protected int x, y;
+    public int x, y;
 
     public State getState(){
         return state;

@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
@@ -14,6 +15,7 @@ public class Bomb extends Entity {
     private List<Flames> flames = new ArrayList<>();
     private Sprite s1, s2, s3;
     public static int power = 1;
+    Sound boom;
 
     public static void increasePower() {
         power++;
@@ -21,10 +23,16 @@ public class Bomb extends Entity {
 
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
-        this.time = 100;
+        this.time = 150;
         this.s1 = Sprite.bomb;
         this.s2 = Sprite.bomb_1;
         this.s3 = Sprite.bomb_2;
+        boom = new Sound("src/uet/oop/bomberman/Sound/explosion.wav");
+    }
+
+    public Bomb(int x, int y){
+        super(x, y, null);
+        boom = new Sound("src/uet/oop/bomberman/Sound/explosion.wav");
     }
     public List getVisual(){
         return this.flames;
@@ -42,19 +50,22 @@ public class Bomb extends Entity {
             this.s1 = Sprite.bomb_exploded;
             this.s2 = Sprite.bomb_exploded1;
             this.s3 = Sprite.bomb_exploded2;
+            boom.play();
         }
         else{
-            this.img = Sprite.movingSprite(s1, s2, s3, 100 - time, Sprite.DEFAULT_SIZE).getFxImage();
+            this.img = Sprite.movingSprite(s1, s2, s3, time, Sprite.DEFAULT_SIZE).getFxImage();
         }
         this.time--;
     }
 
-
+    public void setTime(int time) {
+        this.time = time;
+    }
 
     public void explode(){
         int width_lim = GameMap.WIDTH-1;
         int height_lim = GameMap.HEIGHT-1;
-        GameMap.updateMap(x, y);
+        destroy(x, y);
         //up
         for(int i = y-1; i >= Math.max(y-power, 0); i--){
             Flames f = new Flames(x, i, Sprite.explosion_vertical.getFxImage(), State.UP);
@@ -112,7 +123,6 @@ public class Bomb extends Entity {
                 }
             }
             BombermanGame.visualEffects.addAll(flames);
-
     }
 
 
@@ -126,7 +136,6 @@ public class Bomb extends Entity {
         if(BombermanGame.bomberman.x == _x && BombermanGame.bomberman.y == _y){
             BombermanGame.bomberman.die();
         }
-
         for (Entity t : BombermanGame.entities)
         {
             if(t.x == _x && t.y == _y){

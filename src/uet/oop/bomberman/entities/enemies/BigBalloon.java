@@ -1,16 +1,14 @@
-package uet.oop.bomberman.entities.Enemies;
+package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.graphics.Sprite;
 
-import javax.xml.parsers.SAXParser;
-
-public class BigBallon extends Enemy{
+public class BigBalloon extends Enemy{
     int life = 1;
     //Enemy child = new Balloon()
-    public BigBallon(int x, int y, Image image){
+    public BigBalloon(int x, int y, Image image){
         super(x, y, image);
         this.s1 = Sprite.doll_right1;
         this.s2 = Sprite.doll_right2;
@@ -27,10 +25,10 @@ public class BigBallon extends Enemy{
 
     @Override
     public void update() {
-        System.out.println(timer);
         if(state == State.DIE){
             Enemy b = new Balloon(x, y, Sprite.balloom_left3.getFxImage());
             Enemy b1 = new Balloon(x, y, Sprite.balloom_left2.getFxImage());
+
             BombermanGame.entities.add(b1);
             BombermanGame.entities.add(b);
         }

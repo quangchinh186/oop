@@ -10,7 +10,8 @@ public class Node {
     public Node(int x, int y) {
         this.x = x;
         this.y = y;
-        if(GameMap.map.get(y).charAt(x) == '#' || GameMap.map.get(y).charAt(x) == '*'){
+        char c = GameMap.map.get(y).charAt(x);
+        if(c == '#' || c == '*' || c == 'o'){
             walkable = false;
         }else{
             walkable = true;
