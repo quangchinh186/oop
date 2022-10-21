@@ -27,7 +27,7 @@ public abstract class Entity {
 
     public Rectangle srcRect;
 
-    public int frames = 0;
+    public int frames = 1;
     public int speed = 100;
 
     public int animIndex = 0;
@@ -36,6 +36,8 @@ public abstract class Entity {
     protected Rectangle rect;
 
     protected Timer jTimer = new Timer();
+
+    protected GTimer gTimer = new GTimer();
 
     protected int timer = 100;
 
@@ -63,8 +65,7 @@ public abstract class Entity {
         int srcX = 0;
         if(isAnimated) {
             //                                                                               speed ,  % frames.
-            srcX = (Sprite.SCALED_SIZE * (int) ( (BombermanGame.getJavaFxTicks() / (GTimer.ticksInASeconds / 6)) % 3));
-            System.out.println(srcX);
+            srcX = (Sprite.SCALED_SIZE * (int) ( (BombermanGame.getJavaFxTicks() / (GTimer.ticksInASeconds / 6)) % frames));
             gc.drawImage(spriteSheet,srcX,animIndex * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE,
                     position.x, position.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
         }
@@ -75,7 +76,6 @@ public abstract class Entity {
 
         //write a draw function for rect.
         drawRect(gc);
-
 
     }
     public abstract void update();

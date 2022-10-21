@@ -1,5 +1,7 @@
 package uet.oop.bomberman.graphics;
 
+import javafx.scene.image.Image;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -33,7 +35,7 @@ public class SpriteSheet {
 
 	public static SpriteSheet gunFlashTiles = new SpriteSheet("/textures/flash_full_auto.png", 3072, 48);
 
-	public static SpriteSheet middleEastTiles = new SpriteSheet("/textures/mid_man.png",64, 48);
+	public static Image middleEastTiles = new Image("/textures/mid_man.png",32 * 4, 32 * 3, true, true);
 
 	public SpriteSheet(String path, int size) {
 		_path = path;

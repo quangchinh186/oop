@@ -1,10 +1,11 @@
 package uet.oop.bomberman.entities;
 
+import com.fasterxml.jackson.core.JsonToken;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 import uet.oop.bomberman.BombermanGame;
@@ -12,8 +13,8 @@ import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.weapon.Weapon;
-import uet.oop.bomberman.entities.stillobjects.Grass;
 import uet.oop.bomberman.graphics.Animation;
+import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.graphics.SpriteSheet;
 import uet.oop.bomberman.map.GameMap;
@@ -21,22 +22,25 @@ import uet.oop.bomberman.map.GameMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TimerTask;
 
 import static uet.oop.bomberman.BombermanGame.*;
 import static uet.oop.bomberman.graphics.SpriteSheet.*;
 
 public class Bomber extends Entity {
     private int cd = 1;
-    private Sprite s1, s2, s3;
 
 
-    private SpriteSheet playerSheet;
+    private int hp = 3;
+
+    private static Image playerSheet = new Image("/textures/udlf.png", 32 * 3, 32 * 4,
+            true, true);;
 
     public static final double PLAYER_SPEED_NORMAL = 1;
 
     public static final double PLAYER_SPEED_BOOSTED = 1.5;
 
-    private boolean poweredUp = false;
+    private boolean isImmuned = false;
     private String checkStuck = "";
     private String twoFrameBackStuck = "";
     private String prevCheckStuck = "";
@@ -45,7 +49,6 @@ public class Bomber extends Entity {
 
     private Rectangle nextFrameRect;
 
-    private Paint pt;
     static HashSet<String> currentlyActiveKeys;
 
     //dung de luu weapons
@@ -72,29 +75,33 @@ public class Bomber extends Entity {
         rect.setHeight(30);
         nextFrameRect = new Rectangle(30,30);
 
-        spriteSheet = new Image("/textures/udlf.png", 32 * 3, 32 * 4,
-                true, true);
+        spriteSheet = playerSheet;
         weapons.clear();
+        initAnimation();
+    }
 
 
-
+    public void initAnimation() {
         Animation walkUp = new Animation(0, 3, 100);
         Animation walkDown = new Animation(1, 3, 100);
         Animation walkLeft = new Animation(2, 3, 100);
         Animation walkRight = new Animation(3, 3, 100);
         Animation die = new Animation(4, 3, 100);
-        Animation idle = new Animation(0, 1, 100);
-
+        Animation idleUp = new Animation(0, 1, 100);
+        Animation idleDown = new Animation(1, 1, 100);
+        Animation idleLeft = new Animation(2, 1, 100);
+        Animation idleRight = new Animation(3, 1, 100);
 
         animations.put("WalkUp", walkUp);
         animations.put("WalkDown", walkDown);
         animations.put("WalkLeft", walkLeft);
         animations.put("WalkRight", walkRight);
         animations.put("Die", die);
-        animations.put("Idle", idle);
-
-
-
+        //
+        animations.put("IdleUp", idleUp);
+        animations.put("IdleDown", idleDown);
+        animations.put("IdleLeft", idleLeft);
+        animations.put("IdleRight", idleRight);
     }
 
     @Override
@@ -107,6 +114,7 @@ public class Bomber extends Entity {
 
         handleMapCollision();
         handleItemCollision();
+        handleDamageCollision();
         //update weapons.
         weapons.forEach(Entity::update);
 
@@ -116,6 +124,30 @@ public class Bomber extends Entity {
         rect.setX(position.x);
         rect.setY(position.y);
         //System.out.println(currentlyActiveKeys);
+    }
+
+    private void handleDamageCollision() {
+
+        for(Entity et : visualEffects) {
+            if(et.rect.intersects(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight())) {
+                if(et instanceof Flames || et instanceof Projectile) {
+                    if(!isImmuned) {
+
+                        System.out.println("Va chung sat thuong");
+                        hp--;
+                        setImmuned(true);
+                        jTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                setImmuned(false);
+                            }
+                        },1000);
+                    }
+                }
+
+                et.setInactive();
+            }
+        }
     }
 
     @Override
@@ -151,6 +183,8 @@ public class Bomber extends Entity {
 
         }
 
+
+
         /**
          * else {
          *             this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
@@ -170,7 +204,6 @@ public class Bomber extends Entity {
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();
-
             }
         }
 
@@ -289,7 +322,6 @@ public class Bomber extends Entity {
             int y = (int) ((position.y + Sprite.DEFAULT_SIZE)/ Sprite.SCALED_SIZE);
             Entity bom = new Bomb(x, y, Sprite.bomb.getFxImage());
             bombs.add(bom);
-            System.out.println(x + " " + y);
             cd = 0;
         }
         if (currentlyActiveKeys.contains("K")){
@@ -322,7 +354,25 @@ public class Bomber extends Entity {
         }
 
         if(currentlyActiveKeys.isEmpty()) {
-            play("Idle");
+            switch (state){
+                case DOWN:
+                    play("IdleDown");
+                    break;
+                case LEFT:
+                    play("IdleLeft");
+                    break;
+                case UP:
+                    play("IdleUp");
+                    break;
+                case DIE:
+                    break;
+                case RIGHT:
+                    play("IdleRight");
+                    break;
+                default:
+                    break;
+
+            }
         }
 
     }
@@ -336,7 +386,15 @@ public class Bomber extends Entity {
 
     public void becomeChad() {
         state = State.CHAD;
-        playerSheet = middleEastTiles;
+        spriteSheet = middleEastTiles;
+        setImmuned(true);
+        jTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setImmuned(false);
+                spriteSheet = playerSheet;
+            }
+        },10000);
     }
 
 
@@ -375,6 +433,12 @@ public class Bomber extends Entity {
     public int getCd() {
         return cd;
     }
+
+    public void setImmuned(boolean immuned) {
+        isImmuned = immuned;
+    }
+
+
 
     public void setPlayerSpeed(double speed) {
         playerSpeed = speed;

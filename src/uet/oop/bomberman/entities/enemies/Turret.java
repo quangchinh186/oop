@@ -1,4 +1,4 @@
-package uet.oop.bomberman.entities.Enemies;
+package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.Physics.Vector2D;
@@ -6,8 +6,9 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Projectile;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.ConcurrentModificationException;
+import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TooManyListenersException;
 
 import static uet.oop.bomberman.BombermanGame.bomberman;
 import static uet.oop.bomberman.BombermanGame.visualEffects;
@@ -15,11 +16,12 @@ import static uet.oop.bomberman.BombermanGame.visualEffects;
 public class Turret extends Entity {
 
 
-    Vector2D direction = new Vector2D();
+    //Vector2D direction = new Vector2D();
     public static final int TURRET_RANGE = 200;
 
     public Turret(int x, int y, Image img) {
         super(x, y, img);
+        gTimer.start();
     }
 
     @Override
@@ -27,10 +29,17 @@ public class Turret extends Entity {
 
         if(Vector2D.getDistance(bomberman.position, position) < TURRET_RANGE) {
 
+            Vector2D direction = new Vector2D();
+
             direction.x = (int) (bomberman.position.x - position.x)/Vector2D.getDistance(bomberman.position, position);
             direction.y = (int) (bomberman.position.y - position.y)/Vector2D.getDistance(bomberman.position, position);
 
-            //createTurretShot(direction);
+
+            if(gTimer.getTicks() > 60 * 3) {
+                createTurretShot(direction);
+                gTimer.start();
+                System.out.println("SHOOT");
+            }
         }
     }
 

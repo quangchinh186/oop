@@ -7,7 +7,7 @@ public class GTimer {
 
 
         //Initializes variables
-        GTimer() {
+        public GTimer() {
             mStartTicks = 0;
             mPausedTicks = 0;
 
@@ -17,7 +17,7 @@ public class GTimer {
         };
 
         //The various clock actions
-        void start() {
+        public void start() {
             //Start the timer
             mStarted = true;
 
@@ -28,10 +28,10 @@ public class GTimer {
             mStartTicks = getJavaFxTicks();
             mPausedTicks = 0;
         };
-        void last() {
+        public void last() {
             lastRun = true;
         };
-        void stop() {
+        public void stop() {
             //Stop the timer
             mStarted = false;
 
@@ -43,7 +43,7 @@ public class GTimer {
             mPausedTicks = 0;
         };
 
-        void pause() {
+        public void pause() {
             //If the timer is running and isn't already paused
             if (mStarted && !mPaused)
             {
@@ -56,7 +56,7 @@ public class GTimer {
             }
         };
 
-        void unpause() {
+        public void unpause() {
             //If the timer is running and paused
             if (mStarted && mPaused)
             {
@@ -73,7 +73,7 @@ public class GTimer {
 
 
         //Gets the timer's time
-        long getTicks() {
+        public long getTicks() {
             //The actual timer time
             long time = 0;
 
@@ -113,7 +113,7 @@ public class GTimer {
         };
 
         //The clock time when the timer started
-        long mStartTicks;
+        public long mStartTicks;
 
         //The ticks stored when the timer was paused
         long mPausedTicks;

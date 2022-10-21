@@ -1,12 +1,12 @@
-package uet.oop.bomberman.entities.Enemies;
+package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.Physics.Vector2D;
-import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Animation;
 
 public class Enemy extends Entity {
+
 
     public Vector2D velocity = new Vector2D();
 
