@@ -25,7 +25,6 @@ public class Oneal extends Enemy {
     @Override
     public void update() {
         super.update();
-        System.out.println(state);
         if(state == State.STOP){
             dieAnimation();
         }else {

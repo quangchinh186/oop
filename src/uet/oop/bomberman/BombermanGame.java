@@ -91,6 +91,7 @@ public class BombermanGame extends Application {
         {
            e.update();
            if(e.getState() == State.DIE){
+               e.update();
                entities.remove(e);
                break;
            }

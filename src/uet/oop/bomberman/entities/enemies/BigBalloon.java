@@ -28,12 +28,15 @@ public class BigBalloon extends Enemy{
         if(state == State.DIE){
             Enemy b = new Balloon(x, y, Sprite.balloom_left3.getFxImage());
             Enemy b1 = new Balloon(x, y, Sprite.balloom_left2.getFxImage());
-
             BombermanGame.entities.add(b1);
             BombermanGame.entities.add(b);
         }
         super.update();
-        animate();
+        if(state == State.STOP){
+            dieAnimation();
+        }else {
+            animate();
+        }
     }
 
     public void animate(){
@@ -48,16 +51,7 @@ public class BigBalloon extends Enemy{
             s3 = Sprite.doll_left3;
 
         }
-        if(state == State.DIE){
-            s1 = Sprite.doll_dead;
-            s2 = Sprite.mob_dead2;
-            s3 = Sprite.mob_dead3;
-        }
-        if(state == State.DIE && timer % Sprite.DEFAULT_SIZE == 0){
-            this.img = null;
-        }else{
-            timer = timer > Sprite.SCALED_SIZE ? 0 :timer+1;
-            this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
-        }
+        timer = timer > Sprite.SCALED_SIZE ? 0 :timer+1;
+        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
     }
 }

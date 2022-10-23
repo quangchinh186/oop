@@ -8,6 +8,7 @@ import uet.oop.bomberman.graphics.Sprite;
 
 public class Creeper extends Oneal{
     private int count;
+    private Bomb bomb;
     public Creeper(int x, int y, Image img){
         super(x, y, img);
         count = 50;
@@ -15,8 +16,23 @@ public class Creeper extends Oneal{
 
     @Override
     public void update() {
-        if(state == State.STOP) return;
         super.update();
+    }
+
+    @Override
+    public void dieAnimation() {
+        s1 = Sprite.bomb_exploded;
+        s2 = Sprite.bomb_exploded1;
+        s3 = Sprite.bomb_exploded2;
+        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
+        timer = timer < animateTime ? timer+1 : animateTime;
+        if(timer == animateTime){
+            this.img = null;
+            if(bomb != null){
+                BombermanGame.visualEffects.removeAll(bomb.getVisual());
+            }
+            state = State.DIE;
+        }
     }
 
     public void animate(){
@@ -26,7 +42,7 @@ public class Creeper extends Oneal{
     @Override
     public void die(){
         this.timer = 1;
-        state = State.DIE;
+        state = State.STOP;
         animateTime = Sprite.SCALED_SIZE;
     }
     @Override
@@ -37,9 +53,8 @@ public class Creeper extends Oneal{
                 position.x = x*32;
                 position.y = y*32;
                 this.img = Sprite.bomb_exploded.getFxImage();
-                Bomb b = new Bomb(x, y);
-                BombermanGame.bombs.add(b);
-                b.setTime(20);
+                bomb = new Bomb(x, y);
+                bomb.explode();
                 die();
             }
         }else{

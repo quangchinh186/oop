@@ -44,9 +44,4 @@ public class Balloon extends Enemy {
         this.img = Sprite.balloom_dead.getFxImage();
     }
 
-    public void Turn(){
-
-    }
-
-
 }

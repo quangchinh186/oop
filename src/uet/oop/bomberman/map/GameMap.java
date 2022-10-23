@@ -65,6 +65,16 @@ public class GameMap extends BombermanGame {
                         Enemy creeper = new Creeper(j, i, Sprite.bomb.getFxImage());
                         entities.add(creeper);
                         break;
+                    case '5':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Enemy buggy = new Buggy(j, i, Sprite.kondoria_left1.getFxImage());
+                        entities.add(buggy);
+                        break;
+                    case '6':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Enemy evilBomber = new EvilBomber(j, i, Sprite.player_right.getFxImage());
+                        entities.add(evilBomber);
+                        break;
                     case '#':
                         object = new Wall(j, i, Sprite.wall.getFxImage());
                         break;

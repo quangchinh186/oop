@@ -50,7 +50,6 @@ public class Bomb extends Entity {
             this.s1 = Sprite.bomb_exploded;
             this.s2 = Sprite.bomb_exploded1;
             this.s3 = Sprite.bomb_exploded2;
-            boom.play();
         }
         else{
             this.img = Sprite.movingSprite(s1, s2, s3, time, Sprite.DEFAULT_SIZE).getFxImage();
@@ -63,6 +62,8 @@ public class Bomb extends Entity {
     }
 
     public void explode(){
+        boom.play();
+        this.img = Sprite.bomb_exploded1.getFxImage();
         int width_lim = GameMap.WIDTH-1;
         int height_lim = GameMap.HEIGHT-1;
         destroy(x, y);

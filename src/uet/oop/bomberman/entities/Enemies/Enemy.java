@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.enemies;
 
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.Entity;
 import javafx.scene.image.Image;
@@ -21,7 +22,7 @@ public class Enemy extends Entity {
     }
 
     public void die(){
-        timer = 1;
+        timer = -10;
         state = State.STOP;
         animateTime = Sprite.SCALED_SIZE;
     }
@@ -42,7 +43,7 @@ public class Enemy extends Entity {
         targetY = BombermanGame.bomberman.y;
         this.x = (int) (position.x / Sprite.SCALED_SIZE);
         this.y = (int) (position.y / Sprite.SCALED_SIZE);
-        if(state != State.DIE && BombermanGame.bomberman.getState() != State.DIE){
+        if(state != State.DIE && BombermanGame.bomberman.getState() != State.DIE && state != State.STOP){
             checkMeetBomber();
             move();
         }
@@ -86,4 +87,12 @@ public class Enemy extends Entity {
         }
     }
 
+    public void setPosition(Vector2D v){
+        this.position.x = v.x;
+        this.position.y = v.y;
+    }
+
+    public Vector2D getPosition(){
+        return this.position;
+    }
 }
