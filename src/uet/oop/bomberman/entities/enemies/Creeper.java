@@ -35,8 +35,14 @@ public class Creeper extends Oneal{
         }
     }
 
+    @Override
     public void animate(){
+        s1 = Sprite.creeper_right1;
+        s2 = Sprite.creeper_right2;
+        s3 = Sprite.creeper_right3;
 
+        timer = timer > Sprite.SCALED_SIZE ? 0 :timer+1;
+        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
     }
 
     @Override

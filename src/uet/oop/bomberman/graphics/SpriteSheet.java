@@ -17,8 +17,11 @@ public class SpriteSheet {
 	public BufferedImage image;
 
 	public static SpriteSheet tiles = new SpriteSheet("/textures/classic.png", 256);
-
+	public static SpriteSheet evil = new SpriteSheet("/textures/classic2.png", 256);
 	public static SpriteSheet gigaTiles = new SpriteSheet("/textures/arnold.png", 16);
+	public static SpriteSheet creeper1 = new SpriteSheet("/sprites/creeper1.png", 16);
+	public static SpriteSheet creeper2 = new SpriteSheet("/sprites/creeper2.png", 16);
+	public static SpriteSheet creeper3 = new SpriteSheet("/sprites/creeper3.png", 16);
 
 	
 	public SpriteSheet(String path, int size) {

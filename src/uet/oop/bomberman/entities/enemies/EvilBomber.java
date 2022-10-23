@@ -5,15 +5,50 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
+import uet.oop.bomberman.states.State;
 
 public class EvilBomber extends Enemy {
     public EvilBomber(int x, int y, Image img){
         super(x, y, img);
+        s1 = Sprite.evil_right;
+        s2 = Sprite.evil_right_1;
+        s3 = Sprite.evil_right_2;
     }
 
     @Override
     public void update() {
         super.update();
+        if(state == State.STOP){
+            dieAnimation();
+        }else {
+            animate();
+        }
+    }
+
+    public void animate(){
+        if(turn == 0){
+            s1 = Sprite.evil_right;
+            s2 = Sprite.evil_right_1;
+            s3 = Sprite.evil_right_2;
+        }
+        if(turn == 1){
+            s1 = Sprite.evil_down;
+            s2 = Sprite.evil_down_1;
+            s3 = Sprite.evil_down_2;
+        }
+        if(turn == 2){
+            s1 = Sprite.evil_left;
+            s2 = Sprite.evil_left_1;
+            s3 = Sprite.evil_left_2;
+        }
+        if(turn == 3){
+            s1 = Sprite.evil_up;
+            s2 = Sprite.evil_up_1;
+            s3 = Sprite.evil_up_2;
+        }
+
+        timer = timer > Sprite.SCALED_SIZE ? 0 :timer+1;
+        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, animateTime).getFxImage();
     }
 
     @Override
