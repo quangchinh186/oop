@@ -13,6 +13,7 @@ import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.weapon.Weapon;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
+import view.ViewManager;
 
 
 import java.util.ArrayList;
@@ -48,41 +49,37 @@ public class BombermanGame extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
-        // Tao Canvas
+    public void start(Stage primaryStage) {
+        try {
+            ViewManager manager = new ViewManager();
+            primaryStage = manager.getMainStage();
+            primaryStage.setTitle("SpaceRunner the Game");
+            primaryStage.setResizable(false);
+            //primaryStage.setFullScreen(true);
 
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
-        gc = canvas.getGraphicsContext2D();
-
-
-        // Tao root container
-        Group root = new Group();
-        root.getChildren().add(canvas);
-
-        // Tao scene
-        scene = new Scene(root);
-
-        // Them scene vao stage
-        stage.setScene(scene);
-        stage.show();
-
-        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
-        GameMap.createMap(level);
-        GameMap.checkCollision(new Rectangle(1,2,4,5));
-
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-                render();
-                update();
-            }
-        };
-        timer.start();
-
-
+            primaryStage.show();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
+
+    /**
+     *
+     * public void start(Stage primaryStage) {
+     *         try {
+     *             ViewManager manager = new ViewManager();
+     *             primaryStage = manager.getMainStage();
+     *             primaryStage.setTitle("SpaceRunner the Game");
+     *             primaryStage.setResizable(false);
+     *             //primaryStage.setFullScreen(true);
+     *
+     *             primaryStage.show();
+     *         } catch(Exception e) {
+     *             e.printStackTrace();
+     *         }
+     *     }
+     */
 
     public void update() {
 

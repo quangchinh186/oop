@@ -73,7 +73,6 @@ public class Weapon extends Item {
 
     @Override
     public void render(GraphicsContext gc) {
-        System.out.println(angle);
         //Sprite.drawRotatedImage(gc, this.img, angle, position.x ,position.y);
         //write a draw function for rect.
         if(bomberman.getState() == State.LEFT && armed) {

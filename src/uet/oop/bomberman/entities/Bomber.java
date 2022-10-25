@@ -371,7 +371,6 @@ public class Bomber extends Entity {
                     break;
                 default:
                     break;
-
             }
         }
 
