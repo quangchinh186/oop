@@ -18,6 +18,7 @@ import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.graphics.SpriteSheet;
 import uet.oop.bomberman.map.GameMap;
+import view.GameViewManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ import java.util.TimerTask;
 
 import static uet.oop.bomberman.BombermanGame.*;
 import static uet.oop.bomberman.graphics.SpriteSheet.*;
+import static view.GameViewManager.*;
 
 public class Bomber extends Entity {
     private int cd = 1;
@@ -34,7 +36,7 @@ public class Bomber extends Entity {
     private int hp = 3;
 
     private static Image playerSheet = new Image("/textures/udlf.png", 32 * 3, 32 * 4,
-            true, true);;
+            true, true);
 
     public static final double PLAYER_SPEED_NORMAL = 1;
 
@@ -79,6 +81,26 @@ public class Bomber extends Entity {
         weapons.clear();
         initAnimation();
     }
+
+
+    public Bomber(int x, int y, String sheetUrl) {
+
+
+        super( x + 1, y, Sprite.player_right.getFxImage());
+        isAnimated = true;
+        prepareActionHandlers();
+        velocity = new Vector2D();
+        rect.setWidth(30);
+        rect.setHeight(30);
+        nextFrameRect = new Rectangle(30,30);
+        weapons.clear();
+        initAnimation();
+
+        spriteSheet = new Image(sheetUrl,32 * 4, 32 * 3, true, true);
+    }
+
+
+
 
 
     public void initAnimation() {
@@ -224,9 +246,9 @@ public class Bomber extends Entity {
             }
         }
 
-        BombermanGame.clearInactiveItem(items);
+        GameViewManager.clearInactiveItem(items);
 
-        BombermanGame.clearInactiveWeapon(weapons);
+        GameViewManager.clearInactiveWeapon(weapons);
 
 
 
@@ -402,7 +424,7 @@ public class Bomber extends Entity {
         // use a set so duplicates are not possible
         currentlyActiveKeys = new HashSet<String>();
         releasedKey = new HashSet<String>();
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>()
+        gameScene.setOnKeyPressed(new EventHandler<KeyEvent>()
         {
             @Override
             public void handle(KeyEvent event)
@@ -412,7 +434,7 @@ public class Bomber extends Entity {
             }
 
         });
-        scene.setOnKeyReleased(new EventHandler<KeyEvent>()
+        gameScene.setOnKeyReleased(new EventHandler<KeyEvent>()
         {
             @Override
             public void handle(KeyEvent event)

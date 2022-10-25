@@ -10,8 +10,9 @@ import java.util.ConcurrentModificationException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static uet.oop.bomberman.BombermanGame.bomberman;
-import static uet.oop.bomberman.BombermanGame.visualEffects;
+import static view.GameViewManager.bomberman;
+import static view.GameViewManager.visualEffects;
+
 
 public class Turret extends Entity {
 

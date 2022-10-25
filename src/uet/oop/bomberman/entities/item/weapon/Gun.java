@@ -5,8 +5,8 @@ import uet.oop.bomberman.Physics.Vector2D;
 import uet.oop.bomberman.entities.Projectile;
 import uet.oop.bomberman.graphics.Sprite;
 
-import static uet.oop.bomberman.BombermanGame.bomberman;
-import static uet.oop.bomberman.BombermanGame.visualEffects;
+import static view.GameViewManager.bomberman;
+import static view.GameViewManager.visualEffects;
 
 
 public class Gun extends Weapon{

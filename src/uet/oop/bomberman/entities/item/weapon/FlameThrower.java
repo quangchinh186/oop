@@ -8,6 +8,7 @@ import uet.oop.bomberman.entities.stillobjects.Grass;
 import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
+import view.GameViewManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,21 +78,21 @@ public class FlameThrower extends Weapon{
                 f.setLast(true);
             }
             f.setHorizontal(true);
-            BombermanGame.visualEffects.add(f);
+            GameViewManager.visualEffects.add(f);
             flames.add(f);
             destroy(i, (int)position.y/Sprite.SCALED_SIZE);
-            if (!(BombermanGame.stillObjects.get((int)position.y/Sprite.SCALED_SIZE * 31 + i) instanceof Grass)) {
+            if (!(GameViewManager.stillObjects.get((int)position.y/Sprite.SCALED_SIZE * 31 + i) instanceof Grass)) {
                 break;
             }
         }
-        BombermanGame.visualEffects.addAll(flames);
+        GameViewManager.visualEffects.addAll(flames);
     }
 
 
     public void destroy(int _x, int _y) {
         switch (GameMap.map.get(_y).charAt(_x)){
             case '*' :
-                Brick temp = (Brick) BombermanGame.stillObjects.get(_y*31 + _x);
+                Brick temp = (Brick) GameViewManager.stillObjects.get(_y*31 + _x);
                 temp.setExploded(true);
                 break;
 

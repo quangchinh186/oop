@@ -8,7 +8,7 @@ import uet.oop.bomberman.entities.stillobjects.Portal;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
-import static uet.oop.bomberman.BombermanGame.stillObjects;
+import static view.GameViewManager.stillObjects;
 
 public class Projectile extends Entity{
 

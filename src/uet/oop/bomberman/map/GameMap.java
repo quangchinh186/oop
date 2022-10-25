@@ -1,7 +1,7 @@
 package uet.oop.bomberman.map;
 
 import javafx.scene.shape.Rectangle;
-import uet.oop.bomberman.BombermanGame;
+
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.enemies.Balloon;
 import uet.oop.bomberman.entities.enemies.Turret;
@@ -18,6 +18,7 @@ import uet.oop.bomberman.entities.stillobjects.Grass;
 import uet.oop.bomberman.entities.stillobjects.Portal;
 import uet.oop.bomberman.entities.stillobjects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
+import view.GameViewManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,8 +26,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import static uet.oop.bomberman.entities.Bomber.weapons;
+import static view.GameViewManager.*;
 
-public class GameMap extends BombermanGame {
+public class GameMap extends GameViewManager {
     public static ArrayList <String> map = new ArrayList<>();
 
     public static void updateMap(int x, int y){
@@ -188,7 +190,7 @@ public class GameMap extends BombermanGame {
     public static void destroy(int _x, int _y) {
         switch (GameMap.map.get(_y).charAt(_x)){
             case '*' :
-                Brick temp = (Brick) BombermanGame.stillObjects.get(_y*31 + _x);
+                Brick temp = (Brick) GameViewManager.stillObjects.get(_y*31 + _x);
                 temp.setExploded(true);
                 break;
 

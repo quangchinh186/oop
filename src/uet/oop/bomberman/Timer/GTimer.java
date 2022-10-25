@@ -1,6 +1,6 @@
 package uet.oop.bomberman.Timer;
 
-import static uet.oop.bomberman.BombermanGame.getJavaFxTicks;
+import static view.GameViewManager.getJavaFxTicks;
 
 public class GTimer {
 

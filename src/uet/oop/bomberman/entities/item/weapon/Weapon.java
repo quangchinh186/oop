@@ -12,9 +12,7 @@ import uet.oop.bomberman.graphics.Sprite;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static uet.oop.bomberman.BombermanGame.bomberman;
-import static uet.oop.bomberman.BombermanGame.visualEffects;
-
+import static view.GameViewManager.bomberman;
 
 
 class Helper extends TimerTask

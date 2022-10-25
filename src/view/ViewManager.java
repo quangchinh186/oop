@@ -138,7 +138,11 @@ public class ViewManager {
         return startButton;
     }
 
+
+
+
     private void createScoresButton() {
+
         GameButton scoresButton = new GameButton("Scores");
         addMenuButtons(scoresButton);
 

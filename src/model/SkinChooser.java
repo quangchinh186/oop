@@ -22,7 +22,7 @@ public class SkinChooser extends VBox {
 
     public SkinChooser(SKIN skin) {
         circleImage = new ImageView(new Image(circleNotChosen));
-        skinImage   = new ImageView(skin.getUrl());
+        skinImage   = new ImageView(skin.getSkinUrl());
         this.skin = skin;
         isCircleChosen = false;
         this.setAlignment(Pos.CENTER);

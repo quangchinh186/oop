@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Timer;
 
 import uet.oop.bomberman.Timer.GTimer;
+import view.GameViewManager;
 
 public abstract class Entity {
 
@@ -65,7 +66,7 @@ public abstract class Entity {
         int srcX = 0;
         if(isAnimated) {
             //                                                                               speed ,  % frames.
-            srcX = (Sprite.SCALED_SIZE * (int) ( (BombermanGame.getJavaFxTicks() / (GTimer.ticksInASeconds / 6)) % frames));
+            srcX = (Sprite.SCALED_SIZE * (int) ( (GameViewManager.getJavaFxTicks() / (GTimer.ticksInASeconds / 6)) % frames));
             gc.drawImage(spriteSheet,srcX,animIndex * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE,
                     position.x, position.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
         }

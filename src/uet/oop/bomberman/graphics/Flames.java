@@ -6,6 +6,7 @@ import uet.oop.bomberman.States.State;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.stillobjects.Grass;
 import uet.oop.bomberman.map.GameMap;
+import view.GameViewManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -82,7 +83,7 @@ public class Flames extends Entity {
     @Override
     public void update() {
         this.time--;
-        if(BombermanGame.stillObjects.get(y*31 + x) instanceof Grass){
+        if(GameViewManager.stillObjects.get(y*31 + x) instanceof Grass){
             this.img = Sprite.movingSprite(s1, s2, s3, this.timer - time,80).getFxImage();
         }else{
             this.img = null;
