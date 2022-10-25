@@ -59,7 +59,7 @@ public class Creeper extends Oneal{
                 position.x = x*32;
                 position.y = y*32;
                 this.img = Sprite.bomb_exploded.getFxImage();
-                bomb = new Bomb(x, y);
+                bomb = new Bomb(x, y, "Creeper");
                 bomb.explode();
                 die();
             }

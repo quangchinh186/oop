@@ -130,15 +130,25 @@ public class Sprite {
 	public static Sprite minvo_dead = new Sprite(DEFAULT_SIZE, 8, 8, SpriteSheet.tiles, 16, 16);
 	
 	//Kondoria
-	public static Sprite kondoria_left1 = new Sprite(DEFAULT_SIZE, 10, 5, SpriteSheet.tiles, 16, 16);
-	public static Sprite kondoria_left2 = new Sprite(DEFAULT_SIZE, 10, 6, SpriteSheet.tiles, 16, 16);
-	public static Sprite kondoria_left3 = new Sprite(DEFAULT_SIZE, 10, 7, SpriteSheet.tiles, 16, 16);
-	
-	public static Sprite kondoria_right1 = new Sprite(DEFAULT_SIZE, 11, 5, SpriteSheet.tiles, 16, 16);
-	public static Sprite kondoria_right2 = new Sprite(DEFAULT_SIZE, 11, 6, SpriteSheet.tiles, 16, 16);
-	public static Sprite kondoria_right3 = new Sprite(DEFAULT_SIZE, 11, 7, SpriteSheet.tiles, 16, 16);
-	
-	public static Sprite kondoria_dead = new Sprite(DEFAULT_SIZE, 10, 8, SpriteSheet.tiles, 16, 16);
+	public static Sprite blue_left1 = new Sprite(DEFAULT_SIZE, 10, 5, SpriteSheet.tiles, 16, 16);
+	public static Sprite blue_left2 = new Sprite(DEFAULT_SIZE, 10, 6, SpriteSheet.tiles, 16, 16);
+	public static Sprite blue_left3 = new Sprite(DEFAULT_SIZE, 10, 7, SpriteSheet.tiles, 16, 16);
+
+	public static Sprite blue_right1 = new Sprite(DEFAULT_SIZE, 11, 5, SpriteSheet.tiles, 16, 16);
+	public static Sprite blue_right2 = new Sprite(DEFAULT_SIZE, 11, 6, SpriteSheet.tiles, 16, 16);
+	public static Sprite blue_right3 = new Sprite(DEFAULT_SIZE, 11, 7, SpriteSheet.tiles, 16, 16);
+
+	public static Sprite blue_dead = new Sprite(DEFAULT_SIZE, 10, 8, SpriteSheet.tiles, 16, 16);
+
+	public static Sprite white_left1 = new Sprite(DEFAULT_SIZE, 10, 5, SpriteSheet.evil, 16, 16);
+	public static Sprite white_left2 = new Sprite(DEFAULT_SIZE, 10, 6, SpriteSheet.evil, 16, 16);
+	public static Sprite white_left3 = new Sprite(DEFAULT_SIZE, 10, 7, SpriteSheet.evil, 16, 16);
+
+	public static Sprite white_right1 = new Sprite(DEFAULT_SIZE, 11, 5, SpriteSheet.evil, 16, 16);
+	public static Sprite white_right2 = new Sprite(DEFAULT_SIZE, 11, 6, SpriteSheet.evil, 16, 16);
+	public static Sprite white_right3 = new Sprite(DEFAULT_SIZE, 11, 7, SpriteSheet.evil, 16, 16);
+
+	public static Sprite white_dead = new Sprite(DEFAULT_SIZE, 10, 8, SpriteSheet.evil, 16, 16);
 
 	//Creeper
 	public static Sprite creeper_right1 = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.creeper1, 16, 16);

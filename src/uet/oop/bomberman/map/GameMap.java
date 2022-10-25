@@ -67,7 +67,7 @@ public class GameMap extends BombermanGame {
                         break;
                     case '5':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Enemy buggy = new Buggy(j, i, Sprite.kondoria_left1.getFxImage());
+                        Enemy buggy = new Buggy(j, i, Sprite.white_left1.getFxImage());
                         entities.add(buggy);
                         break;
                     case '6':

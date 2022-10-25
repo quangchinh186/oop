@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.sound.Sound;
 import uet.oop.bomberman.states.State;
@@ -45,7 +46,7 @@ public class Bomber extends Entity {
         nextFrameRect = new Rectangle(30,30);
         state = State.RIGHT;
         atPortal = false;
-        deadNoise = new Sound("src/uet/oop/bomberman/sound/oof.wav");
+        deadNoise = new Sound("res/sfx/oof.wav");
     }
 
     @Override
@@ -73,7 +74,6 @@ public class Bomber extends Entity {
 
     }
     public void dieAnimation(){
-        System.out.println("in dieAnimation with timer: " + timer);
         this.s1 = Sprite.player_dead1;
         this.s2 = Sprite.player_dead2;
         this.s3 = Sprite.player_dead3;
@@ -82,6 +82,7 @@ public class Bomber extends Entity {
         if(timer == 15){
             this.img = null;
             isPause = true;
+            lives--;
         }
     }
 
@@ -211,11 +212,40 @@ public class Bomber extends Entity {
                 currentlyActiveKeys.remove("K");
                 createProjectile();
             }
+            //mp3 key input test
+            if (currentlyActiveKeys.contains("Q")){
+                currentlyActiveKeys.remove("Q");
+                musicPlayer.play();
+                System.out.println("now playing: " + musicPlayer.getNow());
+            }
+            if (currentlyActiveKeys.contains("W")){
+                currentlyActiveKeys.remove("W");
+                musicPlayer.pause();
+            }
+            if (currentlyActiveKeys.contains("E")){
+                currentlyActiveKeys.remove("E");
+                musicPlayer.next();
+                System.out.println("now playing: " + musicPlayer.getNow());
+            }
+            if (currentlyActiveKeys.contains("R")){
+                currentlyActiveKeys.remove("R");
+                musicPlayer.prev();
+                System.out.println("now playing: " + musicPlayer.getNow());
+            }
+            if (currentlyActiveKeys.contains("U")){
+                currentlyActiveKeys.remove("U");
+                musicPlayer.changeVolume("up");
+            }
+            if (currentlyActiveKeys.contains("I")){
+                currentlyActiveKeys.remove("I");
+                musicPlayer.changeVolume("down");
+            }
+            //end of test
             if (currentlyActiveKeys.contains("SPACE") && bombNumbers != 0){
                 currentlyActiveKeys.remove("SPACE");
                 int x = (int) ((position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE);
                 int y = (int) ((position.y + Sprite.DEFAULT_SIZE)/ Sprite.SCALED_SIZE);
-                Entity bom = new Bomb(x, y, Sprite.bomb.getFxImage());
+                Entity bom = new Bomb(x, y, Sprite.bomb.getFxImage(), "Bomber");
                 boolean check = true;
                 for(int i = 0; i < bombs.size(); i++){
                     if((bombs.get(i).equals(bom))){
@@ -303,11 +333,11 @@ public class Bomber extends Entity {
         });
     }
 
-    public void setbombNumbers(int bombNumbers) {
+    public void setBombNumbers(int bombNumbers) {
         this.bombNumbers = bombNumbers;
     }
 
-    public int getbombNumbers() {
+    public int getBombNumbers() {
         return bombNumbers;
     }
 

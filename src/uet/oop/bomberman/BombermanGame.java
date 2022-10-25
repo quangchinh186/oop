@@ -6,7 +6,10 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import uet.oop.bomberman.sound.BgmManagement;
 import uet.oop.bomberman.sound.Sound;
 import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.*;
@@ -23,13 +26,14 @@ import java.util.List;
 public class BombermanGame extends Application {
     public static boolean isPause = false;
     public static final int WIDTH = 31;
-    public static final int HEIGHT = 13;
+    public static final int HEIGHT = 15;
     public static int level = 1;
+    public static int score = 0;
     public static Scene scene;
     public static Bomber bomberman;
     private GraphicsContext gc;
     private Canvas canvas;
-    private Sound music = new Sound("src/uet/oop/bomberman/sound/mono.wav");
+    public static BgmManagement musicPlayer = new BgmManagement("res/music");
 
     public static List<Enemy> entities = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
@@ -53,19 +57,24 @@ public class BombermanGame extends Application {
 
         // Tao scene
         scene = new Scene(root);
-
+        scene.setFill(Color.web("#81c483"));
         // Them scene vao stage
         stage.setScene(scene);
         stage.show();
         GameMap.createMap(level);
-        //music.play();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 render();
                 if(!isPause){
                     update();
-                }else{
+                    musicPlayer.autoMove();
+                }
+                if(bomberman.lives == 0){
+                    System.out.println("Game Over!");
+                    stop();
+                }
+                else{
                     bomberman.actionHandler();
                 }
             }
@@ -83,8 +92,10 @@ public class BombermanGame extends Application {
             if(b.getTime() == 0){
                 visualEffects.removeAll(b.getVisual());
                 GameMap.updateMap(b.x, b.y);
+                if(b.whom.equals("Bomber")){
+                    bomberman.setBombNumbers(bomberman.getBombNumbers()+1);
+                }
                 bombs.remove(b);
-                bomberman.setbombNumbers(bomberman.getbombNumbers()+1);
             }
         }
         for (Enemy e : entities)

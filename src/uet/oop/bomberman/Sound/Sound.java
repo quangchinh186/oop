@@ -3,20 +3,19 @@ package uet.oop.bomberman.sound;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 
 public class Sound {
     private Clip sfx;
+    private FloatControl floatControl;
+    float curVolume = 0;
     public Sound(String path) {
         try {
                 File file = new File(path);
                 AudioInputStream input = AudioSystem.getAudioInputStream(file);
                 sfx = AudioSystem.getClip();
                 sfx.open(input);
+                floatControl = (FloatControl)sfx.getControl(FloatControl.Type.MASTER_GAIN);
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
@@ -40,5 +39,25 @@ public class Sound {
     }
     public void stop(){
         sfx.stop();
+    }
+    public int getTime(){
+        return sfx.getFramePosition();
+    }
+    public boolean isEnd(){
+        return sfx.getFramePosition() == sfx.getFrameLength();
+    }
+    public void volumeUp(){
+        curVolume += 1.0f;
+        if(curVolume > 6.0f){
+            curVolume = 6.0f;
+        }
+        floatControl.setValue(curVolume);
+    }
+    public void volumeDown(){
+        curVolume -= 1.0f;
+        if(curVolume < -80.0f){
+            curVolume = -80.0f;
+        }
+        floatControl.setValue(curVolume);
     }
 }

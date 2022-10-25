@@ -16,23 +16,26 @@ public class Bomb extends Entity {
     private Sprite s1, s2, s3;
     public static int power = 1;
     Sound boom;
+    public String whom;
 
     public static void increasePower() {
         power++;
     }
 
-    public Bomb(int x, int y, Image img) {
+    public Bomb(int x, int y, Image img, String whom) {
         super(x, y, img);
         this.time = 150;
         this.s1 = Sprite.bomb;
         this.s2 = Sprite.bomb_1;
         this.s3 = Sprite.bomb_2;
-        boom = new Sound("src/uet/oop/bomberman/sound/explosion.wav");
+        this.whom = whom;
+        boom = new Sound("res/sfx/explosion.wav");
     }
 
-    public Bomb(int x, int y){
+    public Bomb(int x, int y, String whom){
         super(x, y, null);
-        boom = new Sound("src/uet/oop/bomberman/sound/explosion.wav");
+        this.whom = whom;
+        boom = new Sound("res/sfx/explosion.wav");
     }
     public List getVisual(){
         return this.flames;

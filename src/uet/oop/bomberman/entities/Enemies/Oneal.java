@@ -111,7 +111,7 @@ public class Oneal extends Enemy {
         int stX = (int)(position.x / Sprite.SCALED_SIZE);
         int stY = (int)(position.y / Sprite.SCALED_SIZE);
         int dis = Math.abs(stX - BombermanGame.bomberman.x) + Math.abs(stY - BombermanGame.bomberman.y);
-        if(dis > 20){
+        if(dis > 10){
             onealSpeed = 1.5;
         }
         else{

@@ -3,9 +3,12 @@ package uet.oop.bomberman.entities.enemies;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Bomb;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 import uet.oop.bomberman.states.State;
+
+import static uet.oop.bomberman.BombermanGame.bombs;
 
 public class EvilBomber extends Enemy {
     public EvilBomber(int x, int y, Image img){
@@ -71,11 +74,13 @@ public class EvilBomber extends Enemy {
         char c = GameMap.map.get(i).charAt(j);
         if(c == '#' || c == '*' || c == 'o'){
             if(position.x % 32 == 0 && position.y % 32 == 0){
-                if(c == '*'){
-                    Bomb bomb = new Bomb(x, y, Sprite.bomb_1.getFxImage());
+                if(c == '*' && bombs.size() < 2){
+                    Bomb bomb = new Bomb(x, y, Sprite.bomb_1.getFxImage(), "EvilBomber");
                     BombermanGame.bombs.add(bomb);
+                    turn = (turn + 2) % 4;
+                } else {
+                    turn = (int) Math.floor(Math.random()*4);
                 }
-                turn = (int) Math.floor(Math.random()*4);
             } else {
                 position.x += v_x[turn];
                 position.y += v_y[turn];

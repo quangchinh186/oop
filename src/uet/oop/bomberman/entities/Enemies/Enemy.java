@@ -22,9 +22,11 @@ public class Enemy extends Entity {
     }
 
     public void die(){
+        if(state == State.DIE) return;
         timer = -10;
         state = State.STOP;
         animateTime = Sprite.SCALED_SIZE;
+        BombermanGame.score += 200;
     }
 
     public void dieAnimation(){
