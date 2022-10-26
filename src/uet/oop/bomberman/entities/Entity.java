@@ -52,7 +52,7 @@ public abstract class Entity {
     public void die(){};
     public void drawRect(GraphicsContext gc) {
         gc.setStroke(Color.YELLOW);
-        gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+        //gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
     }
 
     public void setInactive() {

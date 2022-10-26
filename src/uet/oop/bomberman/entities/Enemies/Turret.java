@@ -18,6 +18,8 @@ public class Turret extends Enemy {
     private final int BULLET_HEIGHT = 30;
     public static Image lgBullet = new Image("/textures/gay_flag.jpeg", 50, 30, true, true);
 
+    public static Image turretSkin = new Image("/textures/america_ball.png", 32, 32, true, true);
+
     GTimer gTimer = new GTimer();
     //Vector2D direction = new Vector2D();
     public static final int TURRET_RANGE = 100;

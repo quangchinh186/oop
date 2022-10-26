@@ -121,7 +121,7 @@ public class GameMap extends GameViewManager {
                         break;
                     case 'P':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Enemy turret = new Turret(j, i, Sprite.player_up_2.getFxImage());
+                        Enemy turret = new Turret(j, i, Turret.turretSkin);
                         entities.add(turret);
                         //weaponsSet.add("G");
                         break;
