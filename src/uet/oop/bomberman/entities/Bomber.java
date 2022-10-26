@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 
-import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.entities.tiles.Portal;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.sound.Sound;
 import uet.oop.bomberman.states.State;

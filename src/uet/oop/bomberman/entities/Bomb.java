@@ -2,6 +2,8 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.entities.tiles.Brick;
+import uet.oop.bomberman.entities.tiles.Grass;
 import uet.oop.bomberman.sound.Sound;
 import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.graphics.Flames;
