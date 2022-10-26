@@ -1,10 +1,13 @@
 package uet.oop.bomberman.entities.tiles;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
+import view.GameViewManager;
+
+
+import java.util.TimerTask;
 
 public class Brick extends Entity {
     private boolean exploded;
@@ -28,8 +31,18 @@ public class Brick extends Entity {
             this.img = Sprite.movingSprite(Sprite.brick_exploded, Sprite.brick_exploded1, Sprite.brick_exploded2, timer, 100).getFxImage();
             if(hasItem){
                 Item p = new Portal(x, y, Sprite.portal.getFxImage());
-                BombermanGame.items.add(p);
+                GameViewManager.items.add(p);
             }
+
+            /**
+             * jTimer.schedule(new TimerTask() {
+             *                 @Override
+             *                 public void run() {
+             *                     setInactive();
+             *                 }
+             *             }, 300);
+             */
+
         }
     }
 }

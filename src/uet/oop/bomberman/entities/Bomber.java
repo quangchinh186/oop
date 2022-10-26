@@ -1,6 +1,9 @@
 package uet.oop.bomberman.entities;
 
+import com.fasterxml.jackson.core.JsonToken;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
@@ -9,19 +12,42 @@ import uet.oop.bomberman.entities.tiles.Portal;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.sound.Sound;
 import uet.oop.bomberman.states.State;
+
+
 import uet.oop.bomberman.entities.item.Item;
+import uet.oop.bomberman.entities.item.weapon.Weapon;
+import uet.oop.bomberman.graphics.Animation;
+import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.graphics.SpriteSheet;
 import uet.oop.bomberman.map.GameMap;
+import view.GameViewManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import java.util.TimerTask;
+
+
 import static uet.oop.bomberman.BombermanGame.*;
+import static uet.oop.bomberman.graphics.SpriteSheet.*;
+import static view.GameViewManager.*;
 
 public class Bomber extends Entity {
     private int bombNumbers = 1;
     private Sound deadNoise;
+    private int cd = 1;
+
+
+    private int hp = 3;
+
+    private static Image playerSheet = new Image("/textures/udlf.png", 32 * 3, 32 * 4,
+            true, true);
+
+    private static Image ricardoSheet = new Image("/textures/ricardo_sheet.png", 13600/6.25, 32,
+            true, true);
+
     public static final double PLAYER_SPEED_NORMAL = 1;
     public static final double PLAYER_SPEED_BOOSTED = 1.5;
     private String checkStuck = "";
@@ -29,7 +55,21 @@ public class Bomber extends Entity {
     private String prevCheckStuck = "";
     private Rectangle nextFrameRect;
     int spawnX, spawnY;
+
+    private boolean isImmune = false;
+
+    private State state = State.RIGHT;
+
+
     static HashSet<String> currentlyActiveKeys;
+
+    //dung de luu weapons
+
+    public static HashSet<String> weaponsSet = new HashSet<>();
+    public static List<Weapon> weapons = new ArrayList<>() {
+    };
+    //
+
     static HashSet<String> releasedKey;
     private Vector2D velocity;
     public static double playerSpeed = 1.5;
@@ -37,16 +77,79 @@ public class Bomber extends Entity {
     private boolean atPortal;
 
     public Bomber(int x, int y, Image img) {
-        super(x, y, img);
+        super(x + 1, y + 1, img);
         lives = 3;
         spawnX = x;
         spawnY = y;
+
+        isAnimated = true;
         prepareActionHandlers();
         velocity = new Vector2D();
         nextFrameRect = new Rectangle(30,30);
         state = State.RIGHT;
         atPortal = false;
         deadNoise = new Sound("res/sfx/oof.wav");
+
+        spriteSheet = playerSheet;
+        weapons.clear();
+        initAnimation();
+    }
+
+
+    public Bomber(int x, int y, String sheetUrl) {
+
+
+        super(x + 1, y + 1, Sprite.player_right.getFxImage());
+        lives = 3;
+        spawnX = x;
+        spawnY = y;
+
+        isAnimated = true;
+        prepareActionHandlers();
+        velocity = new Vector2D();
+        nextFrameRect = new Rectangle(30,30);
+        state = State.RIGHT;
+        atPortal = false;
+        deadNoise = new Sound("res/sfx/oof.wav");
+
+        spriteSheet = playerSheet;
+        weapons.clear();
+        initAnimation();
+
+        spriteSheet = new Image(sheetUrl,32 * 3, 32 * 5, true, true);
+    }
+
+
+
+
+
+    public void initAnimation() {
+        Animation walkUp = new Animation(0, 3, 10);
+        Animation walkDown = new Animation(1, 3, 10);
+        Animation walkLeft = new Animation(2, 3, 10);
+        Animation walkRight = new Animation(3, 3, 10);
+        Animation die = new Animation(4, 3, 10);
+        Animation idleUp = new Animation(0, 1, 10);
+        Animation idleDown = new Animation(1, 1, 10);
+        Animation idleLeft = new Animation(2, 1, 10);
+        Animation idleRight = new Animation(3, 1, 10);
+
+        //ricardo animation
+        Animation dancing = new Animation(0, 68, 5);
+
+        animations.put("WalkUp", walkUp);
+        animations.put("WalkDown", walkDown);
+        animations.put("WalkLeft", walkLeft);
+        animations.put("WalkRight", walkRight);
+        animations.put("Die", die);
+        //
+        animations.put("IdleUp", idleUp);
+        animations.put("IdleDown", idleDown);
+        animations.put("IdleLeft", idleLeft);
+        animations.put("IdleRight", idleRight);
+
+        //dancing baby
+        animations.put("Dancing", dancing);
     }
 
     @Override
@@ -55,10 +158,16 @@ public class Bomber extends Entity {
         //get input
         x = (int) ((position.x + 8) / Sprite.SCALED_SIZE);
         y = (int) ((position.y + 8) / Sprite.SCALED_SIZE);
-        actionHandler();
+
+        if(cd > 0) cd--;
+
         handleMapCollision();
         handleItemCollision();
-        if(velocity.x != 0 || velocity.y != 0){
+        handleDamageCollision();
+        //update weapons.
+        weapons.forEach(Entity::update);
+
+        if(velocity.x != 0 || velocity.y != 0 || spriteSheet.equals(ricardoSheet)){
             animated();
             rect.setX(position.x);
             rect.setY(position.y);
@@ -86,31 +195,69 @@ public class Bomber extends Entity {
         }
     }
 
+    private void handleDamageCollision() {
+
+        for(Entity et : visualEffects) {
+            if(et.rect.intersects(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight())) {
+                if(et instanceof Flames || et instanceof Projectile) {
+                    if(!isImmune) {
+
+                        System.out.println("Va chung sat thuong");
+                        hp--;
+                        setImmune(true);
+                        jTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                setImmune(false);
+                            }
+                        },1000);
+                    }
+                }
+
+                et.setInactive();
+            }
+        }
+    }
+
+    @Override
+    public void render(GraphicsContext gc) {
+        super.render(gc);
+
+        weapons.forEach(g -> g.render(gc));
+    }
+
     public void animated(){
+
+
         timer = timer > Sprite.DEFAULT_SIZE ? 0 : timer+1;
+
+
         switch (state){
             case DOWN:
-                this.s1 = Sprite.player_down;
-                this.s2 = Sprite.player_down_1;
-                this.s3 = Sprite.player_down_2;
+                play("WalkDown");
                 break;
             case LEFT:
-                this.s1 = Sprite.player_left;
-                this.s2 = Sprite.player_left_1;
-                this.s3 = Sprite.player_left_2;
+                play("WalkLeft");
                 break;
             case UP:
-                this.s1 = Sprite.player_up;
-                this.s2 = Sprite.player_up_1;
-                this.s3 = Sprite.player_up_2;
+                play("WalkUp");
+                break;
+            case RIGHT:
+                play("WalkRight");
                 break;
             default:
-                this.s1 = Sprite.player_right;
-                this.s2 = Sprite.player_right_1;
-                this.s3 = Sprite.player_right_2;
                 break;
+
         }
-        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+
+
+        if(spriteSheet.equals(ricardoSheet)) {
+            play("Dancing");
+        }
+
+
+
+
 
     }
 
@@ -124,8 +271,48 @@ public class Bomber extends Entity {
                 }
             }
         }
-        items.removeAll(toRemove);
+
+        int countArmed = 0;
+
+        for(Weapon wp : weapons) {
+
+            if(wp.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
+                wp.doEffect();
+            }
+            if(wp.isArmed()) countArmed++;
+
+        }
+
+        if(countArmed > 1) {
+            for(int i = 0; i < countArmed - 1; i++) {
+                weapons.get(i).setInactive();
+            }
+        }
+
+        GameViewManager.clearInactiveItem(items);
+
+        GameViewManager.clearInactiveWeapon(weapons);
+
+
+
     }
+
+    public void addWeapons(String key, Item wp) {
+            //replace weapon voi key.
+        if(!weapons.isEmpty()) {
+            for(Item item : items) {
+                if(item instanceof Weapon && ((Weapon) item).isArmed()) {
+                    item.setInactive();
+                    break;
+                }
+            }
+            weapons.clear();
+        }
+        weapons.add((Weapon) wp);
+    }
+
+
+
 
     public void handleMapCollision() {
         //check if x or y cause the collision.
@@ -161,6 +348,7 @@ public class Bomber extends Entity {
     }
 
     public void actionHandler () {
+
         if(isPause){
             if(currentlyActiveKeys.isEmpty()) return;
             else isPause = false;
@@ -292,10 +480,110 @@ public class Bomber extends Entity {
         Projectile pj = new Projectile((int)position.x/Sprite.SCALED_SIZE, (int)position.y/Sprite.SCALED_SIZE,
                 Sprite.minvo_right2.getFxImage(), direction);
         visualEffects.add(pj);
+
+        if(currentlyActiveKeys.isEmpty()){
+            velocity.x = 0;
+            velocity.y = 0;
+            //state = State.STOP;
+        }
+        if(currentlyActiveKeys.contains("A")) {
+            currentlyActiveKeys.remove("A");
+            Bomb.power++;
+        }
+        if(currentlyActiveKeys.contains("LEFT")) {
+            velocity.x = -playerSpeed;
+            state = State.LEFT;
+        }
+        if (currentlyActiveKeys.contains("RIGHT")){
+            velocity.x = playerSpeed;
+            state = State.RIGHT;
+        }
+        if (currentlyActiveKeys.contains("UP")){
+            velocity.y = -playerSpeed;
+            state = State.UP;
+        }
+        if (currentlyActiveKeys.contains("DOWN")){
+            velocity.y = playerSpeed;
+            state = State.DOWN;
+        }
+        if (currentlyActiveKeys.contains("SPACE") && cd == 0){
+            currentlyActiveKeys.remove("SPACE");
+            int x = (int) ((position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE);
+            int y = (int) ((position.y + Sprite.DEFAULT_SIZE)/ Sprite.SCALED_SIZE);
+            Entity bom = new Bomb(x, y, "Player");
+            cd = 0;
+        }
+        if (currentlyActiveKeys.contains("K")){
+            currentlyActiveKeys.remove("K");
+            //
+            for(Weapon wp : weapons) {
+                if(wp.isArmed()) {
+                    wp.useWeapon();
+                    break;
+                }
+            }
+        }
+
+        if(releasedKey.contains("LEFT") ) {
+            velocity.x = 0;
+            state = state.LEFT;
+        }
+        if(releasedKey.contains("RIGHT") ) {
+            velocity.x = 0;
+            state = state.RIGHT;
+        }
+
+        if(releasedKey.contains("UP") ) {
+            velocity.y = 0;
+            state = state.UP;
+        }
+        if(releasedKey.contains("DOWN") ) {
+            velocity.y = 0;
+            state = state.DOWN;
+        }
+
+        if(currentlyActiveKeys.isEmpty()) {
+            switch (state){
+                case DOWN:
+                    play("IdleDown");
+                    break;
+                case LEFT:
+                    play("IdleLeft");
+                    break;
+                case UP:
+                    play("IdleUp");
+                    break;
+                case DIE:
+                    break;
+                case RIGHT:
+                    play("IdleRight");
+                    break;
+                case CHAD:
+                    play("Dancing");
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 
+
+
+
+
     public void becomeChad() {
-        this.img = Sprite.player_chad.getFxImage();
+        state = State.CHAD;
+        spriteSheet = ricardoSheet;
+        setImmune(true);
+        jTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setImmune(false);
+                spriteSheet = playerSheet;
+                state = State.RIGHT;
+            }
+        },10000);
     }
 
     public void revive(){
@@ -312,7 +600,7 @@ public class Bomber extends Entity {
         // use a set so duplicates are not possible
         currentlyActiveKeys = new HashSet<String>();
         releasedKey = new HashSet<String>();
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>()
+        gameScene.setOnKeyPressed(new EventHandler<KeyEvent>()
         {
             @Override
             public void handle(KeyEvent event)
@@ -322,7 +610,7 @@ public class Bomber extends Entity {
             }
 
         });
-        scene.setOnKeyReleased(new EventHandler<KeyEvent>()
+        gameScene.setOnKeyReleased(new EventHandler<KeyEvent>()
         {
             @Override
             public void handle(KeyEvent event)
@@ -337,9 +625,24 @@ public class Bomber extends Entity {
         this.bombNumbers = bombNumbers;
     }
 
+    public void setCd(int cd) {
+        this.cd = cd;
+    }
+
+
+    public int getCd() {
+        return cd;
+    }
+
     public int getBombNumbers() {
         return bombNumbers;
     }
+
+    public void setImmune(boolean immune) {
+        isImmune = immune;
+    }
+
+
 
     public void setPlayerSpeed(double speed) {
         playerSpeed = speed;
@@ -348,6 +651,7 @@ public class Bomber extends Entity {
     public void increaseBombRange() {
         Bomb.increasePower();
     }
+
     public void die(){
         timer = 1;
         state = State.DIE;
@@ -363,5 +667,14 @@ public class Bomber extends Entity {
     public void setAtPortal(boolean atPortal) {
         this.atPortal = atPortal;
     }
+
+    public State getState() {
+        return state;
+    }
+
+
 }
+
+
+
 
