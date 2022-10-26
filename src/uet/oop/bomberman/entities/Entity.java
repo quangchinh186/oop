@@ -65,8 +65,10 @@ public abstract class Entity {
         //speed thay vao
         int srcX = 0;
         if(isAnimated) {
+
+            int frameSpeed = speed == 0 ? (GTimer.ticksInASeconds / 6) : speed;
             //                                                                               speed ,  % frames.
-            srcX = (Sprite.SCALED_SIZE * (int) ( (GameViewManager.getJavaFxTicks() / (GTimer.ticksInASeconds / 6)) % frames));
+            srcX = (Sprite.SCALED_SIZE * (int) ( (GameViewManager.getJavaFxTicks() / frameSpeed) % frames));
             gc.drawImage(spriteSheet,srcX,animIndex * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE,
                     position.x, position.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
         }

@@ -38,6 +38,9 @@ public class Bomber extends Entity {
     private static Image playerSheet = new Image("/textures/udlf.png", 32 * 3, 32 * 4,
             true, true);
 
+    private static Image ricardoSheet = new Image("/textures/ricardo_sheet.png", 13600/6.25, 32,
+            true, true);
+
     public static final double PLAYER_SPEED_NORMAL = 1;
 
     public static final double PLAYER_SPEED_BOOSTED = 1.5;
@@ -96,7 +99,7 @@ public class Bomber extends Entity {
         weapons.clear();
         initAnimation();
 
-        spriteSheet = new Image(sheetUrl,32 * 4, 32 * 3, true, true);
+        spriteSheet = new Image(sheetUrl,32 * 3, 32 * 5, true, true);
     }
 
 
@@ -104,15 +107,18 @@ public class Bomber extends Entity {
 
 
     public void initAnimation() {
-        Animation walkUp = new Animation(0, 3, 100);
-        Animation walkDown = new Animation(1, 3, 100);
-        Animation walkLeft = new Animation(2, 3, 100);
-        Animation walkRight = new Animation(3, 3, 100);
-        Animation die = new Animation(4, 3, 100);
-        Animation idleUp = new Animation(0, 1, 100);
-        Animation idleDown = new Animation(1, 1, 100);
-        Animation idleLeft = new Animation(2, 1, 100);
-        Animation idleRight = new Animation(3, 1, 100);
+        Animation walkUp = new Animation(0, 3, 10);
+        Animation walkDown = new Animation(1, 3, 10);
+        Animation walkLeft = new Animation(2, 3, 10);
+        Animation walkRight = new Animation(3, 3, 10);
+        Animation die = new Animation(4, 3, 10);
+        Animation idleUp = new Animation(0, 1, 10);
+        Animation idleDown = new Animation(1, 1, 10);
+        Animation idleLeft = new Animation(2, 1, 10);
+        Animation idleRight = new Animation(3, 1, 10);
+
+        //ricardo animation
+        Animation dancing = new Animation(0, 68, 5);
 
         animations.put("WalkUp", walkUp);
         animations.put("WalkDown", walkDown);
@@ -124,6 +130,9 @@ public class Bomber extends Entity {
         animations.put("IdleDown", idleDown);
         animations.put("IdleLeft", idleLeft);
         animations.put("IdleRight", idleRight);
+
+        //dancing baby
+        animations.put("Dancing", dancing);
     }
 
     @Override
@@ -140,7 +149,7 @@ public class Bomber extends Entity {
         //update weapons.
         weapons.forEach(Entity::update);
 
-        if(velocity.x != 0 || velocity.y != 0){
+        if(velocity.x != 0 || velocity.y != 0 || spriteSheet.equals(ricardoSheet)){
             animated();
         }
         rect.setX(position.x);
@@ -181,9 +190,9 @@ public class Bomber extends Entity {
 
     public void animated(){
 
-        int sheetX = 0, sheetY = 0;
 
         timer = timer > Sprite.DEFAULT_SIZE ? 0 : timer+1;
+
 
         switch (state){
             case DOWN:
@@ -195,14 +204,16 @@ public class Bomber extends Entity {
             case UP:
                 play("WalkUp");
                 break;
-            case DIE:
-                break;
             case RIGHT:
                 play("WalkRight");
                 break;
             default:
                 break;
 
+        }
+
+        if(spriteSheet.equals(ricardoSheet)) {
+            play("Dancing");
         }
 
 
@@ -391,6 +402,9 @@ public class Bomber extends Entity {
                 case RIGHT:
                     play("IdleRight");
                     break;
+                case CHAD:
+                    play("Dancing");
+                    break;
                 default:
                     break;
             }
@@ -407,13 +421,14 @@ public class Bomber extends Entity {
 
     public void becomeChad() {
         state = State.CHAD;
-        spriteSheet = middleEastTiles;
+        spriteSheet = ricardoSheet;
         setImmuned(true);
         jTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 setImmuned(false);
                 spriteSheet = playerSheet;
+                state = State.RIGHT;
             }
         },10000);
     }
