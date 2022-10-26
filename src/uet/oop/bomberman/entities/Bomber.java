@@ -133,7 +133,6 @@ public class Bomber extends Entity {
 
     private void handleItemCollision() {
         List<Item> toRemove = new ArrayList<>();
-        System.out.println(items.size());
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();

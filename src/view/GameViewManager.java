@@ -2,15 +2,19 @@ package view;
 
 
 import javafx.animation.AnimationTimer;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.SKIN;
 import uet.oop.bomberman.entities.Bomb;
@@ -21,9 +25,14 @@ import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.Weapon;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
-import uet.oop.bomberman.States.*;
+import uet.oop.bomberman.states.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
 import uet.oop.bomberman.sound.BgmManagement;
 
 public class GameViewManager {
@@ -67,33 +76,97 @@ public class GameViewManager {
     public static boolean isPause = false;
 
     public static int score = 0;
+    public static int highScore;
+    Text music;
+    Text hp;
+    Button p = new Button("play");
+    Button s = new Button("stop");
+    Button n = new Button(">>");
+    Button b = new Button("<<");
+    Button up = new Button("v+");
+    Button down = new Button("v-");
 
     public GameViewManager() {
         initializeStage();
     }
 
+    public void setButton(Group root){
+        p.setFocusTraversable(false);
+        s.setFocusTraversable(false);
+        n.setFocusTraversable(false);
+        b.setFocusTraversable(false);
+        up.setFocusTraversable(false);
+        down.setFocusTraversable(false);
+        p.setLayoutX(0*30); p.setLayoutY(14*33);
+        s.setLayoutX(1*30); s.setLayoutY(14*33);
+        b.setLayoutX(2*30); b.setLayoutY(14*33);
+        n.setLayoutX(3*30); n.setLayoutY(14*33);
+        down.setLayoutX(4*30); down.setLayoutY(14*33);
+        up.setLayoutX(5*30); up.setLayoutY(14*33);
 
+        p.setOnAction(event->{
+            musicPlayer.play();
+        });
+        s.setOnAction(event->{
+            musicPlayer.pause();
+        });
+        n.setOnAction(event->{
+            musicPlayer.next();
+        });
+        b.setOnAction(event->{
+            musicPlayer.prev();
+        });
+        up.setOnAction(event->{
+            musicPlayer.changeVolume("up");
+        });
+        down.setOnAction(event->{
+            musicPlayer.changeVolume("down");
+        });
+
+        root.getChildren().add(p);
+        root.getChildren().add(s);
+        root.getChildren().add(n);
+        root.getChildren().add(b);
+        root.getChildren().add(up);
+        root.getChildren().add(down);
+    }
     /**
      * create things for MAINGAME
      */
     private void initializeStage() {
-
         gameStage = new Stage();
+        try {
+            File file = new File("highScore.txt");
+            Scanner scanner = new Scanner(file);
+            highScore = scanner.nextInt();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+        musicPlayer.play();
+        music = new Text();
+        music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
+        music.setX(0);
+        music.setY(14*31);
+        hp = new Text();
+        hp.setText("Heart left: " + 4 + "\tBomb to use: " + 1 + "\tScore: " + score);
+        hp.setY(14*32);
 
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * (HEIGHT+2));
         gc = canvas.getGraphicsContext2D();
 
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
+        root.getChildren().add(music);
+        root.getChildren().add(hp);
+        setButton(root);
 
         // Tao scene
         gameScene = new Scene(root);
-
+        gameScene.setFill(Color.web("#81c483"));
         // Them scene vao stage
         gameStage.setScene(gameScene);
         gameStage.show();
-
 
 
         //use this for main file
@@ -174,13 +247,13 @@ public class GameViewManager {
 
     private void createPlayer(SKIN chosenSkin) {
         bomberman = new Bomber(1,1, chosenSkin.getSheetUrl());
-        //entities.add(bomberman);
     }
 
 
     //from oldMain
     public void update() {
-
+        music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
+        hp.setText("Heart left: " + bomberman.lives + "\tBomb to use: " + bomberman.getBombNumbers() + "\tScore: " + score);
         bomberman.update();
         bombs.forEach(Entity::update);
         stillObjects.forEach(Entity::update);

@@ -16,6 +16,7 @@ public class Sound {
                 sfx = AudioSystem.getClip();
                 sfx.open(input);
                 floatControl = (FloatControl)sfx.getControl(FloatControl.Type.MASTER_GAIN);
+                setVol(-10);
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
@@ -59,5 +60,9 @@ public class Sound {
             curVolume = -80.0f;
         }
         floatControl.setValue(curVolume);
+    }
+
+    public void setVol(float val){
+        floatControl.setValue(val);
     }
 }

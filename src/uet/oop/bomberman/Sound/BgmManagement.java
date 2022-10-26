@@ -22,12 +22,10 @@ public class BgmManagement {
     }
 
     public void play(){
-        if(music == null){
+        if(music == null) {
             music = new Sound(songs.get(nowPlaying));
-            music.play();
-        } else {
-            music.play();
         }
+        music.play();
     }
 
     public void pause(){
@@ -43,7 +41,7 @@ public class BgmManagement {
 
     public void prev(){
         music.stop();
-        nowPlaying = nowPlaying == -1 ? songs.size()-1 : nowPlaying-1;
+        nowPlaying = nowPlaying == 0 ? songs.size()-1 : nowPlaying-1;
         music = new Sound(songs.get(nowPlaying));
         music.play();
     }

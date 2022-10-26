@@ -32,12 +32,14 @@ public class Bomb extends Entity {
         this.s3 = Sprite.bomb_2;
         this.whom = whom;
         boom = new Sound("res/sfx/explosion.wav");
+        boom.setVol(-10);
     }
 
     public Bomb(int x, int y, String whom){
         super(x, y, null);
         this.whom = whom;
         boom = new Sound("res/sfx/explosion.wav");
+        boom.setVol(-10);
     }
     public List getVisual(){
         return this.flames;

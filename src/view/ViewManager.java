@@ -205,7 +205,7 @@ public class ViewManager {
 
 
     private void createLogo() {
-        Image logoImage = new Image("view/resources/space_runner.jpg", 500, 100, false, false);
+        Image logoImage = new Image("view/resources/Bomberman_logo.png", 500, 100, false, false);
         ImageView logo = new ImageView(logoImage);
         logo.setLayoutX(400);
         logo.setLayoutY(50);
