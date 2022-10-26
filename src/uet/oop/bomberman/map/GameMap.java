@@ -1,6 +1,8 @@
 package uet.oop.bomberman.map;
 
 import javafx.scene.shape.Rectangle;
+import uet.oop.bomberman.entities.item.weapon.Gun;
+import uet.oop.bomberman.entities.item.weapon.SuicideVest;
 import uet.oop.bomberman.entities.tiles.Brick;
 import uet.oop.bomberman.entities.tiles.Grass;
 import uet.oop.bomberman.entities.tiles.Wall;
@@ -15,6 +17,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static uet.oop.bomberman.entities.Bomber.weapons;
 
 public class GameMap extends GameViewManager {
     public static List <String> map = new ArrayList<>();
@@ -109,6 +113,17 @@ public class GameMap extends GameViewManager {
                         temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);
                         map.set(i, temp);
                         object = new Brick(j, i, Sprite.brick.getFxImage(), "bomb");
+                        break;
+                    case 'G':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Gun gun = new Gun(j, i, Sprite.player_chad.getFxImage());
+                        weapons.add(gun);
+                        break;
+                    case 'V':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        SuicideVest vest = new SuicideVest(j, i, Sprite.bomb_2.getFxImage());
+                        weapons.add(vest);
+                        //weaponsSet.add("G");
                         break;
                     default:
                         object = new Grass(j, i, Sprite.grass.getFxImage());

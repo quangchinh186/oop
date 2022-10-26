@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 
+import uet.oop.bomberman.entities.item.weapon.Weapon;
 import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.tiles.Portal;
 import uet.oop.bomberman.graphics.Animation;
@@ -52,6 +53,9 @@ public class Bomber extends Entity {
     private static Image emptySheet = new Image("/textures/empty.png");
 
     private static Image chosenSheet = new Image("/textures/empty.png");
+
+
+    public static List<Weapon> weapons = new ArrayList<>();
 
     public int frames = 1;
     public int speed = 100;
@@ -135,6 +139,9 @@ public class Bomber extends Entity {
         actionHandler();
         handleMapCollision();
         handleItemCollision();
+
+        weapons.forEach(Entity::update);
+
         if(velocity.x != 0 || velocity.y != 0 || spriteSheet.equals(ricardoSheet)){
             animated();
             rect.setX(position.x);
@@ -202,6 +209,30 @@ public class Bomber extends Entity {
             }
         }
         items.removeAll(toRemove);
+
+
+        int countArmed = 0;
+
+        for(Weapon wp : weapons) {
+
+            if(wp.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
+                wp.doEffect();
+            }
+            if(wp.isArmed()) countArmed++;
+
+        }
+
+        if(countArmed > 1) {
+            for(int i = 0; i < countArmed - 1; i++) {
+                weapons.get(i).setInactive();
+            }
+        }
+
+        GameViewManager.clearInactiveItem(items);
+
+        GameViewManager.clearInactiveWeapon(weapons);
+
+
     }
 
     public void handleMapCollision() {
@@ -286,10 +317,18 @@ public class Bomber extends Entity {
                 velocity.y = playerSpeed;
                 state = State.DOWN;
             }
+
             if (currentlyActiveKeys.contains("K")){
                 currentlyActiveKeys.remove("K");
-                createProjectile();
+                //
+                for(Weapon wp : weapons) {
+                    if(wp.isArmed()) {
+                        wp.useWeapon();
+                        break;
+                    }
+                }
             }
+
             //mp3 key input test
             if (currentlyActiveKeys.contains("Q")){
                 currentlyActiveKeys.remove("Q");
@@ -496,6 +535,9 @@ public class Bomber extends Entity {
 
     @Override
     public void render(GraphicsContext gc) {
+
+
+
         int srcX = 0;
 
         int frameSpeed = speed == 0 ? (GTimer.ticksInASeconds / 6) : speed;
@@ -505,7 +547,10 @@ public class Bomber extends Entity {
                 position.x, position.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 
 
-        //weapons.forEach(g -> g.render(gc));
+        weapons.forEach(g -> g.render(gc));
     }
+
+
+
 }
 

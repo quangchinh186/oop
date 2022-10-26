@@ -9,6 +9,8 @@ import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.Timer;
+
 public abstract class Entity {
     public Entity() {}
     //Rectangle de lam collision.
@@ -17,6 +19,8 @@ public abstract class Entity {
     protected int timer = 0;
     protected State state;
     public int x, y;
+
+    protected Timer jTimer = new Timer();
 
     public State getState(){
         return state;
@@ -41,7 +45,7 @@ public abstract class Entity {
     public void render(GraphicsContext gc) {
         gc.drawImage(img, position.x, position.y);
         //write a draw function for rect.
-        //drawRect(gc);
+        drawRect(gc);
     }
     public abstract void update();
 
@@ -56,5 +60,9 @@ public abstract class Entity {
     }
     public boolean isActive() {
         return isActive;
+    }
+
+    public Vector2D getPosition() {
+        return position;
     }
 }

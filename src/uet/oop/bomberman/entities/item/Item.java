@@ -29,7 +29,5 @@ public class Item extends Entity {
 
     }
 
-    public void destroy() {
-        isActive = false;
-    }
+
 }

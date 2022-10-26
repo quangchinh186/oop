@@ -11,8 +11,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -26,7 +24,7 @@ import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.enemies.Enemy;
 import uet.oop.bomberman.entities.item.Item;
-import uet.oop.bomberman.entities.item.Weapon;
+import uet.oop.bomberman.entities.item.weapon.Weapon;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
