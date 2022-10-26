@@ -9,7 +9,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.GameButton;
 import model.GameSubScene;
@@ -23,18 +29,25 @@ import uet.oop.bomberman.entities.item.Weapon;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
+
 import uet.oop.bomberman.sound.BgmManagement;
 
 import static uet.oop.bomberman.entities.Bomber.currentlyActiveKeys;
 import static view.ViewManager.*;
 
 public class GameViewManager {
+
+    private int maxLv = 2;
+
     private AnchorPane gamePane;
     public static Scene gameScene;
     private Stage gameStage;
 
+
+    Timer jTimer = new Timer();
     private Stage menuStage;
 
     List<GameButton> pauseMenuButtons = new ArrayList<>();
@@ -53,13 +66,15 @@ public class GameViewManager {
 
     private AnimationTimer gameTimer;
 
-    public static int level = 1;
+    public static int level = 2;
 
     //public static Scene scene;
 
     public static Bomber bomberman;
 
     public static long javaFxTicks = 0;
+
+    private int endCd = 0;
 
     private GraphicsContext gc;
     private Canvas canvas;
@@ -78,9 +93,24 @@ public class GameViewManager {
     Group root;
     public static BgmManagement musicPlayer = new BgmManagement("res/music");
 
-    public static boolean isPause = false;
+
 
     public static int score = 0;
+    public static int highScore;
+    Text music;
+    Text hp;
+    Text ui;
+    Button p = new Button("play");
+    Button s = new Button("stop");
+    Button n = new Button(">>");
+    Button b = new Button("<<");
+    Button up = new Button("v+");
+    Button down = new Button("v-");
+    Image heart = new Image("textures/heart.png");
+
+
+    public static boolean isPause = false;
+
     private int MENU_BUTTON_START_X = 390;
 
     private int MENU_BUTTON_START_Y = 150;
@@ -90,24 +120,93 @@ public class GameViewManager {
     }
 
 
+    public void setButton(Group root){
+        p.setFocusTraversable(false);
+        s.setFocusTraversable(false);
+        n.setFocusTraversable(false);
+        b.setFocusTraversable(false);
+        up.setFocusTraversable(false);
+        down.setFocusTraversable(false);
+        p.setLayoutX(0*30); p.setLayoutY(14*33);
+        s.setLayoutX(1*30); s.setLayoutY(14*33);
+        b.setLayoutX(2*30); b.setLayoutY(14*33);
+        n.setLayoutX(3*30); n.setLayoutY(14*33);
+        down.setLayoutX(4*30); down.setLayoutY(14*33);
+        up.setLayoutX(5*30); up.setLayoutY(14*33);
+
+        p.setOnAction(event->{
+            musicPlayer.play();
+        });
+        s.setOnAction(event->{
+            musicPlayer.pause();
+        });
+        n.setOnAction(event->{
+            musicPlayer.next();
+        });
+        b.setOnAction(event->{
+            musicPlayer.prev();
+        });
+        up.setOnAction(event->{
+            musicPlayer.changeVolume("up");
+        });
+        down.setOnAction(event->{
+            musicPlayer.changeVolume("down");
+        });
+
+        root.getChildren().add(p);
+        root.getChildren().add(s);
+        root.getChildren().add(n);
+        root.getChildren().add(b);
+        root.getChildren().add(up);
+        root.getChildren().add(down);
+    }
+
+
     /**
      * create things for MAINGAME
      */
     private void initializeStage() {
 
+
+        gameStage = new Stage();
+        try {
+            File file = new File("highScore.txt");
+            Scanner scanner = new Scanner(file);
+            highScore = scanner.nextInt();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+        musicPlayer.play();
+        music = new Text();
+        music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
+        music.setX(0);
+        music.setY(14*31);
+        hp = new Text();
+        hp.setText("Heart left: ");
+        hp.setY(14*32);
+        ui = new Text();
+        ui.setText("\tBomb to use: " + 1 + "\tScore: " + score);
+        ui.setX(32*10);
+        ui.setY(14*32);
+
+
         gameStage = new Stage();
 
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * (HEIGHT + 2) );
         gc = canvas.getGraphicsContext2D();
 
         // Tao root container
         root = new Group();
         root.getChildren().add(canvas);
-
+        root.getChildren().add(music);
+        root.getChildren().add(hp);
+        root.getChildren().add(ui);
+        //root.getChildren().add(pane);
+        setButton(root);
 
         // Tao scene
         gameScene = new Scene(root);
-
+        gameScene.setFill(Color.web("#81c483"));
         // Them scene vao stage
         gameStage.setScene(gameScene);
 
@@ -128,17 +227,7 @@ public class GameViewManager {
     }
 
 
-    private void createKeysListeners() {
-        gameScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.LEFT) {
-
-                } else if (event.getCode() == KeyCode.RIGHT) {
-
-                }
-                if (event.getCode() == KeyCode.SPACE) {
 
     private void handleInput() {
         //
@@ -233,7 +322,7 @@ public class GameViewManager {
 
         List buttons = new ArrayList<>();
 
-        returnToTileButton = new GameButton("TILE");
+        returnToTileButton = new GameButton("TITLE");
         addPauseMenuButtons(returnToTileButton);
 
         returnToTileButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -244,6 +333,7 @@ public class GameViewManager {
 
                 //clear all entities
                 clearAllEntities();
+                musicPlayer.pause();
                 gameTimer.stop();
                 gameStage.close();
                 menuStage.show();
@@ -319,6 +409,10 @@ public class GameViewManager {
     //from oldMainf
     public void update() {
 
+        music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
+        ui.setText("\tBomb to use: " + bomberman.getBombNumbers() + "\tScore: " + score);
+
+
         bomberman.update();
         bombs.forEach(Entity::update);
         stillObjects.forEach(Entity::update);
@@ -361,6 +455,9 @@ public class GameViewManager {
 
     private void clearAllEntities() {
 
+
+
+
         entities.clear();
         stillObjects.clear();
         items.clear();
@@ -369,7 +466,12 @@ public class GameViewManager {
     }
 
     public void render() {
+
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        for(int i = 0; i < bomberman.lives; i++){
+            gc.drawImage(heart, 64 + (10*i), 440, 10, 10);
+        }
+
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
 
@@ -383,13 +485,39 @@ public class GameViewManager {
 
 
     public void newLevel(){
+
         entities.clear();
         bombs.clear();
         visualEffects.clear();
         items.clear();
         bomberman.revive();
+
         level++;
-        GameMap.createMap(level);
+        if(level >= 3) {
+            //draw image
+            endCd++;
+
+            System.out.println(endCd);
+            musicPlayer.pause();
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+
+            gc.drawImage(new Image("textures/win_scene.jpg"), 0, 0, canvas.getWidth(), canvas.getHeight());
+
+            if(endCd > 120) {
+                gameStage.close();
+                menuStage.show();
+                return;
+            }
+
+
+        }
+
+        if(level < 3) {
+
+            GameMap.createMap(level);
+        }
+
     }
 
 
