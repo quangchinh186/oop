@@ -7,6 +7,8 @@ public class BgmManagement {
     private ArrayList<String> songs = new ArrayList<>();
     public int nowPlaying;
     private Sound music;
+    private boolean isStop;
+    private int stopTime = 0;
 
     public BgmManagement(String path){
         File folder = new File(path);
@@ -17,6 +19,9 @@ public class BgmManagement {
         nowPlaying = 0;
     }
 
+    public void resume(){
+        music.play(stopTime);
+    }
     public String getNow(){
         return songs.get(nowPlaying).substring(10);
     }
@@ -25,10 +30,16 @@ public class BgmManagement {
         if(music == null) {
             music = new Sound(songs.get(nowPlaying));
         }
+        if(isStop){
+            resume();
+            return;
+        }
         music.play();
     }
 
     public void pause(){
+        isStop = true;
+        stopTime = music.getTime();
         music.stop();
     }
 

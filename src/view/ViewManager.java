@@ -178,13 +178,10 @@ public class ViewManager {
         addMenuButtons(creditsButton);
 
         creditsButton.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent event) {
                showSubScene(creditsSubScene);
             }
-
-
         });
 
     }
@@ -245,8 +242,6 @@ public class ViewManager {
         HBox box = new HBox();
         box.setSpacing(20);
 
-
-
         skinList = new ArrayList<>();
         for (SKIN ship : SKIN.values()) {
             SkinChooser skinToPick = new SkinChooser(ship);
@@ -297,9 +292,8 @@ public class ViewManager {
     }
 
     private void createScoreSubScene() {
-        //scoreSubScene = new GameSubScene();
-        //mainPane.getChildren().add(scoreSubScene);
-
+        scoreSubScene = new GameSubScene();
+        mainPane.getChildren().add(scoreSubScene);
 
     }
 

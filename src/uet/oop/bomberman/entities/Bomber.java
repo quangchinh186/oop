@@ -134,7 +134,7 @@ public class Bomber extends Entity {
     private void handleItemCollision() {
         List<Item> toRemove = new ArrayList<>();
         for(Item entity : items) {
-            if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
+            if(entity.rect.intersects(position.x + 5, position.y + 5, rect.getWidth() - 10, rect.getHeight() - 10)) {
                 entity.doEffect();
                 if(!(entity instanceof Portal)){
                     toRemove.add(entity);

@@ -35,6 +35,11 @@ public class Sound {
         sfx.setFramePosition(0);
         sfx.start();
     }
+    public void play(int time){
+        sfx.setFramePosition(time);
+        sfx.start();
+    }
+
     public void loop(){
         sfx.loop(Clip.LOOP_CONTINUOUSLY);
     }
@@ -48,14 +53,14 @@ public class Sound {
         return sfx.getFramePosition() == sfx.getFrameLength();
     }
     public void volumeUp(){
-        curVolume += 1.0f;
+        curVolume += 2.0f;
         if(curVolume > 6.0f){
             curVolume = 6.0f;
         }
         floatControl.setValue(curVolume);
     }
     public void volumeDown(){
-        curVolume -= 1.0f;
+        curVolume -= 2.0f;
         if(curVolume < -80.0f){
             curVolume = -80.0f;
         }

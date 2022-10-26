@@ -9,10 +9,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -36,16 +38,12 @@ import java.util.Scanner;
 import uet.oop.bomberman.sound.BgmManagement;
 
 public class GameViewManager {
-    private AnchorPane gamePane;
     public static Scene gameScene;
     private Stage gameStage;
     private Stage menuStage;
-    private ImageView ship;
 
     private static final int GAME_WIDTH = 31 * 32;
     private static final int GAME_HEIGHT = 13 * 32;
-
-
 
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
@@ -79,12 +77,14 @@ public class GameViewManager {
     public static int highScore;
     Text music;
     Text hp;
+    Text ui;
     Button p = new Button("play");
     Button s = new Button("stop");
     Button n = new Button(">>");
     Button b = new Button("<<");
     Button up = new Button("v+");
     Button down = new Button("v-");
+    Image heart = new Image("textures/heart.png");
 
     public GameViewManager() {
         initializeStage();
@@ -130,10 +130,22 @@ public class GameViewManager {
         root.getChildren().add(up);
         root.getChildren().add(down);
     }
+
     /**
      * create things for MAINGAME
      */
     private void initializeStage() {
+        /*Pane pane = new HBox(10);
+        ImageView imageView = new ImageView(heart);
+        imageView.setFitHeight(16);
+        imageView.setFitWidth(16);
+        for(int i = 0; i < 4; i++){
+            pane.getChildren().add(imageView);
+        }
+        pane.setLayoutY(14*31);
+        pane.setLayoutX(32*2);*/
+
+
         gameStage = new Stage();
         try {
             File file = new File("highScore.txt");
@@ -148,8 +160,12 @@ public class GameViewManager {
         music.setX(0);
         music.setY(14*31);
         hp = new Text();
-        hp.setText("Heart left: " + 4 + "\tBomb to use: " + 1 + "\tScore: " + score);
+        hp.setText("Heart left: " + 4);
         hp.setY(14*32);
+        ui = new Text();
+        ui.setText("\tBomb to use: " + 1 + "\tScore: " + score);
+        ui.setX(32*10);
+        ui.setY(14*32);
 
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * (HEIGHT+2));
         gc = canvas.getGraphicsContext2D();
@@ -159,6 +175,8 @@ public class GameViewManager {
         root.getChildren().add(canvas);
         root.getChildren().add(music);
         root.getChildren().add(hp);
+        root.getChildren().add(ui);
+        //root.getChildren().add(pane);
         setButton(root);
 
         // Tao scene
@@ -253,7 +271,8 @@ public class GameViewManager {
     //from oldMain
     public void update() {
         music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
-        hp.setText("Heart left: " + bomberman.lives + "\tBomb to use: " + bomberman.getBombNumbers() + "\tScore: " + score);
+        hp.setText("Heart left: " + bomberman.lives);
+        ui.setText("\tBomb to use: " + bomberman.getBombNumbers() + "\tScore: " + score);
         bomberman.update();
         bombs.forEach(Entity::update);
         stillObjects.forEach(Entity::update);
@@ -279,30 +298,20 @@ public class GameViewManager {
         }
         items.forEach(Entity::update);
         visualEffects.forEach(Entity::update);
-
         if(bomberman.isAtPortal() && entities.isEmpty()){
             newLevel();
             System.out.println("Level: " + level);
         }
-
         clearInactiveEntity(visualEffects);
-
-        //remove projectile
-        //nen de rieng or lam chung voi visual effect.
-
-
-
+        musicPlayer.autoMove();
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
-
-
-
         items.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
+        entities.forEach(g -> g.render(gc));
         visualEffects.forEach(g -> g.render(gc));
         bomberman.render(gc);
     }
