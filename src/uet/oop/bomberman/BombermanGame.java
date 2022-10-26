@@ -2,12 +2,15 @@ package uet.oop.bomberman;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -130,21 +133,66 @@ public class BombermanGame extends Application {
         //play
         play = new Button();
         play.setLayoutX(50*1); play.setLayoutY(15*32);
+        play.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                musicPlayer.play();
+            }
+        });
+        play.setText("Play");
+
         //stop
         stop = new Button();
         stop.setLayoutX(50*2); stop.setLayoutY(15*32);
+        stop.setText("Pause");
+        stop.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                musicPlayer.pause();
+            }
+        });
+
         //next
         next = new Button();
         next.setLayoutX(50*3); next.setLayoutY(15*32);
+        next.setText(">");
+        next.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                musicPlayer.next();
+            }
+        });
+
         //prev
         prev = new Button();
         prev.setLayoutX(50*4); prev.setLayoutY(15*32);
+        prev.setText("<");
+        prev.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                musicPlayer.prev();
+            }
+        });
         //volD
         volDown = new Button();
         volDown.setLayoutX(50*5); volDown.setLayoutY(15*32);
+        volDown.setText("-");
+        volDown.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                musicPlayer.changeVolume("down");
+            }
+        });
         //volU
         volUp = new Button();
         volUp.setLayoutX(50*6); volUp.setLayoutY(15*32);
+        volUp.setText("+");
+        volUp.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                musicPlayer.changeVolume("up");
+            }
+        });
         root.getChildren().add(play);
         root.getChildren().add(stop);
         root.getChildren().add(next);
