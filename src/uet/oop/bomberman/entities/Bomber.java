@@ -224,7 +224,10 @@ public class Bomber extends Entity {
 
         if(countArmed > 1) {
             for(int i = 0; i < countArmed - 1; i++) {
-                weapons.get(i).setInactive();
+                if(countArmed > 1) {
+                    weapons.get(i).setInactive();
+                    countArmed--;
+                }
             }
         }
 
@@ -234,6 +237,8 @@ public class Bomber extends Entity {
 
 
     }
+
+
 
     public void handleMapCollision() {
         //check if x or y cause the collision.
@@ -461,7 +466,7 @@ public class Bomber extends Entity {
         this.s3 = Sprite.player_right_2;
         position.x = spawnX * Sprite.SCALED_SIZE;
         position.y = spawnY * Sprite.SCALED_SIZE;
-        //lives--;
+        lives--;
     }
     private static void prepareActionHandlers()
     {
@@ -514,7 +519,7 @@ public class Bomber extends Entity {
         velocity.x = 0;
         velocity.y = 0;
         deadNoise.play();
-        lives--;
+        //lives--;
         System.out.println(lives);
     }
 

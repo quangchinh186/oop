@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import model.GameButton;
 import model.GameSubScene;
 import model.SKIN;
-import uet.oop.bomberman.Sound.BgmManagement;
+import uet.oop.bomberman.sound.BgmManagement;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Entity;

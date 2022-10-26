@@ -76,11 +76,11 @@ public class Weapon extends Item {
         //write a draw function for rect.
         if(bomberman.getState() == State.LEFT && armed) {
             gc.drawImage(this.img, 0, 0, this.img.getWidth(), this.img.getHeight(),
-                    position.x ,position.y,-this.img.getWidth()/2,this.img.getHeight()/2);
+                    position.x ,position.y,-this.img.getWidth(),this.img.getHeight());
         }
         else if(bomberman.getState() != State.LEFT && armed){
             Sprite.drawRotatedImage(gc, this.img, angle, position.x, position.y,
-                    this.img.getWidth()/2, this.img.getHeight()/2);
+                    this.img.getWidth(), this.img.getHeight());
         }
 
         else {

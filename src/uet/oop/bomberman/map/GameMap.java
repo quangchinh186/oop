@@ -116,12 +116,18 @@ public class GameMap extends GameViewManager {
                         break;
                     case 'G':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Gun gun = new Gun(j, i, Sprite.player_chad.getFxImage());
+                        Gun gun = new Gun(j, i, Gun.gunImg);
                         weapons.add(gun);
+                        break;
+                    case 'P':
+                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                        Enemy turret = new Turret(j, i, Sprite.player_up_2.getFxImage());
+                        entities.add(turret);
+                        //weaponsSet.add("G");
                         break;
                     case 'V':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
-                        SuicideVest vest = new SuicideVest(j, i, Sprite.bomb_2.getFxImage());
+                        SuicideVest vest = new SuicideVest(j, i, SuicideVest.vestImg);
                         weapons.add(vest);
                         //weaponsSet.add("G");
                         break;

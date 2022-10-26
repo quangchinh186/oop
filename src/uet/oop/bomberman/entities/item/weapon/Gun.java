@@ -3,7 +3,7 @@ package uet.oop.bomberman.entities.item.weapon;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.entities.Projectile;
-import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.sound.Sound;
 
 import static view.GameViewManager.bomberman;
 import static view.GameViewManager.visualEffects;
@@ -12,7 +12,10 @@ import static view.GameViewManager.visualEffects;
 public class Gun extends Weapon{
 
     private int cd ;
-    private static Image gunImg = new Image("/textures/rifle.png");
+
+    Sound gunShot = new Sound("res/sfx/gunShot.wav");
+
+    public static Image gunImg = new Image("/textures/rifle.png",41,14,true,true);
 
     private static Image bullet = new Image("/textures/ammo.png",12,12, true, true);
 
@@ -40,15 +43,9 @@ public class Gun extends Weapon{
 
         if(ammo > 0 && armed) {
 
-            cd += 2;
-
-            if(cd > 360) cd = 0;
-
-            System.out.println(cd);
 
             //this.img = Sprite.movingSpriteSheet()
-            System.out.println("FIRE");
-
+            gunShot.play();
 
             createProjectile();
             ammo--;

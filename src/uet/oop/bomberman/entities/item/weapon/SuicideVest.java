@@ -24,7 +24,7 @@ public class SuicideVest extends Weapon {
 
     Sound boom = new Sound("res/sfx/suicideVestSong.wav");
 
-    public static Image vestImg = new Image("/textures/suicide_vest.png");
+    public static Image vestImg = new Image("/textures/suicide_vest.png", 32, 32,true, true);
     public SuicideVest(int x, int y, Image img) {
         super(x, y, img);
         ammo = 10;
@@ -108,7 +108,7 @@ public class SuicideVest extends Weapon {
     public void render(GraphicsContext gc) {
         if(armed) {
             gc.drawImage(this.img, 0, 0, this.img.getWidth(), this.img.getHeight(),
-                    position.x ,position.y,this.img.getWidth()/2,this.img.getHeight()/2);
+                    position.x ,position.y,this.img.getWidth(),this.img.getHeight());
         }
         else {
             gc.drawImage(this.img, position.x, position.y);

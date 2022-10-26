@@ -1,6 +1,5 @@
-package uet.oop.bomberman.Sound;
+package uet.oop.bomberman.sound;
 
-import uet.oop.bomberman.Sound.*;
 import java.io.File;
 import java.util.ArrayList;
 

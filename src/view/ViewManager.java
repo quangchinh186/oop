@@ -165,7 +165,50 @@ public class ViewManager {
 
     }
 
-    private void createHelpButton() {
+    private void createCreditsSubScene() {
+        creditsSubScene = new GameSubScene();
+        mainPane.getChildren().add(creditsSubScene);
+
+        InfoLabel credits = new InfoLabel("  <<< Credits >>>");
+        credits.setLayoutX(120);
+        credits.setLayoutY(20);
+        Label credit0 = new Label("OOP Project By Nguyen Khoa Dang");
+        Label credit1 = new Label("  ");
+        Label credit2 = new Label("And Le Quang Chinh");
+
+
+        VBox creditsBox = new VBox(10, credit0, credit1, credit2);
+
+
+        creditsBox.setLayoutX(50);
+        creditsBox.setLayoutY(80);
+        creditsSubScene.getPane().getChildren().addAll(credits, creditsBox);
+
+    }
+
+    private void createHelpSubScene() {
+        helpSubScene = new GameSubScene();
+        mainPane.getChildren().add(helpSubScene);
+
+
+        InfoLabel credits = new InfoLabel("  <<< Credits >>>");
+        credits.setLayoutX(120);
+        credits.setLayoutY(20);
+        Label credit0 = new Label("Press SPACE to plant Bomb");
+        Label credit1 = new Label("Press K to use your weapon  ");
+        Label credit2 = new Label("Press P to pause the game");
+
+
+        VBox creditsBox = new VBox(20, credit0, credit1, credit2);
+
+
+        creditsBox.setLayoutX(50);
+        creditsBox.setLayoutY(80);
+        helpSubScene.getPane().getChildren().addAll(credits, creditsBox);
+
+    }
+
+        private void createHelpButton() {
         GameButton helpButton = new GameButton("Help");
         addMenuButtons(helpButton);
 
@@ -235,15 +278,19 @@ public class ViewManager {
         scoreSubScene = new GameSubScene();
         skinChooserSubScene = new GameSubScene();
 
-        mainPane.getChildren().addAll(creditsSubScene, helpSubScene, scoreSubScene, skinChooserSubScene);
+        mainPane.getChildren().addAll( scoreSubScene, skinChooserSubScene);
 
         createSkinChooserSubScene();
+        createCreditsSubScene();
+        createHelpSubScene();
 
 
     }
 
 
-    private HBox createSkinsToChoose() {
+
+
+        private HBox createSkinsToChoose() {
         HBox box = new HBox();
         box.setSpacing(20);
 
@@ -278,7 +325,7 @@ public class ViewManager {
 
 
     private void createSkinChooserSubScene() {
-        ///skinChooserSubScene = new GameSubScene();
+        //skinChooserSubScene = new GameSubScene();
         //mainPane.getChildren().add(skinChooserSubScene);
 
         InfoLabel chooseSkinLabel = new InfoLabel("CHOOSE YOUR SKIN");
@@ -289,12 +336,7 @@ public class ViewManager {
 
     }
 
-    private void createCreditsSubScene() {
-        //creditsSubScene = new GameSubScene();
-        //mainPane.getChildren().add(creditsSubScene);
 
-
-    }
 
     private void createScoreSubScene() {
         scoreSubScene = new GameSubScene();
@@ -302,12 +344,6 @@ public class ViewManager {
 
     }
 
-    private void createHelpSubScene() {
-        //helpSubScene = new GameSubScene();
-        //mainPane.getChildren().add(helpSubScene);
-
-
-    }
 
 
 
