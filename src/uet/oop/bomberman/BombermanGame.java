@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -40,6 +41,7 @@ public class BombermanGame extends Application {
     public static Bomber bomberman;
     private GraphicsContext gc;
     private Canvas canvas;
+    private Button play, stop, next, prev, volUp, volDown;
     public static BgmManagement musicPlayer = new BgmManagement("res/music");
 
     public static List<Enemy> entities = new ArrayList<>();
@@ -49,7 +51,7 @@ public class BombermanGame extends Application {
     public static List<Entity> visualEffects = new ArrayList<>();
 
     public static void main(String[] args)  {
-        
+
         Application.launch(BombermanGame.class);
     }
 
@@ -73,7 +75,7 @@ public class BombermanGame extends Application {
         curScore.setY(14*32);
         music.setText("Now playing: " + musicPlayer.getNow());
         music.setX(0);
-        music.setY(15*32);
+        music.setY(15*31);
 
         // Tao Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
@@ -84,6 +86,7 @@ public class BombermanGame extends Application {
         root.getChildren().add(canvas);
         root.getChildren().add(curScore);
         root.getChildren().add(music);
+        addButton(root);
 
         // Tao scene
         scene = new Scene(root);
@@ -123,6 +126,32 @@ public class BombermanGame extends Application {
         timer.start();
     }
 
+    public void addButton(Group root){
+        //play
+        play = new Button();
+        play.setLayoutX(50*1); play.setLayoutY(15*32);
+        //stop
+        stop = new Button();
+        stop.setLayoutX(50*2); stop.setLayoutY(15*32);
+        //next
+        next = new Button();
+        next.setLayoutX(50*3); next.setLayoutY(15*32);
+        //prev
+        prev = new Button();
+        prev.setLayoutX(50*4); prev.setLayoutY(15*32);
+        //volD
+        volDown = new Button();
+        volDown.setLayoutX(50*5); volDown.setLayoutY(15*32);
+        //volU
+        volUp = new Button();
+        volUp.setLayoutX(50*6); volUp.setLayoutY(15*32);
+        root.getChildren().add(play);
+        root.getChildren().add(stop);
+        root.getChildren().add(next);
+        root.getChildren().add(prev);
+        root.getChildren().add(volDown);
+        root.getChildren().add(volUp);
+    }
 
     public void update() {
         bomberman.update();
