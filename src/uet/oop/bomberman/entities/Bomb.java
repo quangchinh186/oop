@@ -69,8 +69,8 @@ public class Bomb extends Entity {
     public void explode(){
         boom.play();
         this.img = Sprite.bomb_exploded1.getFxImage();
-        int width_lim = GameMap.WIDTH-1;
-        int height_lim = GameMap.HEIGHT-1;
+        int width_lim = 31;
+        int height_lim = 12;
         destroy(x, y);
         //up
         for(int i = y-1; i >= Math.max(y-power, 0); i--){

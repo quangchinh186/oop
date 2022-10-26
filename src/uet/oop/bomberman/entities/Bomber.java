@@ -82,7 +82,6 @@ public class Bomber extends Entity {
         if(timer == 15){
             this.img = null;
             isPause = true;
-            lives--;
         }
     }
 
@@ -306,6 +305,7 @@ public class Bomber extends Entity {
         this.s3 = Sprite.player_right_2;
         position.x = spawnX * Sprite.SCALED_SIZE;
         position.y = spawnY * Sprite.SCALED_SIZE;
+        lives--;
     }
     private static void prepareActionHandlers()
     {
