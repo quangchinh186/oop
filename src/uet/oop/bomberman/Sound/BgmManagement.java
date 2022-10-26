@@ -18,7 +18,7 @@ public class BgmManagement {
     }
 
     public String getNow(){
-        return songs.get(nowPlaying);
+        return songs.get(nowPlaying).substring(10);
     }
 
     public void play(){
@@ -62,4 +62,5 @@ public class BgmManagement {
             next();
         }
     }
+
 }
