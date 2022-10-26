@@ -141,7 +141,8 @@ public class Bomb extends Entity {
             Brick temp = (Brick) GameViewManager.stillObjects.get(_y*31 + _x);
             temp.setExploded(true);
         }
-        if(GameViewManager.bomberman.x == _x && GameViewManager.bomberman.y == _y){
+        if(GameViewManager.bomberman.x == _x && GameViewManager.bomberman.y == _y
+        && !GameViewManager.bomberman.isImmune()){
             GameViewManager.bomberman.die();
         }
         for (Entity t : GameViewManager.entities)

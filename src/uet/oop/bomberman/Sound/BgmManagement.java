@@ -1,12 +1,13 @@
-package uet.oop.bomberman.sound;
+package uet.oop.bomberman.Sound;
 
+import uet.oop.bomberman.Sound.*;
 import java.io.File;
 import java.util.ArrayList;
 
 public class BgmManagement {
     private ArrayList<String> songs = new ArrayList<>();
     public int nowPlaying;
-    private Sound music;
+    private uet.oop.bomberman.sound.Sound music;
     private boolean isStop;
     private int stopTime = 0;
 
@@ -28,7 +29,7 @@ public class BgmManagement {
 
     public void play(){
         if(music == null) {
-            music = new Sound(songs.get(nowPlaying));
+            music = new uet.oop.bomberman.sound.Sound(songs.get(nowPlaying));
         }
         if(isStop){
             resume();
@@ -46,14 +47,14 @@ public class BgmManagement {
     public void next(){
         music.stop();
         nowPlaying = nowPlaying == songs.size() ? 0 : nowPlaying+1;
-        music = new Sound(songs.get(nowPlaying));
+        music = new uet.oop.bomberman.sound.Sound(songs.get(nowPlaying));
         music.play();
     }
 
     public void prev(){
         music.stop();
         nowPlaying = nowPlaying == 0 ? songs.size()-1 : nowPlaying-1;
-        music = new Sound(songs.get(nowPlaying));
+        music = new uet.oop.bomberman.sound.Sound(songs.get(nowPlaying));
         music.play();
     }
 

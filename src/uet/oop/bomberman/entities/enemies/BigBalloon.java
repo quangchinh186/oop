@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.states.State;
+
 import uet.oop.bomberman.graphics.Sprite;
 import view.GameViewManager;
 

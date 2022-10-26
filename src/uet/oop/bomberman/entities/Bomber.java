@@ -1,26 +1,24 @@
 package uet.oop.bomberman.entities;
 
 import javafx.event.EventHandler;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 
-import uet.oop.bomberman.entities.item.FlameItem;
+import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.tiles.Portal;
+import uet.oop.bomberman.graphics.Animation;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.sound.Sound;
-import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 import view.GameViewManager;
-import view.ViewManager;
+import uet.oop.bomberman.timer.GTimer;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
-import static uet.oop.bomberman.BombermanGame.*;
 import static view.GameViewManager.*;
 
 public class Bomber extends Entity {
@@ -33,12 +31,34 @@ public class Bomber extends Entity {
     private String prevCheckStuck = "";
     private Rectangle nextFrameRect;
     int spawnX, spawnY;
+
+    private Timer jTimer = new Timer();
     public static HashSet<String> currentlyActiveKeys;
     public static HashSet<String> releasedKey;
     private Vector2D velocity;
     public static double playerSpeed = 1.5;
     public int lives;
     private boolean atPortal;
+
+    public HashMap<String, Animation> animations = new HashMap<>();
+
+
+    private static Image playerSheet = new Image("/textures/bombersheet.png", 32 * 5, 32 * 5,
+            true, true);
+
+    private static Image ricardoSheet = new Image("/textures/ricardo_sheet.png", 13600/6.25, 32,
+            true, true);
+
+    private static Image emptySheet = new Image("/textures/empty.png");
+
+    private static Image chosenSheet = new Image("/textures/empty.png");
+
+    public int frames = 1;
+    public int speed = 100;
+
+    public int animIndex = 0;
+    private static Image spriteSheet;
+    private boolean isImmune = false;
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
@@ -58,6 +78,12 @@ public class Bomber extends Entity {
         lives = 3;
         spawnX = x;
         spawnY = y;
+
+
+        chosenSheet = new Image(Url,32 * 5, 32 * 5, true, true);
+        spriteSheet = chosenSheet;
+        initAnimation();
+        //
         prepareActionHandlers();
         velocity = new Vector2D();
         nextFrameRect = new Rectangle(30,30);
@@ -66,6 +92,39 @@ public class Bomber extends Entity {
         deadNoise = new Sound("res/sfx/oof.wav");
     }
 
+
+
+    public void initAnimation() {
+
+
+
+        Animation walkUp = new Animation(0, 3, 10);
+        Animation walkDown = new Animation(1, 3, 10);
+        Animation walkLeft = new Animation(2, 3, 10);
+        Animation walkRight = new Animation(3, 3, 10);
+        Animation die = new Animation(4, 5, 10);
+        Animation idleUp = new Animation(0, 1, 10);
+        Animation idleDown = new Animation(1, 1, 10);
+        Animation idleLeft = new Animation(2, 1, 10);
+        Animation idleRight = new Animation(3, 1, 10);
+
+        //ricardo animation
+        Animation dancing = new Animation(0, 68, 5);
+
+        animations.put("WalkUp", walkUp);
+        animations.put("WalkDown", walkDown);
+        animations.put("WalkLeft", walkLeft);
+        animations.put("WalkRight", walkRight);
+        animations.put("Die", die);
+        //
+        animations.put("IdleUp", idleUp);
+        animations.put("IdleDown", idleDown);
+        animations.put("IdleLeft", idleLeft);
+        animations.put("IdleRight", idleRight);
+
+        //dancing baby
+        animations.put("Dancing", dancing);
+    }
 
     @Override
     public void update() {
@@ -76,7 +135,7 @@ public class Bomber extends Entity {
         actionHandler();
         handleMapCollision();
         handleItemCollision();
-        if(velocity.x != 0 || velocity.y != 0){
+        if(velocity.x != 0 || velocity.y != 0 || spriteSheet.equals(ricardoSheet)){
             animated();
             rect.setX(position.x);
             rect.setY(position.y);
@@ -92,42 +151,42 @@ public class Bomber extends Entity {
 
     }
     public void dieAnimation(){
-        this.s1 = Sprite.player_dead1;
-        this.s2 = Sprite.player_dead2;
-        this.s3 = Sprite.player_dead3;
-        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+        play("Die");
         timer = timer < 15 ? timer+1 : 15;
         if(timer == 15){
             this.img = null;
             //isPause = true;
+            spriteSheet = emptySheet;
+
+
         }
     }
 
     public void animated(){
-        timer = timer > Sprite.DEFAULT_SIZE ? 0 : timer+1;
         switch (state){
             case DOWN:
-                this.s1 = Sprite.player_down;
-                this.s2 = Sprite.player_down_1;
-                this.s3 = Sprite.player_down_2;
+                play("WalkDown");
                 break;
             case LEFT:
-                this.s1 = Sprite.player_left;
-                this.s2 = Sprite.player_left_1;
-                this.s3 = Sprite.player_left_2;
+                play("WalkLeft");
                 break;
             case UP:
-                this.s1 = Sprite.player_up;
-                this.s2 = Sprite.player_up_1;
-                this.s3 = Sprite.player_up_2;
+                play("WalkUp");
                 break;
+            case RIGHT:
+                play("WalkRight");
+                break;
+            case DIE:
+                play("Die");
             default:
-                this.s1 = Sprite.player_right;
-                this.s2 = Sprite.player_right_1;
-                this.s3 = Sprite.player_right_2;
                 break;
+
         }
-        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+
+
+        if(spriteSheet.equals(ricardoSheet)) {
+            play("Dancing");
+        }
 
     }
 
@@ -180,7 +239,8 @@ public class Bomber extends Entity {
 
     public void actionHandler () {
         if(isPause){
-            if(currentlyActiveKeys.isEmpty()) return;
+            if(currentlyActiveKeys.isEmpty()) {
+            }
             else isPause = false;
         }
 
@@ -280,8 +340,27 @@ public class Bomber extends Entity {
             if(currentlyActiveKeys.contains("SPACE")){
                 currentlyActiveKeys.remove("SPACE");
                 revive();
+                spriteSheet = chosenSheet;
             }
         }
+
+        if(releasedKey.contains("UP")) {
+            play("IdleUp");
+
+        }
+
+        if(releasedKey.contains("DOWN")) {
+            play("IdleDown");
+        }
+
+        if(releasedKey.contains("LEFT")) {
+            play("IdleLeft");
+        }
+
+        if(releasedKey.contains("RIGHT")) {
+            play("IdleRight");
+        }
+
     }
 
     private void createProjectile() {
@@ -313,8 +392,27 @@ public class Bomber extends Entity {
     }
 
     public void becomeChad() {
-        this.img = Sprite.player_chad.getFxImage();
+        state = State.CHAD;
+        spriteSheet = ricardoSheet;
+        setImmune(true);
+        jTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setImmune(false);
+                spriteSheet = chosenSheet;
+                state = State.RIGHT;
+            }
+        },10000);
     }
+
+    public boolean isImmune() {
+        return isImmune;
+    }
+
+    private void setImmune(boolean b) {
+        isImmune = b;
+    }
+
 
     public void revive(){
         state = State.RIGHT;
@@ -324,7 +422,7 @@ public class Bomber extends Entity {
         this.s3 = Sprite.player_right_2;
         position.x = spawnX * Sprite.SCALED_SIZE;
         position.y = spawnY * Sprite.SCALED_SIZE;
-        lives--;
+        //lives--;
     }
     private static void prepareActionHandlers()
     {
@@ -369,12 +467,16 @@ public class Bomber extends Entity {
     }
 
 
+
     public void die(){
         timer = 1;
         state = State.DIE;
+        play("Die");
         velocity.x = 0;
         velocity.y = 0;
         deadNoise.play();
+        lives--;
+        System.out.println(lives);
     }
 
     public boolean isAtPortal() {
@@ -383,6 +485,27 @@ public class Bomber extends Entity {
 
     public void setAtPortal(boolean atPortal) {
         this.atPortal = atPortal;
+    }
+
+    public void play(String id) {
+        frames = animations.get(id).frames;
+        speed = animations.get(id).speed;
+        animIndex = animations.get(id).index;
+    }
+
+
+    @Override
+    public void render(GraphicsContext gc) {
+        int srcX = 0;
+
+        int frameSpeed = speed == 0 ? (GTimer.ticksInASeconds / 6) : speed;
+        //                                                                               speed ,  % frames.
+        srcX = (Sprite.SCALED_SIZE * (int) ( (GameViewManager.getJavaFxTicks() / frameSpeed) % frames));
+        gc.drawImage(spriteSheet,srcX,animIndex * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE,
+                position.x, position.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+
+
+        //weapons.forEach(g -> g.render(gc));
     }
 }
 

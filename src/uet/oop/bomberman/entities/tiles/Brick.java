@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.item.BombItem;
-import uet.oop.bomberman.entities.item.FlameItem;
+import uet.oop.bomberman.entities.item.ChadItem;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.SpeedItem;
 import uet.oop.bomberman.graphics.Sprite;
@@ -38,7 +38,7 @@ public class Brick extends Entity {
                     GameViewManager.items.add(p);
                     break;
                 case "flame":
-                    Item f = new FlameItem(x, y, Sprite.powerup_flames.getFxImage());
+                    Item f = new ChadItem(x, y, Sprite.powerup_flames.getFxImage());
                     GameViewManager.items.add(f);
                     break;
                 case "bomb":
@@ -48,6 +48,10 @@ public class Brick extends Entity {
                 case "speed":
                     Item s = new SpeedItem(x, y, Sprite.powerup_speed.getFxImage());
                     GameViewManager.items.add(s);
+                    break;
+                case "chad":
+                    Item c = new ChadItem(x, y, Sprite.powerup_bombpass.getFxImage());
+                    GameViewManager.items.add(c);
                     break;
                 default: break;
             }

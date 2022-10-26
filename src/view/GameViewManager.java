@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import model.GameButton;
 import model.GameSubScene;
 import model.SKIN;
+import uet.oop.bomberman.Sound.BgmManagement;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Entity;
@@ -33,10 +34,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-import uet.oop.bomberman.sound.BgmManagement;
 
 import static uet.oop.bomberman.entities.Bomber.currentlyActiveKeys;
-import static view.ViewManager.*;
 
 public class GameViewManager {
 
@@ -213,9 +212,10 @@ public class GameViewManager {
         gameStage.setOnCloseRequest(x -> {
             x.consume();
             // if(ConfirmExit.askConfirmation()) {
-            // Platform.exit();
-            gameStage.close();
-            menuStage.show();
+            Platform.exit();
+            musicPlayer.pause();
+
+
             // }
         });
 
@@ -254,6 +254,7 @@ public class GameViewManager {
 
     public void createNewGame(Stage menuStage, SKIN chosenSkin) {
         isPause = false;
+        level = 2;
         this.menuStage = menuStage;
         this.menuStage.hide();
         //createBG();
@@ -278,6 +279,7 @@ public class GameViewManager {
                 handleInput();
                 if(!isPause) {
                     update();
+
                 }
 
             }
@@ -337,6 +339,7 @@ public class GameViewManager {
                 gameTimer.stop();
                 gameStage.close();
                 menuStage.show();
+
             }
 
 
@@ -409,11 +412,15 @@ public class GameViewManager {
     //from oldMainf
     public void update() {
 
+        javaFxTicks++;
+
+
         music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
         ui.setText("\tBomb to use: " + bomberman.getBombNumbers() + "\tScore: " + score);
 
 
         bomberman.update();
+        updateLives();
         bombs.forEach(Entity::update);
         stillObjects.forEach(Entity::update);
         if(!(bombs.isEmpty())) {
@@ -453,11 +460,35 @@ public class GameViewManager {
 
     }
 
+    private void updateLives() {
+        if(bomberman.lives == 0) {
+            //draw image
+            endCd++;
+
+            System.out.println(endCd);
+            musicPlayer.pause();
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+
+            gc.drawImage(new Image("textures/gameOver.jpg"), 0, 0, canvas.getWidth(), canvas.getHeight());
+
+            if(endCd > 120) {
+                isPause = true;
+                gameStage.close();
+                menuStage.show();
+                return;
+            }
+
+
+        }
+    }
+
     private void clearAllEntities() {
 
 
 
-
+        musicPlayer.pause();
+        gameTimer.stop();
         entities.clear();
         stillObjects.clear();
         items.clear();
@@ -486,10 +517,7 @@ public class GameViewManager {
 
     public void newLevel(){
 
-        entities.clear();
-        bombs.clear();
-        visualEffects.clear();
-        items.clear();
+        clearAllEntities();
         bomberman.revive();
 
         level++;
@@ -505,6 +533,7 @@ public class GameViewManager {
             gc.drawImage(new Image("textures/win_scene.jpg"), 0, 0, canvas.getWidth(), canvas.getHeight());
 
             if(endCd > 120) {
+                isPause = true;
                 gameStage.close();
                 menuStage.show();
                 return;
@@ -512,6 +541,10 @@ public class GameViewManager {
 
 
         }
+
+
+
+
 
         if(level < 3) {
 

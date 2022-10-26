@@ -7,10 +7,6 @@ import uet.oop.bomberman.entities.tiles.Wall;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.entities.enemies.*;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.item.BombItem;
-import uet.oop.bomberman.entities.item.FlameItem;
-import uet.oop.bomberman.entities.item.Item;
-import uet.oop.bomberman.entities.item.SpeedItem;
 import uet.oop.bomberman.graphics.Sprite;
 import view.GameViewManager;
 
@@ -98,6 +94,11 @@ public class GameMap extends GameViewManager {
                         temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);
                         map.set(i, temp);
                         object = new Brick(j, i, Sprite.brick.getFxImage(), "speed");
+                        break;
+                    case 'c':
+                        temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);
+                        map.set(i, temp);
+                        object = new Brick(j, i, Sprite.brick.getFxImage(), "chad");
                         break;
                     case 'f':
                         temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);

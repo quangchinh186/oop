@@ -73,6 +73,13 @@ public class ViewManager {
 
         createButtons();
 
+        mainStage.setOnCloseRequest(x -> {
+            x.consume();
+            // if(ConfirmExit.askConfirmation()) {
+            Platform.exit();
+            // }
+        });
+
     }
 
 
