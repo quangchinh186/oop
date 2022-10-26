@@ -99,7 +99,7 @@ public class Bomber extends Entity {
     public Bomber(int x, int y, String sheetUrl) {
 
 
-        super(x + 1, y + 1, Sprite.player_right.getFxImage());
+        super(x, y, Sprite.player_right.getFxImage());
         lives = 3;
         spawnX = x;
         spawnY = y;
@@ -161,6 +161,7 @@ public class Bomber extends Entity {
 
         if(cd > 0) cd--;
 
+        actionHandler();
         handleMapCollision();
         handleItemCollision();
         handleDamageCollision();

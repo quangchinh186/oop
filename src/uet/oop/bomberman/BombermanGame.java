@@ -5,9 +5,6 @@ import javafx.stage.Stage;
 import view.ViewManager;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class BombermanGame extends Application {
 
@@ -22,7 +19,7 @@ public class BombermanGame extends Application {
         try {
             ViewManager manager = new ViewManager();
             primaryStage = manager.getMainStage();
-            primaryStage.setTitle("SpaceRunner the Game");
+            primaryStage.setTitle("Middle East Man");
             primaryStage.setResizable(false);
             //primaryStage.setFullScreen(true);
 

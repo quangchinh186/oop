@@ -216,11 +216,12 @@ public class GameViewManager {
         stillObjects.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
 
-        bomberman.render(gc);
+
 
         items.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
         visualEffects.forEach(g -> g.render(gc));
+        bomberman.render(gc);
     }
 
     public static void clearInactiveEntity(List<Entity> lst) {

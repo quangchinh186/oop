@@ -84,6 +84,7 @@ public abstract class Entity {
         }
 
 
+        drawRect(gc);
 
     }
     public abstract void update();
