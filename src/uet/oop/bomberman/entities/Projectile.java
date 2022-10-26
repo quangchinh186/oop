@@ -79,7 +79,7 @@ public class Projectile extends Entity{
         }
         if(rect.intersects(bomberman.rect.getX(), bomberman.rect.getY(),
                 bomberman.rect.getWidth(), bomberman.rect.getHeight())
-                && harmPlayer) {
+                && harmPlayer && !bomberman.isImmune()) {
             bomberman.die();
         }
 
