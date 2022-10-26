@@ -9,7 +9,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import uet.oop.bomberman.entities.item.FlameItem;
 import uet.oop.bomberman.sound.BgmManagement;
 import uet.oop.bomberman.sound.Sound;
 import uet.oop.bomberman.states.State;
@@ -20,8 +23,10 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class BombermanGame extends Application {
@@ -30,6 +35,7 @@ public class BombermanGame extends Application {
     public static final int HEIGHT = 15;
     public static int level = 1;
     public static int score = 0;
+    public static int highScore;
     public static Scene scene;
     public static Bomber bomberman;
     private GraphicsContext gc;
@@ -46,9 +52,28 @@ public class BombermanGame extends Application {
         Application.launch(BombermanGame.class);
     }
 
+
     @Override
     public void start(Stage stage) {
+        try {
+            File file = new File("highScore.txt");
+            Scanner scanner = new Scanner(file);
+            highScore = scanner.nextInt();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+
+        //highScore = scanner.nextInt();
         stage.setTitle("Bomberman");
+        Text curScore = new Text();
+        Text music = new Text();
+        curScore.setText("Score: " + score + " Best: " + highScore);
+        curScore.setX(0);
+        curScore.setY(14*32);
+        music.setText("Now playing: " + musicPlayer.getNow());
+        music.setX(0);
+        music.setY(15*32);
+
         // Tao Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
@@ -56,6 +81,8 @@ public class BombermanGame extends Application {
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
+        root.getChildren().add(curScore);
+        root.getChildren().add(music);
 
         // Tao scene
         scene = new Scene(root);
@@ -64,16 +91,27 @@ public class BombermanGame extends Application {
         stage.setScene(scene);
         stage.show();
         GameMap.createMap(level);
+        musicPlayer.play();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 render();
                 if(!isPause){
+                    curScore.setText("Score: " + score + "\tBest: " + highScore);
+                    music.setText("Now playing: " + musicPlayer.getNow());
                     update();
                     musicPlayer.autoMove();
                 }
                 if(bomberman.lives == 0){
                     System.out.println("Game Over!");
+                    highScore = highScore < score ? score : highScore;
+                    try {
+                        Writer wr = new FileWriter("highScore.txt");
+                        wr.write(Integer.toString(highScore));
+                        wr.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     stop();
                 }
                 else{
