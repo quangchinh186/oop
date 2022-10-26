@@ -1,14 +1,15 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
+
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 import uet.oop.bomberman.states.State;
+import view.GameViewManager;
 
-import static uet.oop.bomberman.BombermanGame.bombs;
+import static view.GameViewManager.bombs;
 
 public class EvilBomber extends Enemy {
     public EvilBomber(int x, int y, Image img){
@@ -76,7 +77,7 @@ public class EvilBomber extends Enemy {
             if(position.x % 32 == 0 && position.y % 32 == 0){
                 if(c == '*' && bombs.size() < 2){
                     Bomb bomb = new Bomb(x, y, Sprite.bomb_1.getFxImage(), "EvilBomber");
-                    BombermanGame.bombs.add(bomb);
+                    bombs.add(bomb);
                     turn = (turn + 2) % 4;
                 } else {
                     turn = (int) Math.floor(Math.random()*4);

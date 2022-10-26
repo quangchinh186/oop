@@ -1,7 +1,6 @@
 package uet.oop.bomberman.map;
 
 import javafx.scene.shape.Rectangle;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.tiles.Brick;
 import uet.oop.bomberman.entities.tiles.Grass;
 import uet.oop.bomberman.entities.tiles.Wall;
@@ -13,6 +12,7 @@ import uet.oop.bomberman.entities.item.FlameItem;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.SpeedItem;
 import uet.oop.bomberman.graphics.Sprite;
+import view.GameViewManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class GameMap extends BombermanGame {
+public class GameMap extends GameViewManager {
     public static List <String> map = new ArrayList<>();
     public static List<Vector2D> nextLevel = new ArrayList<>();
 
@@ -28,7 +28,7 @@ public class GameMap extends BombermanGame {
         String temp = map.get(y).substring(0, x) + ' ' + map.get(y).substring(x+1);
         map.set(y, temp);
         Entity t = new Grass(x, y, Sprite.grass.getFxImage());
-        BombermanGame.stillObjects.set(y*31 + x, t);
+        GameViewManager.stillObjects.set(y*31 + x, t);
     }
     public static void occupyBlock(int x, int y) {
         String temp = map.get(y).substring(0, x) + 'o' + map.get(y).substring(x+1);
@@ -37,17 +37,19 @@ public class GameMap extends BombermanGame {
     public static void createMap(int level) {
         map.clear();
         nextLevel.clear();
-        BombermanGame.stillObjects.clear();
+        GameViewManager.stillObjects.clear();
         String path = "src/uet/oop/bomberman/map/map" + (level) + ".txt";
         getMap(path);
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).length(); j++) {
                 Entity object;
                 switch (map.get(i).charAt(j)) {
+                    /*
                     case 'p' :
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         bomberman = new Bomber(j, i, Sprite.player_right.getFxImage());
                         break;
+                     */
                     case '1' :
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         Enemy balloon = new Balloon(j, i, Sprite.balloom_left3.getFxImage());
@@ -56,7 +58,7 @@ public class GameMap extends BombermanGame {
                     case '2':
                         object = new Grass(j, i, Sprite.grass.getFxImage());
                         Enemy oneal = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
-                        entities.add(oneal);
+                        GameViewManager.entities.add(oneal);
                         break;
                     case '3':
                         object = new Grass(j, i, Sprite.grass.getFxImage());

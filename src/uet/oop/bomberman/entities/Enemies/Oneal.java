@@ -2,10 +2,10 @@ package uet.oop.bomberman.entities.enemies;
 
 import uet.oop.bomberman.map.Node;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
+import view.GameViewManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +110,7 @@ public class Oneal extends Enemy {
     public int decideDirection(){
         int stX = (int)(position.x / Sprite.SCALED_SIZE);
         int stY = (int)(position.y / Sprite.SCALED_SIZE);
-        int dis = Math.abs(stX - BombermanGame.bomberman.x) + Math.abs(stY - BombermanGame.bomberman.y);
+        int dis = Math.abs(stX - GameViewManager.bomberman.x) + Math.abs(stY - GameViewManager.bomberman.y);
         if(dis > 10){
             onealSpeed = 1.5;
         }
@@ -123,7 +123,7 @@ public class Oneal extends Enemy {
         s.h_cost = dis;
         s.setF_cost();
         //Init end node *aka* bomberman
-        Node e = new Node(BombermanGame.bomberman.x, BombermanGame.bomberman.y);
+        Node e = new Node(GameViewManager.bomberman.x, GameViewManager.bomberman.y);
         e.g_cost = dis;
         e.h_cost = 0;
         e.setF_cost();

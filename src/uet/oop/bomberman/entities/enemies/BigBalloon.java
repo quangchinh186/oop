@@ -1,9 +1,9 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.graphics.Sprite;
+import view.GameViewManager;
 
 public class BigBalloon extends Enemy{
     int life = 1;
@@ -28,8 +28,8 @@ public class BigBalloon extends Enemy{
         if(state == State.DIE){
             Enemy b = new Balloon(x, y, Sprite.balloom_left3.getFxImage());
             Enemy b1 = new Balloon(x, y, Sprite.balloom_left2.getFxImage());
-            BombermanGame.entities.add(b1);
-            BombermanGame.entities.add(b);
+            GameViewManager.entities.add(b1);
+            GameViewManager.entities.add(b);
         }
         super.update();
         if(state == State.STOP){

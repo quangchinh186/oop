@@ -2,8 +2,8 @@ package uet.oop.bomberman.entities.item;
 
 import javafx.scene.image.Image;
 
-import static uet.oop.bomberman.BombermanGame.bomberman;
 import static uet.oop.bomberman.entities.Bomber.PLAYER_SPEED_BOOSTED;
+import static view.GameViewManager.bomberman;
 
 public class SpeedItem extends Item {
 

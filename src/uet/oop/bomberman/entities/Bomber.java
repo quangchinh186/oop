@@ -12,12 +12,15 @@ import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
+import view.GameViewManager;
+import view.ViewManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import static uet.oop.bomberman.BombermanGame.*;
+import static view.GameViewManager.*;
 
 public class Bomber extends Entity {
     private int bombNumbers = 1;
@@ -48,6 +51,20 @@ public class Bomber extends Entity {
         atPortal = false;
         deadNoise = new Sound("res/sfx/oof.wav");
     }
+
+    public Bomber(int x, int y, String Url) {
+        super(x, y, Sprite.player_right.getFxImage());
+        lives = 3;
+        spawnX = x;
+        spawnY = y;
+        prepareActionHandlers();
+        velocity = new Vector2D();
+        nextFrameRect = new Rectangle(30,30);
+        state = State.RIGHT;
+        atPortal = false;
+        deadNoise = new Sound("res/sfx/oof.wav");
+    }
+
 
     @Override
     public void update() {
@@ -312,7 +329,7 @@ public class Bomber extends Entity {
         // use a set so duplicates are not possible
         currentlyActiveKeys = new HashSet<String>();
         releasedKey = new HashSet<String>();
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>()
+        gameScene.setOnKeyPressed(new EventHandler<KeyEvent>()
         {
             @Override
             public void handle(KeyEvent event)
@@ -322,7 +339,7 @@ public class Bomber extends Entity {
             }
 
         });
-        scene.setOnKeyReleased(new EventHandler<KeyEvent>()
+        gameScene.setOnKeyReleased(new EventHandler<KeyEvent>()
         {
             @Override
             public void handle(KeyEvent event)
@@ -348,6 +365,8 @@ public class Bomber extends Entity {
     public void increaseBombRange() {
         Bomb.increasePower();
     }
+
+
     public void die(){
         timer = 1;
         state = State.DIE;

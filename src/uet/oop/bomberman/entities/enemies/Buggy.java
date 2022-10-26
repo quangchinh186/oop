@@ -1,10 +1,10 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.states.State;
+import view.GameViewManager;
 
 public class Buggy extends Enemy{
 
@@ -68,7 +68,7 @@ public class Buggy extends Enemy{
     }
 
     public void teleport(){
-        for (Enemy enemy : BombermanGame.entities) {
+        for (Enemy enemy : GameViewManager.entities) {
             if(enemy instanceof Buggy) continue;
             if(enemy.getPosition().x % 32 == 0 && enemy.getPosition().y % 32 == 0){
                 double a = enemy.getPosition().x;
