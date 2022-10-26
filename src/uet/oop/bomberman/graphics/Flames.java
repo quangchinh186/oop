@@ -7,6 +7,8 @@ import uet.oop.bomberman.entities.tiles.Grass;
 import uet.oop.bomberman.map.GameMap;
 import view.GameViewManager;
 
+import java.util.TimerTask;
+
 public class Flames extends Entity {
     public boolean horizontal = false;
     public State state;
@@ -19,6 +21,13 @@ public class Flames extends Entity {
         this.y = y;
         this.state = s;
         this.time = 15;
+
+        jTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setInactive();
+            }
+        }, 750);
     }
 
     public void setLast(boolean last) {
@@ -76,4 +85,5 @@ public class Flames extends Entity {
         }
 
     }
+
 }

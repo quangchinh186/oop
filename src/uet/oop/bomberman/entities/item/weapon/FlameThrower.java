@@ -73,6 +73,7 @@ public class FlameThrower extends Weapon{
 
         //right
         for (int i = (int)position.x/Sprite.SCALED_SIZE + 1; i < Math.min((int)position.x/Sprite.SCALED_SIZE + 3, width_lim); i++) {
+
             Flames f = new Flames(i, (int)position.y/Sprite.SCALED_SIZE, Sprite.explosion_horizontal.getFxImage(), State.RIGHT);
             if (i == Math.min((int)position.x/Sprite.SCALED_SIZE  , width_lim) || GameMap.map.get((int)position.y/Sprite.SCALED_SIZE).charAt(i + 1) == '#') {
                 f.setLast(true);

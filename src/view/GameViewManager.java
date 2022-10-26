@@ -134,7 +134,6 @@ public class GameViewManager {
 
     }
 
-
     /**
      * hide menuStage and create gameStage
      */
@@ -206,22 +205,17 @@ public class GameViewManager {
         //remove projectile
         //nen de rieng or lam chung voi visual effect.
 
-
-
-
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
-
-
-
+        bomberman.render(gc);
         items.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
         visualEffects.forEach(g -> g.render(gc));
-        bomberman.render(gc);
+
     }
 
     public static void clearInactiveEntity(List<Entity> lst) {

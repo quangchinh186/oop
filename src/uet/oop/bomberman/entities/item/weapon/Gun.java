@@ -9,8 +9,12 @@ import static view.GameViewManager.bomberman;
 import static view.GameViewManager.visualEffects;
 
 
+
+
 public class Gun extends Weapon{
 
+
+    public static Image bullet_sprite = new Image("textures/bullet.png", 12, 12, true, true);
     private int cd ;
     private static Image gunImg = new Image("/textures/rifle.png");
 
@@ -78,9 +82,9 @@ public class Gun extends Weapon{
                 // code block
         }
 
-        Projectile pj = new Projectile((int)((bomberman.position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE ) ,
-                (int)(bomberman.position.y + Sprite.DEFAULT_SIZE) /Sprite.SCALED_SIZE,
-                Sprite.minvo_right2.getFxImage(), direction);
+        Projectile pj = new Projectile((int)((bomberman.position.x) / Sprite.SCALED_SIZE ) ,
+                (int)(bomberman.position.y) /Sprite.SCALED_SIZE,
+                bullet_sprite, direction);
         visualEffects.add(pj);
         //System.out.println("IM CUMMIN");
     }
@@ -92,6 +96,7 @@ public class Gun extends Weapon{
             cd += 3;
         }
     }
+
 
 
 }

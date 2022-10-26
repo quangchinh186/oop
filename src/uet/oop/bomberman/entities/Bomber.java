@@ -23,14 +23,11 @@ import uet.oop.bomberman.graphics.SpriteSheet;
 import uet.oop.bomberman.map.GameMap;
 import view.GameViewManager;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import java.util.TimerTask;
+import java.util.*;
 
 
 import static uet.oop.bomberman.BombermanGame.*;
+import static uet.oop.bomberman.entities.item.weapon.Gun.bullet_sprite;
 import static uet.oop.bomberman.graphics.SpriteSheet.*;
 import static view.GameViewManager.*;
 
@@ -117,6 +114,8 @@ public class Bomber extends Entity {
         initAnimation();
 
         spriteSheet = new Image(sheetUrl,32 * 3, 32 * 5, true, true);
+
+
     }
 
 
@@ -165,7 +164,7 @@ public class Bomber extends Entity {
         handleMapCollision();
         handleItemCollision();
         handleDamageCollision();
-        //update weapons.
+
         weapons.forEach(Entity::update);
 
         if(velocity.x != 0 || velocity.y != 0 || spriteSheet.equals(ricardoSheet)){
@@ -181,6 +180,8 @@ public class Bomber extends Entity {
                 GameMap.occupyBlock(b.x, b.y);
             }
         }
+
+
 
     }
     public void dieAnimation(){
@@ -198,26 +199,29 @@ public class Bomber extends Entity {
 
     private void handleDamageCollision() {
 
-        for(Entity et : visualEffects) {
-            if(et.rect.intersects(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight())) {
-                if(et instanceof Flames || et instanceof Projectile) {
-                    if(!isImmune) {
-
-                        System.out.println("Va chung sat thuong");
-                        hp--;
-                        setImmune(true);
-                        jTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                setImmune(false);
-                            }
-                        },1000);
-                    }
-                }
-
-                et.setInactive();
-            }
-        }
+        //for collding with player.
+        /**
+         * for(Entity et : visualEffects) {
+         *             if(et.rect.intersects(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight())) {
+         *                 if(et instanceof Flames || et instanceof Projectile) {
+         *                     if(!isImmune) {
+         *
+         *                         System.out.println("Va chung sat thuong");
+         *                         hp--;
+         *                         setImmune(true);
+         *                         jTimer.schedule(new TimerTask() {
+         *                             @Override
+         *                             public void run() {
+         *                                 setImmune(false);
+         *                             }
+         *                         },1000);
+         *                     }
+         *                 }
+         *
+         *                 et.setInactive();
+         *             }
+         *         }
+         */
     }
 
     @Override
@@ -257,9 +261,6 @@ public class Bomber extends Entity {
         }
 
 
-
-
-
     }
 
     private void handleItemCollision() {
@@ -267,9 +268,6 @@ public class Bomber extends Entity {
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();
-                if(!(entity instanceof Portal)){
-                    toRemove.add(entity);
-                }
             }
         }
 
@@ -399,7 +397,13 @@ public class Bomber extends Entity {
             }
             if (currentlyActiveKeys.contains("K")){
                 currentlyActiveKeys.remove("K");
-                createProjectile();
+                //
+                for(Weapon wp : weapons) {
+                    if(wp.isArmed()) {
+                        wp.useWeapon();
+                        break;
+                    }
+                }
             }
             //mp3 key input test
             if (currentlyActiveKeys.contains("Q")){
@@ -479,93 +483,9 @@ public class Bomber extends Entity {
         }
 
         Projectile pj = new Projectile((int)position.x/Sprite.SCALED_SIZE, (int)position.y/Sprite.SCALED_SIZE,
-                Sprite.minvo_right2.getFxImage(), direction);
+                bullet_sprite, direction);
         visualEffects.add(pj);
 
-        if(currentlyActiveKeys.isEmpty()){
-            velocity.x = 0;
-            velocity.y = 0;
-            //state = State.STOP;
-        }
-        if(currentlyActiveKeys.contains("A")) {
-            currentlyActiveKeys.remove("A");
-            Bomb.power++;
-        }
-        if(currentlyActiveKeys.contains("LEFT")) {
-            velocity.x = -playerSpeed;
-            state = State.LEFT;
-        }
-        if (currentlyActiveKeys.contains("RIGHT")){
-            velocity.x = playerSpeed;
-            state = State.RIGHT;
-        }
-        if (currentlyActiveKeys.contains("UP")){
-            velocity.y = -playerSpeed;
-            state = State.UP;
-        }
-        if (currentlyActiveKeys.contains("DOWN")){
-            velocity.y = playerSpeed;
-            state = State.DOWN;
-        }
-        if (currentlyActiveKeys.contains("SPACE") && cd == 0){
-            currentlyActiveKeys.remove("SPACE");
-            int x = (int) ((position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE);
-            int y = (int) ((position.y + Sprite.DEFAULT_SIZE)/ Sprite.SCALED_SIZE);
-            Entity bom = new Bomb(x, y, "Player");
-            cd = 0;
-        }
-        if (currentlyActiveKeys.contains("K")){
-            currentlyActiveKeys.remove("K");
-            //
-            for(Weapon wp : weapons) {
-                if(wp.isArmed()) {
-                    wp.useWeapon();
-                    break;
-                }
-            }
-        }
-
-        if(releasedKey.contains("LEFT") ) {
-            velocity.x = 0;
-            state = state.LEFT;
-        }
-        if(releasedKey.contains("RIGHT") ) {
-            velocity.x = 0;
-            state = state.RIGHT;
-        }
-
-        if(releasedKey.contains("UP") ) {
-            velocity.y = 0;
-            state = state.UP;
-        }
-        if(releasedKey.contains("DOWN") ) {
-            velocity.y = 0;
-            state = state.DOWN;
-        }
-
-        if(currentlyActiveKeys.isEmpty()) {
-            switch (state){
-                case DOWN:
-                    play("IdleDown");
-                    break;
-                case LEFT:
-                    play("IdleLeft");
-                    break;
-                case UP:
-                    play("IdleUp");
-                    break;
-                case DIE:
-                    break;
-                case RIGHT:
-                    play("IdleRight");
-                    break;
-                case CHAD:
-                    play("Dancing");
-                    break;
-                default:
-                    break;
-            }
-        }
 
     }
 
