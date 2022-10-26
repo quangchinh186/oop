@@ -160,7 +160,7 @@ public class GameViewManager {
         music.setX(0);
         music.setY(14*31);
         hp = new Text();
-        hp.setText("Heart left: " + 4);
+        hp.setText("Heart left: ");
         hp.setY(14*32);
         ui = new Text();
         ui.setText("\tBomb to use: " + 1 + "\tScore: " + score);
@@ -169,7 +169,6 @@ public class GameViewManager {
 
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * (HEIGHT+2));
         gc = canvas.getGraphicsContext2D();
-
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
@@ -271,7 +270,6 @@ public class GameViewManager {
     //from oldMain
     public void update() {
         music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
-        hp.setText("Heart left: " + bomberman.lives);
         ui.setText("\tBomb to use: " + bomberman.getBombNumbers() + "\tScore: " + score);
         bomberman.update();
         bombs.forEach(Entity::update);
@@ -308,6 +306,9 @@ public class GameViewManager {
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        for(int i = 0; i < bomberman.lives; i++){
+            gc.drawImage(heart, 64 + (10*i), 440, 10, 10);
+        }
         stillObjects.forEach(g -> g.render(gc));
         items.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
