@@ -2,22 +2,17 @@ package view;
 
 
 import javafx.animation.AnimationTimer;
-import javafx.event.Event;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.GameButton;
+import model.GameSubScene;
 import model.SKIN;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Bomber;
@@ -27,23 +22,31 @@ import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.Weapon;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
-import uet.oop.bomberman.states.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
 import uet.oop.bomberman.sound.BgmManagement;
 
+import static uet.oop.bomberman.entities.Bomber.currentlyActiveKeys;
+import static view.ViewManager.*;
+
 public class GameViewManager {
+    private AnchorPane gamePane;
     public static Scene gameScene;
     private Stage gameStage;
+
     private Stage menuStage;
 
+    List<GameButton> pauseMenuButtons = new ArrayList<>();
+
+
+    private GameSubScene sceneToHide;
     private static final int GAME_WIDTH = 31 * 32;
     private static final int GAME_HEIGHT = 13 * 32;
+
+    private GameSubScene pauseSubScene;
+
+    private GameSubScene gameOverSubScene;
 
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
@@ -69,121 +72,56 @@ public class GameViewManager {
     public static List<Entity> visualEffects = new ArrayList<>();
 
 
+    private GameButton returnToTileButton;
+
+    private GameButton exitButton;
+    Group root;
     public static BgmManagement musicPlayer = new BgmManagement("res/music");
 
     public static boolean isPause = false;
 
     public static int score = 0;
-    public static int highScore;
-    Text music;
-    Text hp;
-    Text ui;
-    Button p = new Button("play");
-    Button s = new Button("stop");
-    Button n = new Button(">>");
-    Button b = new Button("<<");
-    Button up = new Button("v+");
-    Button down = new Button("v-");
-    Image heart = new Image("textures/heart.png");
+    private int MENU_BUTTON_START_X = 390;
+
+    private int MENU_BUTTON_START_Y = 150;
 
     public GameViewManager() {
         initializeStage();
     }
 
-    public void setButton(Group root){
-        p.setFocusTraversable(false);
-        s.setFocusTraversable(false);
-        n.setFocusTraversable(false);
-        b.setFocusTraversable(false);
-        up.setFocusTraversable(false);
-        down.setFocusTraversable(false);
-        p.setLayoutX(0*30); p.setLayoutY(14*33);
-        s.setLayoutX(1*30); s.setLayoutY(14*33);
-        b.setLayoutX(2*30); b.setLayoutY(14*33);
-        n.setLayoutX(3*30); n.setLayoutY(14*33);
-        down.setLayoutX(4*30); down.setLayoutY(14*33);
-        up.setLayoutX(5*30); up.setLayoutY(14*33);
-
-        p.setOnAction(event->{
-            musicPlayer.play();
-        });
-        s.setOnAction(event->{
-            musicPlayer.pause();
-        });
-        n.setOnAction(event->{
-            musicPlayer.next();
-        });
-        b.setOnAction(event->{
-            musicPlayer.prev();
-        });
-        up.setOnAction(event->{
-            musicPlayer.changeVolume("up");
-        });
-        down.setOnAction(event->{
-            musicPlayer.changeVolume("down");
-        });
-
-        root.getChildren().add(p);
-        root.getChildren().add(s);
-        root.getChildren().add(n);
-        root.getChildren().add(b);
-        root.getChildren().add(up);
-        root.getChildren().add(down);
-    }
 
     /**
      * create things for MAINGAME
      */
     private void initializeStage() {
-        /*Pane pane = new HBox(10);
-        ImageView imageView = new ImageView(heart);
-        imageView.setFitHeight(16);
-        imageView.setFitWidth(16);
-        for(int i = 0; i < 4; i++){
-            pane.getChildren().add(imageView);
-        }
-        pane.setLayoutY(14*31);
-        pane.setLayoutX(32*2);*/
-
 
         gameStage = new Stage();
-        try {
-            File file = new File("highScore.txt");
-            Scanner scanner = new Scanner(file);
-            highScore = scanner.nextInt();
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
-        musicPlayer.play();
-        music = new Text();
-        music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
-        music.setX(0);
-        music.setY(14*31);
-        hp = new Text();
-        hp.setText("Heart left: ");
-        hp.setY(14*32);
-        ui = new Text();
-        ui.setText("\tBomb to use: " + 1 + "\tScore: " + score);
-        ui.setX(32*10);
-        ui.setY(14*32);
 
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * (HEIGHT+2));
+        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
+
         // Tao root container
-        Group root = new Group();
+        root = new Group();
         root.getChildren().add(canvas);
-        root.getChildren().add(music);
-        root.getChildren().add(hp);
-        root.getChildren().add(ui);
-        //root.getChildren().add(pane);
-        setButton(root);
+
 
         // Tao scene
         gameScene = new Scene(root);
-        gameScene.setFill(Color.web("#81c483"));
+
         // Them scene vao stage
         gameStage.setScene(gameScene);
+
+        gameStage.setOnCloseRequest(x -> {
+            x.consume();
+            // if(ConfirmExit.askConfirmation()) {
+            // Platform.exit();
+            gameStage.close();
+            menuStage.show();
+            // }
+        });
+
         gameStage.show();
+
 
 
         //use this for main file
@@ -202,34 +140,31 @@ public class GameViewManager {
                 }
                 if (event.getCode() == KeyCode.SPACE) {
 
-                }
+    private void handleInput() {
+        //
+        if (currentlyActiveKeys.contains("P")) {
+            currentlyActiveKeys.remove("P");
+            if (isPause) {
+                isPause = false;
+                hideSubScene(pauseSubScene);
+            } else {
+                isPause = true;
+                showSubScene(pauseSubScene);
             }
-        });
-
-        gameScene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.LEFT) {
-                    //isLeftKeyPressed = false;
-                } else if (event.getCode() == KeyCode.RIGHT) {
-                    //isRightKeyPressed = false;
-                }
-                if (event.getCode() == KeyCode.SPACE) {
-                    //isSpacePressed = false;
-                    //isBulletFired = false;
-                }
-
-            }
-        });
-
+        }
     }
 
+    private void hideSubScene(GameSubScene subScene) {
+        subScene.setVisible(false);
+        hideSubSceneButtons(subScene);
+    }
 
     /**
      * hide menuStage and create gameStage
      */
 
     public void createNewGame(Stage menuStage, SKIN chosenSkin) {
+        isPause = false;
         this.menuStage = menuStage;
         this.menuStage.hide();
         //createBG();
@@ -251,26 +186,139 @@ public class GameViewManager {
             @Override
             public void handle(long l) {
                 render();
-                update();
+                handleInput();
+                if(!isPause) {
+                    update();
+                }
+
             }
         };
         gameTimer.start();
     }
 
+
+    private void createSubScenes() {
+
+
+
+        pauseSubScene = new GameSubScene();
+        //gameOverSubScene = new GameSubScene();
+
+
+        root.getChildren().addAll(pauseSubScene);
+
+        createPauseSubScene();
+        //createGameOverSubScene();
+
+
+    }
+
+
+    private void createPauseSubScene() {
+        createPauseSubSceneButton();
+    }
+
+
+    private void addPauseMenuButtons(GameButton button) {
+        if(!pauseMenuButtons.contains(button)) {
+            button.setLayoutX(MENU_BUTTON_START_X);
+            button.setLayoutY(MENU_BUTTON_START_Y + pauseMenuButtons.size() * 100);
+            pauseMenuButtons.add(button);
+            root.getChildren().add(button);
+        }
+
+
+    }
+    private List<GameButton> createPauseSubSceneButton() {
+
+        List buttons = new ArrayList<>();
+
+        returnToTileButton = new GameButton("TILE");
+        addPauseMenuButtons(returnToTileButton);
+
+        returnToTileButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                //hide GameSubScene and showMenu
+
+                //clear all entities
+                clearAllEntities();
+                gameTimer.stop();
+                gameStage.close();
+                menuStage.show();
+            }
+
+
+        });
+
+        returnToTileButton.setVisible(false);
+
+        //create back button
+
+        exitButton = new GameButton("Exit");
+        addPauseMenuButtons(exitButton);
+
+        exitButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                //hide GameSubScene and showMenu
+                Platform.exit();
+                gameStage.close();
+                menuStage.show();
+            }
+
+
+        });
+
+        exitButton.setVisible(false);
+
+        buttons.add(exitButton);
+        buttons.add(returnToTileButton);
+
+        return buttons;
+    }
+
     private void createGameElements() {
         GameMap.createMap(level);
+        //createPauseSubSceneButton();
+        createSubScenes();
 
+    }
+
+    private void showSubScene(GameSubScene subScene) {
+
+        subScene.setVisible(true);
+        showSubSceneButtons(subScene);
+        if (sceneToHide != null) {
+            sceneToHide.moveSubScene(100,100);
+        }
+        subScene.moveSubScene(830,130);
+        sceneToHide = subScene;
+    }
+
+    private void showSubSceneButtons(GameSubScene subScene) {
+        for(GameButton gb : pauseMenuButtons) {
+            gb.setVisible(true);
+        }
+    }
+
+    private void hideSubSceneButtons(GameSubScene subScene) {
+        for(GameButton gb : pauseMenuButtons) {
+            gb.setVisible(false);
+        }
     }
 
     private void createPlayer(SKIN chosenSkin) {
         bomberman = new Bomber(1,1, chosenSkin.getSheetUrl());
+        //entities.add(bomberman);
     }
 
 
-    //from oldMain
+    //from oldMainf
     public void update() {
-        music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
-        ui.setText("\tBomb to use: " + bomberman.getBombNumbers() + "\tScore: " + score);
+
         bomberman.update();
         bombs.forEach(Entity::update);
         stillObjects.forEach(Entity::update);
@@ -296,23 +344,39 @@ public class GameViewManager {
         }
         items.forEach(Entity::update);
         visualEffects.forEach(Entity::update);
+
         if(bomberman.isAtPortal() && entities.isEmpty()){
             newLevel();
             System.out.println("Level: " + level);
         }
+
         clearInactiveEntity(visualEffects);
-        musicPlayer.autoMove();
+
+        //remove projectile
+        //nen de rieng or lam chung voi visual effect.
+
+
+
+    }
+
+    private void clearAllEntities() {
+
+        entities.clear();
+        stillObjects.clear();
+        items.clear();
+        bombs.clear();
+        visualEffects.clear();
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for(int i = 0; i < bomberman.lives; i++){
-            gc.drawImage(heart, 64 + (10*i), 440, 10, 10);
-        }
         stillObjects.forEach(g -> g.render(gc));
+        entities.forEach(g -> g.render(gc));
+
+
+
         items.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
         visualEffects.forEach(g -> g.render(gc));
         bomberman.render(gc);
     }

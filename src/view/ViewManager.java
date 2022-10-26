@@ -40,8 +40,8 @@ public class ViewManager {
 
     private static final int HEIGHT = 768;
     private static final int WIDTH = 1024;
-    private static final double MENU_BUTTON_START_X = 100;
-    private static final double MENU_BUTTON_START_Y = 150;
+    public final double MENU_BUTTON_START_X = 100;
+    public final double MENU_BUTTON_START_Y = 150;
     private static final String BUTTON_SFX = "file:src/model/resources/robotSFX.wav";
 
     AnchorPane mainPane;
@@ -231,9 +231,7 @@ public class ViewManager {
         mainPane.getChildren().addAll(creditsSubScene, helpSubScene, scoreSubScene, skinChooserSubScene);
 
         createSkinChooserSubScene();
-        createScoreSubScene();
-        createHelpSubScene();
-        createCreditsSubScene();
+
 
     }
 
