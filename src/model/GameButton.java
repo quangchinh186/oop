@@ -16,9 +16,9 @@ public class GameButton extends Button {
 
     private final String FONT_PATH = "src/model/resources/kenvector_future.ttf";
     private static final String BUTTON_PRESSED_STYLE = "-fx-background-color: transparent;-fx-background-image: " +
-            "url('file:///C:/Users/nguye/IdeaProjects/demoAndLearn/src/main/java/model/resources/yellow_button_pressed.png');";
+            "url('model/resources/yellow_button_pressed.png');";
     private static final String BUTTON_FREE_STYLE = "-fx-background-color: transparent;-fx-background-image: " +
-            "url('file:///C:/Users/nguye/IdeaProjects/demoAndLearn/src/main/java/model/resources/yellow_button.png');";
+            "url('model/resources/yellow_button.png');";
     //private static final String BUTTON_FREE_STYLE = "src/model/resources/rocketButton.png";
 
     public GameButton(String text) {
