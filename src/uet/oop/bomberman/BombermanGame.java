@@ -49,6 +49,7 @@ public class BombermanGame extends Application {
     public static List<Entity> visualEffects = new ArrayList<>();
 
     public static void main(String[] args)  {
+        
         Application.launch(BombermanGame.class);
     }
 

@@ -1,13 +1,16 @@
 package uet.oop.bomberman.entities.item;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.Bomb;
+
 import static uet.oop.bomberman.BombermanGame.bomberman;
 
 
 public class FlameItem extends Item {
-
+    public boolean done;
     public FlameItem(int x, int y, Image img) {
-            super(x, y, img);
+        super(x, y, img);
+        done = false;
     }
     @Override
     public void update() {
@@ -15,7 +18,11 @@ public class FlameItem extends Item {
     }
 
     public void doEffect() {
-        bomberman.becomeChad();
+        if(!done){
+            Bomb.power++;
+            System.out.println(Bomb.power);
+            done = true;
+        }
     }
 }
 

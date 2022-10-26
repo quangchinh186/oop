@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 
+import uet.oop.bomberman.entities.item.FlameItem;
 import uet.oop.bomberman.entities.tiles.Portal;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.sound.Sound;
@@ -115,6 +116,7 @@ public class Bomber extends Entity {
 
     private void handleItemCollision() {
         List<Item> toRemove = new ArrayList<>();
+        System.out.println(items.size());
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();

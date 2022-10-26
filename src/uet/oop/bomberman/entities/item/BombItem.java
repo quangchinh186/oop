@@ -5,9 +5,9 @@ import static uet.oop.bomberman.BombermanGame.bomberman;
 
 
 
-public class BombPowerUp extends Item {
+public class BombItem extends Item {
 
-    public BombPowerUp(int x, int y, Image img) {
+    public BombItem(int x, int y, Image img) {
         super(x, y, img);
     }
     @Override
@@ -17,8 +17,7 @@ public class BombPowerUp extends Item {
 
     @Override
     public void doEffect() {
-        bomberman.increaseBombRange();
-        System.out.println("BOMB TO");
+        bomberman.setBombNumbers(bomberman.getBombNumbers()+1);
     }
 }
 

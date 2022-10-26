@@ -8,7 +8,7 @@ import uet.oop.bomberman.entities.tiles.Wall;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.entities.enemies.*;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.item.BombPowerUp;
+import uet.oop.bomberman.entities.item.BombItem;
 import uet.oop.bomberman.entities.item.FlameItem;
 import uet.oop.bomberman.entities.item.Item;
 import uet.oop.bomberman.entities.item.SpeedItem;
@@ -35,6 +35,7 @@ public class GameMap extends BombermanGame {
         map.set(y, temp);
     }
     public static void createMap(int level) {
+        String temp;
         map.clear();
         nextLevel.clear();
         BombermanGame.stillObjects.clear();
@@ -82,29 +83,29 @@ public class GameMap extends BombermanGame {
                         object = new Wall(j, i, Sprite.wall.getFxImage());
                         break;
                     case '*':
-                        object = new Brick(j, i, Sprite.brick.getFxImage(), false);
+                        object = new Brick(j, i, Sprite.brick.getFxImage(), "");
                         break;
                     case 'x':
-                        String temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);
+                        temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);
                         map.set(i, temp);
-                        object = new Brick(j, i, Sprite.brick.getFxImage(), true);
+                        object = new Brick(j, i, Sprite.brick.getFxImage(), "portal");
                         Vector2D v = new Vector2D(j, i);
                         nextLevel.add(v);
                         break;
-                    case 'S':
-                        object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Item speedItem = new SpeedItem(j, i, Sprite.powerup_speed.getFxImage());
-                        items.add(speedItem);
+                    case 's':
+                        temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);
+                        map.set(i, temp);
+                        object = new Brick(j, i, Sprite.brick.getFxImage(), "speed");
                         break;
-                    case 'F':
-                        object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Item flameItem = new FlameItem(j, i, Sprite.powerup_flames.getFxImage());
-                        items.add(flameItem);
+                    case 'f':
+                        temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);
+                        map.set(i, temp);
+                        object = new Brick(j, i, Sprite.brick.getFxImage(), "flame");
                         break;
-                    case 'B':
-                        object = new Grass(j, i, Sprite.grass.getFxImage());
-                        Item bombPowerUp = new BombPowerUp(j, i, Sprite.powerup_bombs.getFxImage());
-                        items.add(bombPowerUp);
+                    case 'b':
+                        temp = map.get(i).substring(0, j) + '*' + map.get(i).substring(j+1);
+                        map.set(i, temp);
+                        object = new Brick(j, i, Sprite.brick.getFxImage(), "bomb");
                         break;
                     default:
                         object = new Grass(j, i, Sprite.grass.getFxImage());
