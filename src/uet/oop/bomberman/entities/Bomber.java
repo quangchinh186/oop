@@ -33,8 +33,8 @@ public class Bomber extends Entity {
     private String prevCheckStuck = "";
     private Rectangle nextFrameRect;
     int spawnX, spawnY;
-    static HashSet<String> currentlyActiveKeys;
-    static HashSet<String> releasedKey;
+    public static HashSet<String> currentlyActiveKeys;
+    public static HashSet<String> releasedKey;
     private Vector2D velocity;
     public static double playerSpeed = 1.5;
     public int lives;
@@ -99,7 +99,7 @@ public class Bomber extends Entity {
         timer = timer < 15 ? timer+1 : 15;
         if(timer == 15){
             this.img = null;
-            isPause = true;
+            //isPause = true;
         }
     }
 
@@ -133,7 +133,7 @@ public class Bomber extends Entity {
 
     private void handleItemCollision() {
         List<Item> toRemove = new ArrayList<>();
-        System.out.println(items.size());
+        //System.out.println(items.size());
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();
@@ -275,7 +275,14 @@ public class Bomber extends Entity {
                     bombs.add(bom);
                     bombNumbers--;
                }
+               // GameInput now.
+
+                //if()
+
             }
+
+
+
         } else {
             if(currentlyActiveKeys.contains("SPACE")){
                 currentlyActiveKeys.remove("SPACE");
