@@ -50,7 +50,7 @@ public class Brick extends Entity {
                     GameViewManager.items.add(s);
                     break;
                 case "chad":
-                    Item c = new ChadItem(x, y, Sprite.powerup_bombpass.getFxImage());
+                    Item c = new ChadItem(x, y, Sprite.powerup_flamepass.getFxImage());
                     GameViewManager.items.add(c);
                     break;
                 default: break;

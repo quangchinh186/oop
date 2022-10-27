@@ -63,7 +63,7 @@ public class GameViewManager {
 
     private AnimationTimer gameTimer;
 
-    public static int level = 2;
+    public static int level = 1;
 
     //public static Scene scene;
 
@@ -182,7 +182,7 @@ public class GameViewManager {
         hp.setText("Heart left: ");
         hp.setY(14*32);
         ui = new Text();
-        ui.setText("\tBomb to use: " + 1 + "\tScore: " + score);
+        ui.setText("\tBomb to use: " + 1 + "\tScore: " + score  + "\tBest: " + highScore );
         ui.setX(32*10);
         ui.setY(14*32);
 
@@ -252,7 +252,7 @@ public class GameViewManager {
 
     public void createNewGame(Stage menuStage, SKIN chosenSkin) {
         isPause = false;
-        level = 2;
+        level = 1;
         this.menuStage = menuStage;
         this.menuStage.hide();
         //createBG();
@@ -414,7 +414,8 @@ public class GameViewManager {
 
 
         music.setText("Now playing: " + musicPlayer.getNow() + "\tLevel " + level);
-        ui.setText("\tBomb to use: " + bomberman.getBombNumbers() + "\tScore: " + score);
+        ui.setText("\tBomb to use: " + bomberman.getBombNumbers() + "\tScore: " + score  + "\tBest: " + highScore );
+
 
 
         bomberman.update();
@@ -464,6 +465,7 @@ public class GameViewManager {
             endCd++;
 
             System.out.println(endCd);
+
             musicPlayer.pause();
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -472,6 +474,7 @@ public class GameViewManager {
 
             if(endCd > 120) {
                 isPause = true;
+                gameTimer.stop();
                 gameStage.close();
                 menuStage.show();
                 return;
@@ -547,6 +550,7 @@ public class GameViewManager {
         if(level < 3) {
 
             GameMap.createMap(level);
+            gameTimer.start();
         }
 
     }

@@ -27,7 +27,7 @@ public class SuicideVest extends Weapon {
     public static Image vestImg = new Image("/textures/suicide_vest.png", 32, 32,true, true);
     public SuicideVest(int x, int y, Image img) {
         super(x, y, img);
-        ammo = 10;
+        ammo = 1;
         boom.setVol(-10);
     }
 
