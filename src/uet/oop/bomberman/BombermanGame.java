@@ -21,7 +21,6 @@ public class BombermanGame extends Application {
             primaryStage = manager.getMainStage();
             primaryStage.setTitle("Middle East Man");
             primaryStage.setResizable(false);
-            //primaryStage.setFullScreen(true);
 
             primaryStage.show();
         } catch(Exception e) {

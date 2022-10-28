@@ -40,6 +40,22 @@ public class GameSubScene extends SubScene {
         }
         transition.play();
     }
+
+    public void moveSubScene(int layOutX, int layOutY) {
+        TranslateTransition transition = new TranslateTransition();
+        transition.setDuration(Duration.seconds(0.5));
+        transition.setNode(this);
+        if(isHidden) {
+            transition.setToX(-layOutX);
+            transition.setToY(-layOutY);
+            isHidden = false;
+        } else {
+            transition.setToX(0);
+            isHidden = true;
+        }
+        transition.play();
+    }
+
     public AnchorPane getPane() {
         return (AnchorPane) this.getRoot();
     }

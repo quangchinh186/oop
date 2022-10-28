@@ -40,8 +40,8 @@ public class ViewManager {
 
     private static final int HEIGHT = 768;
     private static final int WIDTH = 1024;
-    private static final double MENU_BUTTON_START_X = 100;
-    private static final double MENU_BUTTON_START_Y = 150;
+    public final double MENU_BUTTON_START_X = 100;
+    public final double MENU_BUTTON_START_Y = 150;
     private static final String BUTTON_SFX = "file:src/model/resources/robotSFX.wav";
 
     AnchorPane mainPane;
@@ -72,6 +72,13 @@ public class ViewManager {
         createLogo();
 
         createButtons();
+
+        mainStage.setOnCloseRequest(x -> {
+            x.consume();
+            // if(ConfirmExit.askConfirmation()) {
+            Platform.exit();
+            // }
+        });
 
     }
 
@@ -158,7 +165,50 @@ public class ViewManager {
 
     }
 
-    private void createHelpButton() {
+    private void createCreditsSubScene() {
+        creditsSubScene = new GameSubScene();
+        mainPane.getChildren().add(creditsSubScene);
+
+        InfoLabel credits = new InfoLabel("  <<< Credits >>>");
+        credits.setLayoutX(120);
+        credits.setLayoutY(20);
+        Label credit0 = new Label("OOP Project By Nguyen Khoa Dang");
+        Label credit1 = new Label("  ");
+        Label credit2 = new Label("And Le Quang Chinh");
+
+
+        VBox creditsBox = new VBox(10, credit0, credit1, credit2);
+
+
+        creditsBox.setLayoutX(50);
+        creditsBox.setLayoutY(80);
+        creditsSubScene.getPane().getChildren().addAll(credits, creditsBox);
+
+    }
+
+    private void createHelpSubScene() {
+        helpSubScene = new GameSubScene();
+        mainPane.getChildren().add(helpSubScene);
+
+
+        InfoLabel credits = new InfoLabel("  <<< Credits >>>");
+        credits.setLayoutX(120);
+        credits.setLayoutY(20);
+        Label credit0 = new Label("Press SPACE to plant Bomb");
+        Label credit1 = new Label("Press K to use your weapon  ");
+        Label credit2 = new Label("Press P to pause the game");
+
+
+        VBox creditsBox = new VBox(20, credit0, credit1, credit2);
+
+
+        creditsBox.setLayoutX(50);
+        creditsBox.setLayoutY(80);
+        helpSubScene.getPane().getChildren().addAll(credits, creditsBox);
+
+    }
+
+        private void createHelpButton() {
         GameButton helpButton = new GameButton("Help");
         addMenuButtons(helpButton);
 
@@ -178,13 +228,10 @@ public class ViewManager {
         addMenuButtons(creditsButton);
 
         creditsButton.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent event) {
                showSubScene(creditsSubScene);
             }
-
-
         });
 
     }
@@ -205,7 +252,7 @@ public class ViewManager {
 
 
     private void createLogo() {
-        Image logoImage = new Image("view/resources/space_runner.jpg", 500, 100, false, false);
+        Image logoImage = new Image("view/resources/Bomberman_logo.png", 500, 100, false, false);
         ImageView logo = new ImageView(logoImage);
         logo.setLayoutX(400);
         logo.setLayoutY(50);
@@ -231,21 +278,21 @@ public class ViewManager {
         scoreSubScene = new GameSubScene();
         skinChooserSubScene = new GameSubScene();
 
-        mainPane.getChildren().addAll(creditsSubScene, helpSubScene, scoreSubScene, skinChooserSubScene);
+        mainPane.getChildren().addAll( scoreSubScene, skinChooserSubScene);
 
         createSkinChooserSubScene();
-        createScoreSubScene();
-        createHelpSubScene();
         createCreditsSubScene();
+        createHelpSubScene();
+
 
     }
 
 
-    private HBox createSkinsToChoose() {
+
+
+        private HBox createSkinsToChoose() {
         HBox box = new HBox();
         box.setSpacing(20);
-
-
 
         skinList = new ArrayList<>();
         for (SKIN ship : SKIN.values()) {
@@ -278,7 +325,7 @@ public class ViewManager {
 
 
     private void createSkinChooserSubScene() {
-        ///skinChooserSubScene = new GameSubScene();
+        //skinChooserSubScene = new GameSubScene();
         //mainPane.getChildren().add(skinChooserSubScene);
 
         InfoLabel chooseSkinLabel = new InfoLabel("CHOOSE YOUR SKIN");
@@ -289,26 +336,14 @@ public class ViewManager {
 
     }
 
-    private void createCreditsSubScene() {
-        //creditsSubScene = new GameSubScene();
-        //mainPane.getChildren().add(creditsSubScene);
 
-
-    }
 
     private void createScoreSubScene() {
-        //scoreSubScene = new GameSubScene();
-        //mainPane.getChildren().add(scoreSubScene);
-
-
-    }
-
-    private void createHelpSubScene() {
-        //helpSubScene = new GameSubScene();
-        //mainPane.getChildren().add(helpSubScene);
-
+        scoreSubScene = new GameSubScene();
+        mainPane.getChildren().add(scoreSubScene);
 
     }
+
 
 
 

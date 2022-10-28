@@ -1,53 +1,30 @@
 package uet.oop.bomberman.entities;
 
-import com.fasterxml.jackson.core.JsonToken;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 
+import uet.oop.bomberman.entities.item.weapon.Weapon;
+import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.tiles.Portal;
+import uet.oop.bomberman.graphics.Animation;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.sound.Sound;
-import uet.oop.bomberman.states.State;
-
-
 import uet.oop.bomberman.entities.item.Item;
-import uet.oop.bomberman.entities.item.weapon.Weapon;
-import uet.oop.bomberman.graphics.Animation;
-import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
-import uet.oop.bomberman.graphics.SpriteSheet;
 import uet.oop.bomberman.map.GameMap;
 import view.GameViewManager;
+import uet.oop.bomberman.timer.GTimer;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
-import java.util.TimerTask;
-
-
-import static uet.oop.bomberman.BombermanGame.*;
-import static uet.oop.bomberman.graphics.SpriteSheet.*;
 import static view.GameViewManager.*;
 
 public class Bomber extends Entity {
     private int bombNumbers = 1;
     private Sound deadNoise;
-    private int cd = 1;
-
-
-    private int hp = 3;
-
-    private static Image playerSheet = new Image("/textures/udlf.png", 32 * 3, 32 * 4,
-            true, true);
-
-    private static Image ricardoSheet = new Image("/textures/ricardo_sheet.png", 13600/6.25, 32,
-            true, true);
-
     public static final double PLAYER_SPEED_NORMAL = 1;
     public static final double PLAYER_SPEED_BOOSTED = 1.5;
     private String checkStuck = "";
@@ -56,79 +33,80 @@ public class Bomber extends Entity {
     private Rectangle nextFrameRect;
     int spawnX, spawnY;
 
-    private boolean isImmune = false;
-
-    private State state = State.RIGHT;
-
-
-    static HashSet<String> currentlyActiveKeys;
-
-    //dung de luu weapons
-
-    public static HashSet<String> weaponsSet = new HashSet<>();
-    public static List<Weapon> weapons = new ArrayList<>() {
-    };
-    //
-
-    static HashSet<String> releasedKey;
+    private Timer jTimer = new Timer();
+    public static HashSet<String> currentlyActiveKeys;
+    public static HashSet<String> releasedKey;
     private Vector2D velocity;
     public static double playerSpeed = 1.5;
     public int lives;
     private boolean atPortal;
 
+    public HashMap<String, Animation> animations = new HashMap<>();
+
+
+    private static Image playerSheet = new Image("/textures/bombersheet.png", 32 * 5, 32 * 5,
+            true, true);
+
+    private static Image ricardoSheet = new Image("/textures/ricardo_sheet.png", 13600/6.25, 32,
+            true, true);
+
+    private static Image emptySheet = new Image("/textures/empty.png");
+
+    private static Image chosenSheet = new Image("/textures/empty.png");
+
+
+    public static List<Weapon> weapons = new ArrayList<>();
+
+    public int frames = 1;
+    public int speed = 100;
+
+    public int animIndex = 0;
+    private static Image spriteSheet;
+    private boolean isImmune = false;
+
     public Bomber(int x, int y, Image img) {
-        super(x + 1, y + 1, img);
+        super(x, y, img);
         lives = 3;
         spawnX = x;
         spawnY = y;
-
-        isAnimated = true;
         prepareActionHandlers();
         velocity = new Vector2D();
         nextFrameRect = new Rectangle(30,30);
         state = State.RIGHT;
         atPortal = false;
         deadNoise = new Sound("res/sfx/oof.wav");
-
-        spriteSheet = playerSheet;
-        weapons.clear();
-        initAnimation();
     }
 
-
-    public Bomber(int x, int y, String sheetUrl) {
-
-
+    public Bomber(int x, int y, String Url) {
         super(x, y, Sprite.player_right.getFxImage());
         lives = 3;
         spawnX = x;
         spawnY = y;
 
-        isAnimated = true;
+
+        chosenSheet = new Image(Url,32 * 5, 32 * 5, true, true);
+        spriteSheet = chosenSheet;
+        initAnimation();
+        //
         prepareActionHandlers();
         velocity = new Vector2D();
         nextFrameRect = new Rectangle(30,30);
         state = State.RIGHT;
         atPortal = false;
         deadNoise = new Sound("res/sfx/oof.wav");
-
-        spriteSheet = playerSheet;
-        weapons.clear();
-        initAnimation();
-
-        spriteSheet = new Image(sheetUrl,32 * 3, 32 * 5, true, true);
     }
 
 
 
-
-
     public void initAnimation() {
+
+
+
         Animation walkUp = new Animation(0, 3, 10);
         Animation walkDown = new Animation(1, 3, 10);
         Animation walkLeft = new Animation(2, 3, 10);
         Animation walkRight = new Animation(3, 3, 10);
-        Animation die = new Animation(4, 3, 10);
+        Animation die = new Animation(4, 5, 10);
         Animation idleUp = new Animation(0, 1, 10);
         Animation idleDown = new Animation(1, 1, 10);
         Animation idleLeft = new Animation(2, 1, 10);
@@ -158,14 +136,10 @@ public class Bomber extends Entity {
         //get input
         x = (int) ((position.x + 8) / Sprite.SCALED_SIZE);
         y = (int) ((position.y + 8) / Sprite.SCALED_SIZE);
-
-        if(cd > 0) cd--;
-
         actionHandler();
         handleMapCollision();
         handleItemCollision();
-        handleDamageCollision();
-        //update weapons.
+
         weapons.forEach(Entity::update);
 
         if(velocity.x != 0 || velocity.y != 0 || spriteSheet.equals(ricardoSheet)){
@@ -184,55 +158,18 @@ public class Bomber extends Entity {
 
     }
     public void dieAnimation(){
-        this.s1 = Sprite.player_dead1;
-        this.s2 = Sprite.player_dead2;
-        this.s3 = Sprite.player_dead3;
-        this.img = Sprite.movingSprite(s1, s2, s3, this.timer, Sprite.DEFAULT_SIZE).getFxImage();
+        play("Die");
         timer = timer < 15 ? timer+1 : 15;
         if(timer == 15){
             this.img = null;
-            isPause = true;
-            lives--;
+            //isPause = true;
+            spriteSheet = emptySheet;
+
+
         }
-    }
-
-    private void handleDamageCollision() {
-
-        for(Entity et : visualEffects) {
-            if(et.rect.intersects(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight())) {
-                if(et instanceof Flames || et instanceof Projectile) {
-                    if(!isImmune) {
-
-                        System.out.println("Va chung sat thuong");
-                        hp--;
-                        setImmune(true);
-                        jTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                setImmune(false);
-                            }
-                        },1000);
-                    }
-                }
-
-                et.setInactive();
-            }
-        }
-    }
-
-    @Override
-    public void render(GraphicsContext gc) {
-        super.render(gc);
-
-        weapons.forEach(g -> g.render(gc));
     }
 
     public void animated(){
-
-
-        timer = timer > Sprite.DEFAULT_SIZE ? 0 : timer+1;
-
-
         switch (state){
             case DOWN:
                 play("WalkDown");
@@ -246,6 +183,8 @@ public class Bomber extends Entity {
             case RIGHT:
                 play("WalkRight");
                 break;
+            case DIE:
+                play("Die");
             default:
                 break;
 
@@ -256,14 +195,11 @@ public class Bomber extends Entity {
             play("Dancing");
         }
 
-
-
-
-
     }
 
     private void handleItemCollision() {
         List<Item> toRemove = new ArrayList<>();
+        //System.out.println(items.size());
         for(Item entity : items) {
             if(entity.rect.intersects(position.x, position.y, rect.getWidth(), rect.getHeight())) {
                 entity.doEffect();
@@ -272,6 +208,8 @@ public class Bomber extends Entity {
                 }
             }
         }
+        items.removeAll(toRemove);
+
 
         int countArmed = 0;
 
@@ -286,7 +224,10 @@ public class Bomber extends Entity {
 
         if(countArmed > 1) {
             for(int i = 0; i < countArmed - 1; i++) {
-                weapons.get(i).setInactive();
+                if(countArmed > 1) {
+                    weapons.get(i).setInactive();
+                    countArmed--;
+                }
             }
         }
 
@@ -295,23 +236,7 @@ public class Bomber extends Entity {
         GameViewManager.clearInactiveWeapon(weapons);
 
 
-
     }
-
-    public void addWeapons(String key, Item wp) {
-            //replace weapon voi key.
-        if(!weapons.isEmpty()) {
-            for(Item item : items) {
-                if(item instanceof Weapon && ((Weapon) item).isArmed()) {
-                    item.setInactive();
-                    break;
-                }
-            }
-            weapons.clear();
-        }
-        weapons.add((Weapon) wp);
-    }
-
 
 
 
@@ -349,9 +274,9 @@ public class Bomber extends Entity {
     }
 
     public void actionHandler () {
-
         if(isPause){
-            if(currentlyActiveKeys.isEmpty()) return;
+            if(currentlyActiveKeys.isEmpty()) {
+            }
             else isPause = false;
         }
 
@@ -397,10 +322,18 @@ public class Bomber extends Entity {
                 velocity.y = playerSpeed;
                 state = State.DOWN;
             }
+
             if (currentlyActiveKeys.contains("K")){
                 currentlyActiveKeys.remove("K");
-                createProjectile();
+                //
+                for(Weapon wp : weapons) {
+                    if(wp.isArmed()) {
+                        wp.useWeapon();
+                        break;
+                    }
+                }
             }
+
             //mp3 key input test
             if (currentlyActiveKeys.contains("Q")){
                 currentlyActiveKeys.remove("Q");
@@ -442,17 +375,36 @@ public class Bomber extends Entity {
                         break;
                     }
                 }
-               if(check){
+                if(check){
                     bombs.add(bom);
                     bombNumbers--;
-               }
+                }
             }
         } else {
             if(currentlyActiveKeys.contains("SPACE")){
                 currentlyActiveKeys.remove("SPACE");
                 revive();
+                spriteSheet = chosenSheet;
             }
         }
+
+        if(releasedKey.contains("UP")) {
+            play("IdleUp");
+
+        }
+
+        if(releasedKey.contains("DOWN")) {
+            play("IdleDown");
+        }
+
+        if(releasedKey.contains("LEFT")) {
+            play("IdleLeft");
+        }
+
+        if(releasedKey.contains("RIGHT")) {
+            play("IdleRight");
+        }
+
     }
 
     private void createProjectile() {
@@ -463,8 +415,8 @@ public class Bomber extends Entity {
                 direction.y = -3;
                 break;
             case DOWN:y:
-                // code block
-                direction.y = 3;
+            // code block
+            direction.y = 3;
                 break;
             case LEFT:
                 // code block
@@ -481,97 +433,7 @@ public class Bomber extends Entity {
         Projectile pj = new Projectile((int)position.x/Sprite.SCALED_SIZE, (int)position.y/Sprite.SCALED_SIZE,
                 Sprite.minvo_right2.getFxImage(), direction);
         visualEffects.add(pj);
-
-        if(currentlyActiveKeys.isEmpty()){
-            velocity.x = 0;
-            velocity.y = 0;
-            //state = State.STOP;
-        }
-        if(currentlyActiveKeys.contains("A")) {
-            currentlyActiveKeys.remove("A");
-            Bomb.power++;
-        }
-        if(currentlyActiveKeys.contains("LEFT")) {
-            velocity.x = -playerSpeed;
-            state = State.LEFT;
-        }
-        if (currentlyActiveKeys.contains("RIGHT")){
-            velocity.x = playerSpeed;
-            state = State.RIGHT;
-        }
-        if (currentlyActiveKeys.contains("UP")){
-            velocity.y = -playerSpeed;
-            state = State.UP;
-        }
-        if (currentlyActiveKeys.contains("DOWN")){
-            velocity.y = playerSpeed;
-            state = State.DOWN;
-        }
-        if (currentlyActiveKeys.contains("SPACE") && cd == 0){
-            currentlyActiveKeys.remove("SPACE");
-            int x = (int) ((position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE);
-            int y = (int) ((position.y + Sprite.DEFAULT_SIZE)/ Sprite.SCALED_SIZE);
-            Entity bom = new Bomb(x, y, "Player");
-            cd = 0;
-        }
-        if (currentlyActiveKeys.contains("K")){
-            currentlyActiveKeys.remove("K");
-            //
-            for(Weapon wp : weapons) {
-                if(wp.isArmed()) {
-                    wp.useWeapon();
-                    break;
-                }
-            }
-        }
-
-        if(releasedKey.contains("LEFT") ) {
-            velocity.x = 0;
-            state = state.LEFT;
-        }
-        if(releasedKey.contains("RIGHT") ) {
-            velocity.x = 0;
-            state = state.RIGHT;
-        }
-
-        if(releasedKey.contains("UP") ) {
-            velocity.y = 0;
-            state = state.UP;
-        }
-        if(releasedKey.contains("DOWN") ) {
-            velocity.y = 0;
-            state = state.DOWN;
-        }
-
-        if(currentlyActiveKeys.isEmpty()) {
-            switch (state){
-                case DOWN:
-                    play("IdleDown");
-                    break;
-                case LEFT:
-                    play("IdleLeft");
-                    break;
-                case UP:
-                    play("IdleUp");
-                    break;
-                case DIE:
-                    break;
-                case RIGHT:
-                    play("IdleRight");
-                    break;
-                case CHAD:
-                    play("Dancing");
-                    break;
-                default:
-                    break;
-            }
-        }
-
     }
-
-
-
-
 
     public void becomeChad() {
         state = State.CHAD;
@@ -581,11 +443,20 @@ public class Bomber extends Entity {
             @Override
             public void run() {
                 setImmune(false);
-                spriteSheet = playerSheet;
+                spriteSheet = chosenSheet;
                 state = State.RIGHT;
             }
         },10000);
     }
+
+    public boolean isImmune() {
+        return isImmune;
+    }
+
+    private void setImmune(boolean b) {
+        isImmune = b;
+    }
+
 
     public void revive(){
         state = State.RIGHT;
@@ -595,6 +466,7 @@ public class Bomber extends Entity {
         this.s3 = Sprite.player_right_2;
         position.x = spawnX * Sprite.SCALED_SIZE;
         position.y = spawnY * Sprite.SCALED_SIZE;
+        lives--;
     }
     private static void prepareActionHandlers()
     {
@@ -626,24 +498,9 @@ public class Bomber extends Entity {
         this.bombNumbers = bombNumbers;
     }
 
-    public void setCd(int cd) {
-        this.cd = cd;
-    }
-
-
-    public int getCd() {
-        return cd;
-    }
-
     public int getBombNumbers() {
         return bombNumbers;
     }
-
-    public void setImmune(boolean immune) {
-        isImmune = immune;
-    }
-
-
 
     public void setPlayerSpeed(double speed) {
         playerSpeed = speed;
@@ -653,12 +510,17 @@ public class Bomber extends Entity {
         Bomb.increasePower();
     }
 
+
+
     public void die(){
         timer = 1;
         state = State.DIE;
+        play("Die");
         velocity.x = 0;
         velocity.y = 0;
         deadNoise.play();
+        //lives--;
+        System.out.println(lives);
     }
 
     public boolean isAtPortal() {
@@ -669,13 +531,30 @@ public class Bomber extends Entity {
         this.atPortal = atPortal;
     }
 
-    public State getState() {
-        return state;
+    public void play(String id) {
+        frames = animations.get(id).frames;
+        speed = animations.get(id).speed;
+        animIndex = animations.get(id).index;
     }
 
 
+    @Override
+    public void render(GraphicsContext gc) {
+
+
+
+        int srcX = 0;
+
+        int frameSpeed = speed == 0 ? (GTimer.ticksInASeconds / 6) : speed;
+        //                                                                               speed ,  % frames.
+        srcX = (Sprite.SCALED_SIZE * (int) ( (GameViewManager.getJavaFxTicks() / frameSpeed) % frames));
+        gc.drawImage(spriteSheet,srcX,animIndex * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE,
+                position.x, position.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+
+
+        weapons.forEach(g -> g.render(gc));
+    }
+
+
+
 }
-
-
-
-

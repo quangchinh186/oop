@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.entities.Projectile;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.timer.GTimer;
 
 import static view.GameViewManager.bomberman;
 import static view.GameViewManager.visualEffects;
@@ -12,8 +13,16 @@ import static view.GameViewManager.visualEffects;
 public class Turret extends Enemy {
 
 
+
+    private final int BULLET_WIDTH = 50;
+    private final int BULLET_HEIGHT = 30;
+    public static Image lgBullet = new Image("/textures/gay_flag.jpeg", 50, 30, true, true);
+
+    public static Image turretSkin = new Image("/textures/america_ball.png", 32, 32, true, true);
+
+    GTimer gTimer = new GTimer();
     //Vector2D direction = new Vector2D();
-    public static final int TURRET_RANGE = 200;
+    public static final int TURRET_RANGE = 100;
 
     public Turret(int x, int y, Image img) {
         super(x, y, img);
@@ -40,9 +49,9 @@ public class Turret extends Enemy {
     }
 
     public void createTurretShot(Vector2D direction) {
-        Projectile pj = new Projectile((int)((position.x ) / Sprite.SCALED_SIZE ) ,
-                (int)(position.y) /Sprite.SCALED_SIZE,
-                Sprite.minvo_right2.getFxImage(), direction);
+        Projectile pj = new Projectile((int)((position.x )) ,
+                (int)(position.y) ,
+                lgBullet, direction,  BULLET_WIDTH, BULLET_HEIGHT,true);
         visualEffects.add(pj);
     }
 }

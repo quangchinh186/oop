@@ -3,7 +3,7 @@ package uet.oop.bomberman.entities.item;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
-import static view.GameViewManager.items;
+import view.GameViewManager;
 
 
 public class Item extends Entity {
@@ -21,17 +21,13 @@ public class Item extends Entity {
     public void update() {
         if(!isActive) {
             //clear khoi list item.
-            items.remove(this);
+            GameViewManager.items.remove(this);
         }
-        rect.setX(position.x);
-        rect.setY(position.y);
     }
 
     public void doEffect() {
 
     }
 
-    public void destroy() {
-        isActive = false;
-    }
+
 }

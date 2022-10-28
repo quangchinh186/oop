@@ -1,4 +1,4 @@
-package uet.oop.bomberman.Timer;
+package uet.oop.bomberman.timer;
 
 import static view.GameViewManager.getJavaFxTicks;
 

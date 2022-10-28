@@ -1,13 +1,12 @@
 package uet.oop.bomberman.entities.enemies;
 
-import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.states.State;
+import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.entities.Entity;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 import view.GameViewManager;
-
 
 
 public class Enemy extends Entity {
@@ -54,7 +53,8 @@ public class Enemy extends Entity {
     }
 
     public void checkMeetBomber(){
-        if(this.rect.intersects(targetX * Sprite.SCALED_SIZE + 8, targetY * Sprite.SCALED_SIZE + 8, Sprite.DEFAULT_SIZE, Sprite.DEFAULT_SIZE)){
+        if(this.rect.intersects(targetX * Sprite.SCALED_SIZE + 8, targetY * Sprite.SCALED_SIZE + 8, Sprite.DEFAULT_SIZE, Sprite.DEFAULT_SIZE)
+                && !GameViewManager.bomberman.isImmune()) {
             GameViewManager.bomberman.die();
         }
     }

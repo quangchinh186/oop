@@ -1,7 +1,7 @@
 package model;
 
 public enum SKIN {
-    BOMBERMAN("model/resources/skinchooser/bomberman.png", "/textures/udlf.png"),
+    BOMBERMAN("model/resources/skinchooser/bomberman.png", "/textures/bombersheet.png"),
     MIDDLE_EASTMAN("model/resources/skinchooser/arab_man.png", "/textures/mid_man.png"),
     RICARDO("model/resources/skinchooser/ricardo.png", "bro.png");
 

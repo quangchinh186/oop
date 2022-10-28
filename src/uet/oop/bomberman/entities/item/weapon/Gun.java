@@ -3,7 +3,7 @@ package uet.oop.bomberman.entities.item.weapon;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.physics.Vector2D;
 import uet.oop.bomberman.entities.Projectile;
-import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.sound.Sound;
 
 import static view.GameViewManager.bomberman;
 import static view.GameViewManager.visualEffects;
@@ -12,7 +12,12 @@ import static view.GameViewManager.visualEffects;
 public class Gun extends Weapon{
 
     private int cd ;
-    private static Image gunImg = new Image("/textures/rifle.png");
+
+    Sound gunShot = new Sound("res/sfx/gunShot.wav");
+
+    public static Image gunImg = new Image("/textures/rifle.png",41,14,true,true);
+
+    private static Image bullet = new Image("/textures/ammo.png",12,12, true, true);
 
     private Image gunFx;
 
@@ -21,7 +26,7 @@ public class Gun extends Weapon{
     public Gun(int x, int y, Image img) {
         super(x, y, img);
 
-        ammo = 7;
+        ammo = 10;
         cd = 0;
 
     }
@@ -38,15 +43,9 @@ public class Gun extends Weapon{
 
         if(ammo > 0 && armed) {
 
-            cd += 2;
-
-            if(cd > 360) cd = 0;
-
-            System.out.println(cd);
 
             //this.img = Sprite.movingSpriteSheet()
-            System.out.println("FIRE");
-
+            gunShot.play();
 
             createProjectile();
             ammo--;
@@ -78,9 +77,9 @@ public class Gun extends Weapon{
                 // code block
         }
 
-        Projectile pj = new Projectile((int)((bomberman.position.x + Sprite.DEFAULT_SIZE) / Sprite.SCALED_SIZE ) ,
-                (int)(bomberman.position.y + Sprite.DEFAULT_SIZE) /Sprite.SCALED_SIZE,
-                Sprite.minvo_right2.getFxImage(), direction);
+        Projectile pj = new Projectile((int) bomberman.position.x ,
+                (int) bomberman.position.y,
+                bullet, direction);
         visualEffects.add(pj);
         //System.out.println("IM CUMMIN");
     }

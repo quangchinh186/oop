@@ -1,8 +1,6 @@
-
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.tiles.Brick;
 import uet.oop.bomberman.entities.tiles.Grass;
 import uet.oop.bomberman.sound.Sound;
@@ -11,7 +9,6 @@ import uet.oop.bomberman.graphics.Flames;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.map.GameMap;
 import view.GameViewManager;
-import view.ViewManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +32,14 @@ public class Bomb extends Entity {
         this.s3 = Sprite.bomb_2;
         this.whom = whom;
         boom = new Sound("res/sfx/explosion.wav");
+        boom.setVol(-10);
     }
 
     public Bomb(int x, int y, String whom){
         super(x, y, null);
         this.whom = whom;
         boom = new Sound("res/sfx/explosion.wav");
+        boom.setVol(-10);
     }
     public List getVisual(){
         return this.flames;
@@ -72,8 +71,8 @@ public class Bomb extends Entity {
     public void explode(){
         boom.play();
         this.img = Sprite.bomb_exploded1.getFxImage();
-        int width_lim = GameMap.WIDTH-1;
-        int height_lim = GameMap.HEIGHT-1;
+        int width_lim = 30;
+        int height_lim = 11;
         destroy(x, y);
         //up
         for(int i = y-1; i >= Math.max(y-power, 0); i--){
@@ -142,10 +141,11 @@ public class Bomb extends Entity {
             Brick temp = (Brick) GameViewManager.stillObjects.get(_y*31 + _x);
             temp.setExploded(true);
         }
-        if(GameViewManager.bomberman.x == _x && GameViewManager.bomberman.y == _y){
+        if(GameViewManager.bomberman.x == _x && GameViewManager.bomberman.y == _y
+                && !GameViewManager.bomberman.isImmune()){
             GameViewManager.bomberman.die();
         }
-        for (Entity t : GameViewManager.enemies)
+        for (Entity t : GameViewManager.entities)
         {
             if(t.x == _x && t.y == _y){
                 t.die();

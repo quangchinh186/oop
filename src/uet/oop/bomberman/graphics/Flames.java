@@ -1,11 +1,14 @@
 package uet.oop.bomberman.graphics;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.states.State;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.tiles.Grass;
 import uet.oop.bomberman.map.GameMap;
 import view.GameViewManager;
+
+import java.util.TimerTask;
 
 public class Flames extends Entity {
     public boolean horizontal = false;
@@ -19,6 +22,13 @@ public class Flames extends Entity {
         this.y = y;
         this.state = s;
         this.time = 15;
+
+        jTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setInactive();
+            }
+        }, 1000);
     }
 
     public void setLast(boolean last) {

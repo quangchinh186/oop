@@ -42,6 +42,10 @@ public class Weapon extends Item {
             this.position.x = bomberman.getPosition().x;
             this.position.y = bomberman.getPosition().y + Sprite.DEFAULT_SIZE;
             getAngle();
+
+            if(ammo == 0) {
+                setInactive();
+            }
         }
     }
 
@@ -72,11 +76,11 @@ public class Weapon extends Item {
         //write a draw function for rect.
         if(bomberman.getState() == State.LEFT && armed) {
             gc.drawImage(this.img, 0, 0, this.img.getWidth(), this.img.getHeight(),
-                    position.x ,position.y,-this.img.getWidth()/2,this.img.getHeight()/2);
+                    position.x ,position.y,-this.img.getWidth(),this.img.getHeight());
         }
         else if(bomberman.getState() != State.LEFT && armed){
             Sprite.drawRotatedImage(gc, this.img, angle, position.x, position.y,
-                    this.img.getWidth()/2, this.img.getHeight()/2);
+                    this.img.getWidth(), this.img.getHeight());
         }
 
         else {
@@ -85,17 +89,17 @@ public class Weapon extends Item {
 
     }
 
-   public void getAngle() {
-       switch (bomberman.getState()){
-           case DOWN:
-               angle = 90;
-               break;
-           case UP:
-               angle = 270;
-               break;
-           default:
-               angle = 0;
-               break;
-       }
+    public void getAngle() {
+        switch (bomberman.getState()){
+            case DOWN:
+                angle = 90;
+                break;
+            case UP:
+                angle = 270;
+                break;
+            default:
+                angle = 0;
+                break;
+        }
     }
 }

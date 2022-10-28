@@ -15,10 +15,7 @@ public class Sprite {
 	public static final int DEFAULT_SIZE = 16;
 	public static final int SCALED_SIZE = DEFAULT_SIZE * 2;
 	private static final int TRANSPARENT_COLOR = 0xffff00ff;
-
-	public final int SIZE_X;
-
-	public final int SIZE_Y;
+	public final int SIZE;
 	private int _x, _y;
 	public int[] _pixels;
 	protected int _realWidth;
@@ -83,13 +80,7 @@ public class Sprite {
 	public static Sprite evil_dead2 = new Sprite(DEFAULT_SIZE, 5, 2, SpriteSheet.evil, 13, 15);
 	public static Sprite evil_dead3 = new Sprite(DEFAULT_SIZE, 6, 2, SpriteSheet.evil, 16, 16);
 
-	public static Sprite player_chad = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.gigaTiles, 8, 8);
-
-	public static Sprite gold_1 = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.gTiles, 8, 8);
-	public static Sprite gold_2 = new Sprite(DEFAULT_SIZE, 0, 1, SpriteSheet.gTiles, 8, 8);
-	public static Sprite gold_3 = new Sprite(DEFAULT_SIZE, 0, 2, SpriteSheet.gTiles, 8, 8);
-
-
+	public static Sprite player_chad = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.gigaTiles, 16, 16);
 
 	/*
 	|--------------------------------------------------------------------------
@@ -141,7 +132,6 @@ public class Sprite {
 	public static Sprite minvo_dead = new Sprite(DEFAULT_SIZE, 8, 8, SpriteSheet.tiles, 16, 16);
 
 	//Kondoria
-
 	public static Sprite blue_left1 = new Sprite(DEFAULT_SIZE, 10, 5, SpriteSheet.tiles, 16, 16);
 	public static Sprite blue_left2 = new Sprite(DEFAULT_SIZE, 10, 6, SpriteSheet.tiles, 16, 16);
 	public static Sprite blue_left3 = new Sprite(DEFAULT_SIZE, 10, 7, SpriteSheet.tiles, 16, 16);
@@ -166,16 +156,6 @@ public class Sprite {
 	public static Sprite creeper_right1 = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.creeper1, 16, 16);
 	public static Sprite creeper_right2 = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.creeper2, 16, 16);
 	public static Sprite creeper_right3 = new Sprite(DEFAULT_SIZE, 0, 0, SpriteSheet.creeper3, 16, 16);
-
-	public static Sprite kondoria_left1 = new Sprite(DEFAULT_SIZE, 10, 5, SpriteSheet.tiles, 16, 16);
-	public static Sprite kondoria_left2 = new Sprite(DEFAULT_SIZE, 10, 6, SpriteSheet.tiles, 16, 16);
-	public static Sprite kondoria_left3 = new Sprite(DEFAULT_SIZE, 10, 7, SpriteSheet.tiles, 16, 16);
-
-	public static Sprite kondoria_right1 = new Sprite(DEFAULT_SIZE, 11, 5, SpriteSheet.tiles, 16, 16);
-	public static Sprite kondoria_right2 = new Sprite(DEFAULT_SIZE, 11, 6, SpriteSheet.tiles, 16, 16);
-	public static Sprite kondoria_right3 = new Sprite(DEFAULT_SIZE, 11, 7, SpriteSheet.tiles, 16, 16);
-
-	public static Sprite kondoria_dead = new Sprite(DEFAULT_SIZE, 10, 8, SpriteSheet.tiles, 16, 16);
 
 	//ALL
 	public static Sprite mob_dead1 = new Sprite(DEFAULT_SIZE, 15, 0, SpriteSheet.tiles, 16, 16);
@@ -247,22 +227,10 @@ public class Sprite {
 	public static Sprite powerup_flamepass = new Sprite(DEFAULT_SIZE, 6, 10, SpriteSheet.tiles, 16, 16);
 
 	public Sprite(int size, int x, int y, SpriteSheet sheet, int rw, int rh) {
-		SIZE_X = SIZE_Y = size;
-		_pixels = new int[SIZE_X * SIZE_Y];
-		_x = x * SIZE_X;
-		_y = y * SIZE_Y;
-		_sheet = sheet;
-		_realWidth = rw;
-		_realHeight = rh;
-		load();
-	}
-
-	public Sprite(int sizeX, int sizeY, int x, int y, SpriteSheet sheet, int rw, int rh) {
-		SIZE_X = sizeX;
-		SIZE_Y = sizeY;
-		_pixels = new int[SIZE_X * SIZE_Y];
-		_x = x * SIZE_X;
-		_y = y * SIZE_Y;
+		SIZE = size;
+		_pixels = new int[SIZE * SIZE];
+		_x = x * SIZE;
+		_y = y * SIZE;
 		_sheet = sheet;
 		_realWidth = rw;
 		_realHeight = rh;
@@ -270,12 +238,10 @@ public class Sprite {
 	}
 
 	public Sprite(int size, int color) {
-		SIZE_X = SIZE_Y = size;
-		_pixels = new int[SIZE_X * SIZE_Y];
+		SIZE = size;
+		_pixels = new int[SIZE * SIZE];
 		setColor(color);
 	}
-
-
 
 	private void setColor(int color) {
 		for (int i = 0; i < _pixels.length; i++) {
@@ -284,9 +250,9 @@ public class Sprite {
 	}
 
 	private void load() {
-		for (int y = 0; y < SIZE_Y; y++) {
-			for (int x = 0; x < SIZE_X; x++) {
-				_pixels[x + y * SIZE_X] = _sheet._pixels[(x + _x) + (y + _y) * _sheet.SIZE_X];
+		for (int y = 0; y < SIZE; y++) {
+			for (int x = 0; x < SIZE; x++) {
+				_pixels[x + y * SIZE] = _sheet._pixels[(x + _x) + (y + _y) * _sheet.SIZE];
 			}
 		}
 	}
@@ -311,37 +277,8 @@ public class Sprite {
 		return (animate % time > diff) ? x1 : x2;
 	}
 
-	public static Sprite movingSpriteSheet(SpriteSheet sheet ,int xPos, int yPos, int numOfSprite, int animate, int time) {
-		int calc = animate % time;
-		int diff = time / (numOfSprite - 1);
-
-		//dif == 32/3
-		// animate <= sprite_size..
-
-		yPos += (int) animate/ diff;
-		//this shit leak bo nho.
-		return new Sprite(DEFAULT_SIZE, xPos, yPos, sheet, 16, 16);
-
-		//tao ra mang 2 chieu luu cac sprite nho voi moi sheet duoc tao
-	}
-
-	public static Sprite movingSpriteSheet(SpriteSheet sheet ,int xPos, int yPos, int numOfSprite,
-										   int animate, int time, int width, int height) {
-		int calc = animate % time;
-		int diff = time / (numOfSprite - 1);
-
-		//dif == 32/3
-		// animate <= sprite_size..
-
-		xPos += (int) animate/ width;
-		//this shit leak bo nho.
-		return new Sprite(width, height, xPos, yPos, sheet, width, height);
-
-		//tao ra mang 2 chieu luu cac sprite nho voi moi sheet duoc tao
-	}
-
 	public int getSize() {
-		return SIZE_X;
+		return SIZE;
 	}
 
 	public int getPixel(int i) {
@@ -349,15 +286,15 @@ public class Sprite {
 	}
 
 	public Image getFxImage() {
-		WritableImage wr = new WritableImage(SIZE_X, SIZE_Y);
+		WritableImage wr = new WritableImage(SIZE, SIZE);
 		PixelWriter pw = wr.getPixelWriter();
-		for (int x = 0; x < SIZE_X; x++) {
-			for (int y = 0; y < SIZE_Y; y++) {
-				if ( _pixels[x + y * SIZE_X] == TRANSPARENT_COLOR) {
+		for (int x = 0; x < SIZE; x++) {
+			for (int y = 0; y < SIZE; y++) {
+				if ( _pixels[x + y * SIZE] == TRANSPARENT_COLOR) {
 					pw.setArgb(x, y, 0);
 				}
 				else {
-					pw.setArgb(x, y, _pixels[x + y * SIZE_X]);
+					pw.setArgb(x, y, _pixels[x + y * SIZE]);
 				}
 			}
 		}
@@ -391,7 +328,6 @@ public class Sprite {
 
 		return output;
 	}
-
 
 	public static void rotate(GraphicsContext gc, double angle, double px, double py) {
 		Rotate r = new Rotate(angle, px, py);
